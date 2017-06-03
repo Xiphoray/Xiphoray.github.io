@@ -62,7 +62,7 @@ layout: default
 
                 <hr style="visibility: hidden;">
 
-                {% if site.duoshuo_share && site.duoshuo_username %}
+                {% if site.duoshuo_share %}
                 <!-- 多说 Share start -->
                 <div class="ds-share"
                     style="text-align: right"
@@ -109,14 +109,8 @@ layout: default
                     {% endif %}
                 </ul>
 
-
-                <div class="bsync-custom icon-long-orange">
-				<a title="一键分享到各大微博和社交网络" class="bshare-bsync" onclick="javascript:bSync.share(event)">
-				</a>
-				<span class="BSHARE_COUNT bshare-share-count">0</span>
-				</div> 
-				<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bsync.js#uuid=#uuid=&amp;style=1">
-				</script>
+<!-- 分享-->
+                <div class="bsync-custom icon-long-orange"><a title="一键分享到各大微博和社交网络" class="bshare-bsync" onclick="javascript:bSync.share(event)"></a></div> <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bsync.js#uuid=#uuid=&amp;style=1"></script>
 
                 {% if site.disqus_username %}
                 <!-- disqus 评论框 start -->
