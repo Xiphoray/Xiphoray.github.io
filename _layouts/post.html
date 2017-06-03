@@ -215,7 +215,6 @@ layout: default
 
 {% if site.netease_comment %}
 <!-- 网易云跟帖JS代码 start -->
-<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
 <script>
   var cloudTieConfig = {
     url: document.location.href, 
@@ -223,9 +222,8 @@ layout: default
     productKey: "8b52592cc2004748af72374515d213ec",
     target: "cloud-tie-wrapper"
   };
-  var yunManualLoad = true;
-  Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vbW9iaWxlL2xpdmVzY3JpcHQuaHRtbA==", true);
 </script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
 <!-- 网易云跟帖JS代码 end -->
 {% endif %}
 
