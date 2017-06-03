@@ -1,8 +1,8 @@
 /* (c) 2012 JiaThis Inc. 0817*/
 var JIATHIS_CONFIGS = {
-    webhost: "https://tomoat.github.io",
+    webhost: "https://xiphoray.github.io",
     lhost: "http://l.jiathis.com",
-    codehost: "https://tomoat.github.io/JiathisViaHttps/JiathisViaHttps",
+    codehost: "https://xiphoray.github.io/JiathisViaHttps/JiathisViaHttps",
     sc: false,
     uid: 1626433,
     ckprefix: "jt_",
