@@ -2,7 +2,7 @@
 var JIATHIS_CONFIGS = {
     webhost: "https://xiphoray.github.io",
     lhost: "http://l.jiathis.com",
-    codehost: "https://xiphoray.github.io/JiathisViaHttps/JiathisViaHttps",
+    codehost: "https://xiphoray.github.io/JiathisViaHttps",
     sc: false,
     uid: 1626433,
     ckprefix: "jt_",
