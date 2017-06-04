@@ -90,7 +90,7 @@ service-worker: true
 friends: [
     {
          title: "重围",
-         href: "blog.meetwhy.com"
+         href: "http://leanote.meetwhy.com/blog/ericwyn"
      }
         
 ]
