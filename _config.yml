@@ -90,7 +90,7 @@ service-worker: true
 friends: [
     {
          title: "重围",
-         href: "http://www.meetwhy.com/"
+         href: "blog.meetwhy.com"
      }
         
 ]
