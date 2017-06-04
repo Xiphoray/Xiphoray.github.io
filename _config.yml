@@ -26,7 +26,7 @@ facebook_username:  profile.php?id=100009786758755
 highlighter: rouge
 permalink: pretty
 paginate: 6
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
 
@@ -87,10 +87,10 @@ service-worker: true
 
 
 # Friends
-#friends: [
-    
-    #     title: "Su",
-    #     href: "http://su.gallery/"
-    # },{
+friends: [
+    {
+         title: "重围",
+         href: "http://www.meetwhy.com/"
+     }
         
-#]
+]
