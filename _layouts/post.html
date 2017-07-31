@@ -89,16 +89,6 @@ layout: default
                     </li>
                     {% endif %}
                 </ul>
-				
-<script>
-var idcomments_acct = '0927afe34f22b7458b464a6ca26d9058';
-var idcomments_post_id;
-var idcomments_post_url;
-</script>
-<span id="IDCommentsPostTitle" style="display:none"></span>
-<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
-
-
 
 
                 {% if site.disqus_username %}
@@ -110,6 +100,16 @@ var idcomments_post_url;
                 {% endif %}
 				<br/>
 				<br/>
+				
+			 <!-- intensedebate 评论框 start -->
+				<script>
+				var idcomments_acct = '0927afe34f22b7458b464a6ca26d9058';
+				var idcomments_post_id;
+				var idcomments_post_url;
+				</script>
+				<span id="IDCommentsPostTitle" style="display:none"></span>
+				<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+				
                 {% if site.netease_comment %}
                 <!-- 网易云跟帖 评论框 start -->
                 <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>

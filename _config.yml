@@ -51,7 +51,7 @@ kramdown:
 #disqus_username: xiphoray
 
 # Netease setttings
-netease_comment: true
+netease_comment: false
 
 
 
