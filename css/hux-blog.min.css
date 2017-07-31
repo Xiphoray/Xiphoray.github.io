@@ -4,7 +4,7 @@
  */
 
 @media (min-width:1200px){.post-container,.sidebar-container{padding-right:5%}}
-@media (min-width:768px){.post-container{padding-right:5%}}.sidebar-container{color:#bfbfbf;font-size:14px}.sidebar-container 
+@media (min-width:1200px){.post-container{padding-right:5%}}.sidebar-container{color:#bfbfbf;font-size:14px}.sidebar-container 
 h5{color:gray;padding-bottom:1em}
 .sidebar-container h5 a{color:gray!important;text-decoration:none}
 .sidebar-container a{color:#bfbfbf!important}.sidebar-container 
