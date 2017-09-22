@@ -93,14 +93,14 @@ friends: [
          href: "http://leanote.meetwhy.com/blog/ericwyn"
     },
     {
-        title:"益达",
-        href:"https://zilchfp.github.io/"
+         title: "益达",
+         href: "https://zilchfp.github.io/"
     },
     {
          title: "万方",
          href: "http://altholin.com/blog/"
     },
-        {
+    {
          title: "马哲",
          href: "http://blog.csdn.net/blueblueskyz"
     }
