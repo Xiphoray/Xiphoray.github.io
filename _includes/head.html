@@ -6,7 +6,9 @@
     <meta name="description" content="{{ site.description }}">
     <meta name="keywords"  content="{{ site.keyword }}">
     <meta name="theme-color" content="{{ site.chrome-tab-theme-color }}">
-	
+	<div id="wx_pic" style="margin:0 auto;display:none;">
+<img src="/img/icon_wechat.jpg" />
+</div>
     <title>{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}</title>
 
     <!-- Web App Manifest -->
@@ -36,9 +38,7 @@
 <script src="{{ "/js/needsharebutton.min.js" | prepend: site.baseurl }}"></script>
 <!-- needsharebutton CSS file -->
 <link href="/css/needsharebutton.min.css" | prepend: site.baseurl }}" rel="stylesheet" />
-<div id="wx_pic" style="margin:0 auto;display:none;">
-<img src="/img/icon_wechat.jpg" />
-</div>
+
 	
     <!-- Hux Delete, sad but pending in China
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
