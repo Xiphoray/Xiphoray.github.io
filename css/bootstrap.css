@@ -6563,4 +6563,12 @@ button.close {
     display: none !important;
   }
 }
+#fuckwechat {
+	font-size: 12px;
+	padding: 10px;
+	color: #b94a48;
+	background: #f2dede;
+	line-height: 20px;
+	display: none;
+}
 /*# sourceMappingURL=bootstrap.css.map */
