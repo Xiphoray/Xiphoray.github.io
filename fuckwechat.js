@@ -16,7 +16,7 @@
 
     function fuckWeChat() {
         if (!isWechat()) {
-            $('#fuckwechat').style.display = 'block';
+            $('#fuckwechat')[0].style.display = 'block';
         }
     }
 
