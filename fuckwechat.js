@@ -119,8 +119,8 @@
     }
 
     function fuckWeChat() {
-        if (isWechat() && isIOS()) {
-            $('#wechat').style.display = 'block';
+        if (isWechat()) {
+            $('#fuckwechat').style.display = 'block';
         }
     }
 
