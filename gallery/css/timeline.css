@@ -53,7 +53,7 @@ body, html {
 .lanren ul.list p{text-align: center;padding: 10px;}
 .lanren .more{overflow: hidden;padding:10px;text-align: center;}
 .lanren .more a{display: block;width: 80px;padding:8px 0;color:#fff;margin:0 auto;background:#333;text-align:center;border-radius:3px;}
-.lanren .more a:hover{text-decoration: none;background: red;color: #fff;}
+.lanren .more a:hover{text-decoration: none;background: #337ab7;color: #fff;}
 
 .lanren ul.list li {
 	position: relative;
