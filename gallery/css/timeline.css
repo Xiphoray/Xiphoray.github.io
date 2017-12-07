@@ -16,7 +16,7 @@ body, html {
 
 	.hidden{ display: none;}
 	.lanren ul.list{overflow: hidden;}
-	.lanren ul.list li{width: 150px;height: 150px;margin:5px;float: left;overflow: hidden;}
+	.lanren ul.list li{max-width: 800px;margin:5px;float: left;overflow: hidden;}
 	.lanren ul.list li dev{width: 100%;height: 100%;}
 	.lanren ul.list p{text-align: center;padding: 10px;}
 	.lanren .more{overflow: hidden;padding:10px;text-align: center;}
