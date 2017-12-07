@@ -203,7 +203,7 @@ layout: default
 				</ul>
 			</div>
 		</div>
-		<script src="http://www.lanrenzhijia.com/ajaxjs/jquery.min.js"></script>
+		<script src="js/jquery.min.js"></script>
 		<script>
 			var _content = []; //临时存储li循环内容
 			var lanren = {
@@ -215,7 +215,7 @@ layout: default
 					for(var n=0;n<lanren._default;n++){
 						lis.eq(n).appendTo(".lanren ul.list");
 					}
-					$(".lanren ul.list img").each(function(){
+					$(".lanren ul.list div").each(function(){
 						$(this).attr('src',$(this).attr('realSrc'));
 					})
 					for(var i=lanren._default;i<lis.length;i++){
@@ -232,7 +232,7 @@ layout: default
 							break;
 						}
 						$(".lanren ul.list").append(target);
-						$(".lanren ul.list img").eq(mLis+i).each(function(){
+						$(".lanren ul.list div").eq(mLis+i).each(function(){
 							$(this).attr('src',$(this).attr('realSrc'));
 						});
 					}
