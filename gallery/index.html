@@ -23,8 +23,10 @@ layout: default
 			</header>
 			<div class="main">
 				<ul class="cbp_tmtimeline">
-					<div id="box" class = "box"></div>
-					<div id="btn" class="btn"><a href="javascript:;" >加载更多</a></div>
+					<div class="hidden">
+						<div id="box" class = "box"></div>
+						<div id="btn" class="btn"><a href="javascript:;" >加载更多</a></div>
+					</div>
 					<!---<li>
 						<div class="cbp_tmlabel">
 							<h2 id="boxoffice"></h2>
@@ -76,6 +78,7 @@ layout: default
 				curr = 3;
 				$('.cbp_tmtimeline .btn').html("<p>全部加载完毕...</p>");
 				$('.cbp_tmtimeline .btn').removeAttr('onclick');
+				$('#btn').attr('disabled',"true");
 			}
 		}
 		</script>
