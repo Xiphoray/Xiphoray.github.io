@@ -58,7 +58,7 @@ body, html {
 
 .cc .box{height: auto;margin:0 auto;overflow: hidden;text-align: left;background:#fff;padding:5px;}
 .cc .box ul.list{padding-right: 30px;padding-left: 30px;}
-.cc .btn{overflow: hidden;padding:10px;text-align: center;}
+.cc .btn{overflow: hidden;padding:10px;text-align: center;margin:0 auto;}
 .cc .btn a{display: block;width: 80px;padding:8px 0;color:#fff;margin:0 auto;background:#333;text-align:center;border-radius:3px;}
 .cc .btn a:hover{text-decoration: none;background: #337ab7;color: #fff;}
 
