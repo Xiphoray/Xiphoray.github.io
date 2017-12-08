@@ -46,7 +46,7 @@ body, html {
 	margin-top: -120px;
 }
 
-.hidden{width: 800px;height: auto;margin:0 auto;overflow: hidden;text-align: left;background:#fff;padding:5px;}
+.cc{width: 800px;height: auto;margin:0 auto;overflow: hidden;text-align: left;background:#fff;padding:5px;}
 
 
 .box{overflow: hidden;}
@@ -56,7 +56,7 @@ body, html {
 .cbp_tmtimeline .btn a{display: block;width: 80px;padding:8px 0;color:#fff;margin:0 auto;background:#333;text-align:center;border-radius:3px;}
 .cbp_tmtimeline .btn a:hover{text-decoration: none;background: #337ab7;color: #fff;}
 
-.hidden .box {
+.cc .box {
 	position: relative;
 	box-sizing: border-box;
 	display: inline-block;
