@@ -52,7 +52,7 @@ body, html {
 .box{overflow: hidden;}
 
 .box ul.list{padding-right: 30px;padding-left: 30px;}
-.cbp_tmtimeline .btn{overflow: hidden;padding:10px;text-align: center;position: relative;}
+.cbp_tmtimeline .btn{overflow: hidden;padding:10px;text-align: center;position: relative;margin:0 auto;}
 .cbp_tmtimeline .btn a{display: block;width: 80px;padding:8px 0;color:#fff;margin:0 auto;background:#333;text-align:center;border-radius:3px;}
 .cbp_tmtimeline .btn a:hover{text-decoration: none;background: #337ab7;color: #fff;}
 
