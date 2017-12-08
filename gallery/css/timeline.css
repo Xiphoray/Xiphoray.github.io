@@ -46,7 +46,14 @@ body, html {
 	margin-top: -120px;
 }
 
-
+.hidden {
+	padding: 0;
+	list-style: none;
+	position: relative;
+	max-width: 800px;
+	margin: 0 auto;
+	margin-top: -120px;
+}
 
 
 .box{overflow: hidden;}
