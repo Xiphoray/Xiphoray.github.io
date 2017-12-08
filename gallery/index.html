@@ -50,7 +50,7 @@ layout: default
 		<script>
 		var data = ["images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
 							"images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg"];
-		var time = ["images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
+		var time = ["2017.12.4", "2017.12.4", "2017.12.4", "2017.12.4", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
 							"images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg"];
 
 		var nums = 4;
@@ -75,7 +75,7 @@ layout: default
 			if (curr > 3) {
 				curr = 3;
 				$('.cbp_tmtimeline .btn').html("<p>全部加载完毕...</p>");
-				
+				$('.cbp_tmtimeline .btn').removeAttr('onclick');
 			}
 		}
 		</script>
