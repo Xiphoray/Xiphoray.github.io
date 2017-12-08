@@ -25,7 +25,7 @@ layout: default
 				<ul class="cbp_tmtimeline">
 					<div class="cc">
 						<div id="box" class = "box"></div>
-						<div id="btn" class="btn"><a href="javascript:;" >加载更多</a></div>
+						<div id="btng" class="btng"><a href="javascript:;" >加载更多</a></div>
 					</div>
 					<!---<li>
 						<div class="cbp_tmlabel">
@@ -71,14 +71,14 @@ layout: default
 		};
 		var boxDom = document.getElementById("box");
 		boxDom.innerHTML = render(curr);
-		document.getElementById("btn").onclick = function() {
+		document.getElementById("btng").onclick = function() {
 			curr++;
 			boxDom.innerHTML += render(curr);
 			if (curr > 3) {
 				curr = 3;
-				$('.cbp_tmtimeline .btn').html("<p>全部加载完毕...</p>");
-				$('.cbp_tmtimeline .btn').removeAttr('onclick');
-				$('#btn').attr('disabled',"true");
+				$('.cbp_tmtimeline .btng').html("<p>全部加载完毕...</p>");
+				$('.cbp_tmtimeline .btng').removeAttr('onclick');
+				$('#btng').attr('disabled',"true");
 			}
 		}
 		</script>
