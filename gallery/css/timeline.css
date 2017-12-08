@@ -48,17 +48,15 @@ body, html {
 
 
 
-.hidden{ display: none;}
-.lanren{overflow: hidden;}
-.lanren ul.list{overflow: hidden;padding-right: 30px;padding-left: 30px;}
 
+.box{overflow: hidden;}
 
-.lanren .more{overflow: hidden;padding:10px;text-align: center;}
-.lanren .more a{display: block;width: 80px;padding:8px 0;color:#fff;margin:0 auto;background:#333;text-align:center;border-radius:3px;}
-.lanren .more a:hover{text-decoration: none;background: #337ab7;color: #fff;}
+.box ul.list{padding-right: 30px;padding-left: 30px;}
+.cbp_tmtimeline .btn{overflow: hidden;padding:10px;text-align: center;}
+.cbp_tmtimeline .btn a{display: block;width: 80px;padding:8px 0;color:#fff;margin:0 auto;background:#333;text-align:center;border-radius:3px;}
+.cbp_tmtimeline .btn a:hover{text-decoration: none;background: #337ab7;color: #fff;}
 
-
-.cbp_tmtimeline .lanren {
+.cbp_tmtimeline.box {
 	position: relative;
 	box-sizing: border-box;
 	display: inline-block;
@@ -66,21 +64,19 @@ body, html {
 	width: 100%;
 }
 
-
-.lanren ul.list > li {
+.box ul.list> li {
 	position: relative;
 	box-sizing: border-box;
 	display: inline-block;
 	vertical-align: top;
 	width: 100%;
-	overflow: hidden;
 }
 
 
 
 
 /* The card */
-.lanren ul.list > li .cbp_tmlabel {
+.box ul.list> li .cbp_tmlabel {
 	background: white;
 	color: rgb(78, 78, 78);
 	/* line-height: 1.4; */
@@ -103,7 +99,7 @@ body, html {
 	color: #a5a7aa;
 }
 
-.lanren ul.list > li .cbp_tmlabel h2 {
+.box ul.list> li .cbp_tmlabel h2 {
 	font-weight: bold;
 	font-size: 15px;
 	padding: 14px 20px;
@@ -112,13 +108,13 @@ body, html {
 	line-height: 36px;
 }
 
-.lanren ul.list > li:nth-child(odd) .cbp_tmlabel:after {
+.box ul.list> li:nth-child(odd) .cbp_tmlabel:after {
 	border-right-color: #FFFFFF;
 	display: no;
 }
 
 /* The icons */
-.lanren ul.list > li .cbp_tmicon {
+.box ul.list> li .cbp_tmicon {
 	width: 40px;
 	height: 40px;
 	font-family: 'huxico';

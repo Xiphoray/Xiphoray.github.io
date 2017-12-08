@@ -12,7 +12,7 @@ layout: default
 		<title>Xiphoray - Timeline</title>
 		<link rel="stylesheet" type="text/css" href="css/timeline.css" />
 		<script src="js/modernizr.custom.js"></script>
-		
+
 		
 	</head>
 	<body>
@@ -23,56 +23,9 @@ layout: default
 			</header>
 			<div class="main">
 				<ul class="cbp_tmtimeline">
-				<div class="lanren">
-					<div class="hidden">
-						<li>
-							<div class="cbp_tmlabel">
-								<h2 id="boxoffice"></h2>
-								<time>2017.12.4</time>
-								<img src="images/2017-12-4.jpg">
-								<ul>
-								</ul>
-							</div>
-						</li>
-						
-						<li>
-							<div class="cbp_tmlabel">
-								<h2 id="boxoffice"></h2>
-								<time>2017.12.4</time>
-								<img src="images/2017-12-4.jpg">
-								<ul>
-								</ul>
-							</div>
-						</li>
-						
-						<li>
-							<div class="cbp_tmlabel">
-								<h2 id="boxoffice"></h2>
-								<time>2017.12.4</time>
-								<img src="images/2017-12-4.jpg">
-								<ul>
-								</ul>
-							</div>
-						</li>
-						
-						<li>
-							<div class="cbp_tmlabel">
-								<h2 id="boxoffice"></h2>
-								<time>2017.12.4</time>
-								<img src="images/2017-12-4.jpg">
-								<ul>
-								</ul>
-							</div>
-						</li>
-					</div>
-					<ul class="list">Loading...</ul>
-					<div class="more"><a href="javascript:;" onClick="lanren.loadMore();">More</a></div>
-				</div>
-					
-					
-				</ul>	
-				
-			<!---<li>
+					<div id="box" class = "box"></div>
+					<div id="btn" class="btn"><a href="javascript:;" >加载更多</a></div>
+					<!---<li>
 						<div class="cbp_tmlabel">
 							<h2 id="boxoffice"></h2>
 							<time>2017.12.4</time>
@@ -90,46 +43,41 @@ layout: default
 						</div>
 					</li>--->
 					
-				
+				</ul>
 			</div>
 		</div>
 		<script src="js/jquery.js"></script>
-	<script>
-		var _content = []; //临时存储li循环内容
-		var lanren = {
-			_default:5, //默认显示图片个数
-			_loading:5,  //每次点击按钮后加载的个数
-			init:function(){
-				var lis = $(".lanren .hidden li");
-				$(".lanren ul.list").html("");
-				for(var n=0;n<lanren._default;n++){
-					lis.eq(n).appendTo(".lanren ul.list");
-				}
-				$(".lanren ul.list img").each(function(){
-					$(this).attr('src',$(this).attr('realSrc'));
-				})
-				for(var i=lanren._default;i<lis.length;i++){
-					_content.push(lis.eq(i));
-				}
-				$(".lanren .hidden").html("");
-			},
-			loadMore:function(){
-				var mLis = $(".lanren ul.list li").length;
-				for(var i =0;i<lanren._loading;i++){
-					var target = _content.shift();
-					if(!target){
-						$('.lanren .more').html("<p>You have touched my buttom...</p>");
-						break;
-					}
-					$(".lanren ul.list").append(target);
-					$(".lanren ul.list img").eq(mLis+i).each(function(){
-						$(this).attr('src',$(this).attr('realSrc'));
-					});
-				}
+		<script>
+		var data = ["images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
+							"images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg"];
+		var time = ["images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
+							"images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg"];
+
+		var nums = 4;
+		var curr = 1;
+		var render = function(curr) {
+			var str = '<ul class=\"list\"></ul>',
+				last = curr * nums - 1;
+			last = last >= data.length ? (data.length - 1) : last;
+			for (var i = (curr * nums - nums); i <= last; i++) {
+				
+				str = str.substr(0, str.length - 5); 
+				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + time[i]+ '</time><img src=\"' + data[i] + '\"><ul></ul></div></li>';
+				str += '</ul>'
+			}
+			return str;
+		};
+		var boxDom = document.getElementById("box");
+		boxDom.innerHTML = render(curr);
+		document.getElementById("btn").onclick = function() {
+			curr++;
+			boxDom.innerHTML += render(curr);
+			if (curr > 3) {
+				curr = 3;
+				$('.cbp_tmtimeline .btn').html("<p>全部加载完毕...</p>");
+				
 			}
 		}
-		lanren.init();
-	</script>
-
+		</script>
 	</body>
 </html>
