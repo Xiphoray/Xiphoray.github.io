@@ -12,8 +12,6 @@ layout: default
 		<title>Xiphoray - Timeline</title>
 		<link rel="stylesheet" type="text/css" href="css/timeline.css" />
 		<script src="js/modernizr.custom.js"></script>
-
-		
 	</head>
 	<body>
 		<div class="container" style="margin:0;padding:0;width:100%;">
@@ -27,42 +25,21 @@ layout: default
 						<div id="box" class = "box"></div>
 						<Br/>
 						<Br/>
-						<div id="btng" class="btng"><a href="javascript:;" >加载更多</a></div>
+						<div id="btng" class="btng"><a href="javascript:;" >More</a></div>
 					</div>
-					<!---<li>
-						<div class="cbp_tmlabel">
-							<h2 id="boxoffice"></h2>
-							<time>2017.12.4</time>
-							<img src="images/2017-12-4.jpg">
-							<ul>
-								<li>
-									
-										文字
-									
-								</li>
-								<li class="skill">
-									<span class="link"><a target="_blank" href="http://huangxuan.me/BusyWeek/dist/">Try it</a></span>
-								</li>
-							</ul>
-						</div>
-					</li>--->
-					
 				</ul>
 			</div>
 		</div>
 		<script src="js/jquery.js"></script>
-		<script>
-		
-		var data = [["images/2017-12-4.jpg","2017.12.4"]];
-							
+		<script>	
+		var data = [["images/2017-12-4.jpg","2017.12.4"]];	
 		var nums = 4;
 		var curr = 1;
 		var render = function(curr) {
 			var str = '<ul class=\"list\"></ul>',
 				last = curr * nums - 1;
 			last = last >= data.length ? (data.length - 1) : last;
-			for (var i = (curr * nums - nums); i <= last; i++) {
-				
+			for (var i = (curr * nums - nums); i <= last; i++) {			
 				str = str.substr(0, str.length - 5); 
 				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i][1]+ '</time><img src=\"' + data[i][0] + '\"><ul></ul></div></li>';
 				str += '</ul>'
@@ -76,7 +53,7 @@ layout: default
 			boxDom.innerHTML += render(curr);
 			if (curr * nums - 1 >= data.length - 1) {
 				
-				$('.cbp_tmtimeline .btng').html("<p>全部加载完毕...</p>");
+				$('.cbp_tmtimeline .btng').html("<p>You have touched my bottom...</p>");
 				$('.cbp_tmtimeline .btng').removeAttr('onclick');
 				$('#btng').attr('disabled',"true");
 			}
