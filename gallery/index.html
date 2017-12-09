@@ -50,11 +50,9 @@ layout: default
 		</div>
 		<script src="js/jquery.js"></script>
 		<script>
-		var data = ["images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
-							"images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg"];
-		var time = ["2017.12.4", "2017.12.4", "2017.12.4", "2017.12.4", "images/2017-12-4.jpg", "images/2017-12-4.jpg", 
-							"images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg", "images/2017-12-4.jpg"];
-
+		
+		var data = [["images/2017-12-4.jpg","2017.12.4"],["images/2017-12-4.jpg","2017.12.4"],["images/2017-12-4.jpg","2017.12.4"],["images/2017-12-4.jpg","2017.12.4"],["images/2017-12-4.jpg","2017.12.4"],["images/2017-12-4.jpg","2017.12.4"]]
+							
 		var nums = 4;
 		var curr = 1;
 		var render = function(curr) {
@@ -64,7 +62,7 @@ layout: default
 			for (var i = (curr * nums - nums); i <= last; i++) {
 				
 				str = str.substr(0, str.length - 5); 
-				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + time[i]+ '</time><img src=\"' + data[i] + '\"><ul></ul></div></li>';
+				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i][1]+ '</time><img src=\"' + data[i][0] + '\"><ul></ul></div></li>';
 				str += '</ul>'
 			}
 			return str;
@@ -74,8 +72,8 @@ layout: default
 		document.getElementById("btng").onclick = function() {
 			curr++;
 			boxDom.innerHTML += render(curr);
-			if (curr > 3) {
-				curr = 3;
+			if (curr * nums - 1 >= data.length - 1) {
+				
 				$('.cbp_tmtimeline .btng').html("<p>全部加载完毕...</p>");
 				$('.cbp_tmtimeline .btng').removeAttr('onclick');
 				$('#btng').attr('disabled',"true");
