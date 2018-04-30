@@ -37,13 +37,20 @@ layout: default
 		
 		<script src="js/lightbox.min.js"></script>
 		<script>
+		if(document.body.clientHeight<document.body.clientWidth){
 			lightbox.option({
-				  'resizeDuration': 200,
-				  'wrapAround': true,
+				  'resizeDuration': 600,
 
+				})
+		}
+		else{
+			lightbox.option({
+				  'resizeDuration': 600,
 				  'maxWidth': document.body.clientWidth*7/8,
 				  'maxHeight':document.body.clientHeight*7/8
 				})
+		}
+			
 		</script>
 		<script type="text/javascript">	
 		
