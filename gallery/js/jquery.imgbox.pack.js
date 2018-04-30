@@ -348,44 +348,6 @@
     };
     $(document).ready(function() {
         init()
-		var data = [
-								"2018-2-2","2018-2-1","2018-1-31","2018-1-30","2018-1-29"
-							,"2018-1-28","2018-1-27","2018-1-26","2018-1-25","2018-1-24"
-							,"2018-1-23","2018-1-22","2018.1.5","2018.1.4","2018.1.3"
-							,"2018.1.2","2018.1.1","2017.12.31","2017.12.30","2017.12.4"
-							];	
 
-		var nums = 4;
-		var curr = 1;
-		var render = function(curr) {
-			var str = '<ul class=\"list\"></ul>',
-				last = curr * nums - 1;
-			last = last >= data.length ? (data.length - 1) : last;
-			for (var i = (curr * nums - nums); i <= last; i++) {			
-				str = str.substr(0, str.length - 5); 
-				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i]+ '</time><a class=\"bigger\" href=\"images/' + data[i] + '.webp\"><img src=\"images/' + data[i] + '.webp\" alt=\"\"></a><ul></ul></div></li>';
-				str += '</ul>'
-			}
-			return str;
-		};
-		var boxDom = document.getElementById("box");
-		boxDom.innerHTML = render(curr);
-		document.getElementById("btng").onclick = function() {
-			curr++;
-			boxDom.innerHTML += render(curr);
-			if (curr * nums - 1 >= data.length - 1) {
-				
-				$('.cbp_tmtimeline .btng').html("<p>You have touched my bottom...</p>");
-				$('.cbp_tmtimeline .btng').removeAttr('onclick');
-				$('#btng').attr('disabled',"true");
-			}
-		};
-		$(".bigger").imgbox({
-				'speedIn'		: 0,
-				'speedOut'		: 0,
-				'alignment'		: 'center',
-				'overlayShow'	: true,
-				'allowMultiple'	: false
-			});
     })
 })(jQuery);
