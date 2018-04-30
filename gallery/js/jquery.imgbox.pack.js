@@ -13,7 +13,7 @@
  *   http://www.gnu.org/licenses/gpl.html
  */
 
-;(function($) {
+(function($) {
     $.fn.fixPNG = function() {
         return this.each(function() {
             var b = $(this).css('backgroundImage');
