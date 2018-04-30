@@ -40,12 +40,16 @@ layout: default
 		if(document.body.clientHeight<document.body.clientWidth){
 			lightbox.option({
 				  'resizeDuration': 600,
-				'fitImagesInViewport':false
+					'fitImagesInViewport':false,
+					'maxWidth': document.body.clientWidth*7/8,
+					'positionFromTop':25
 				})
 		}
 		else{
 			lightbox.option({
 				  'resizeDuration': 600,
+				  'positionFromTop':100,
+				  'alwaysShowNavOnTouchDevices':true
 				})
 		}
 			
