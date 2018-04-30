@@ -73,17 +73,17 @@ layout: default
 				$('#btng').attr('disabled',"true");
 			}
 		}
-		(function($) {
-		$(function() {
-			$(".bigger").imgbox({
+		
+		jQuery(document).ready(funciton($){
+        $(".bigger").imgbox({
 				'speedIn'		: 0,
 				'speedOut'		: 0,
 				'alignment'		: 'center',
 				'overlayShow'	: true,
 				'allowMultiple'	: false
 			});
-		});
-	})(jQuery);
+        }) ;
+		
 		</script>
 	</body>
 </html>
