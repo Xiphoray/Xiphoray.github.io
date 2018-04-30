@@ -33,7 +33,7 @@
         nr, zindex = 90,
         titleh = 0,
         shadow = 20,
-        margin = 0,
+        margin = 20,
         fx = $.extend($('<div/>')[0], {
             prop: 0
         });
@@ -74,7 +74,7 @@
         }
     };
     $.fn.imgbox.defaults = {
-        padding: 5,
+        padding: 10,
         alignment: 'auto',
         allowMultiple: true,
         autoScale: true,
@@ -82,9 +82,9 @@
         speedOut: 500,
         easingIn: 'swing',
         easingOut: 'swing',
-        zoomOpacity: true,
-        overlayShow: true,
-        overlayOpacity: 0.9,
+        zoomOpacity: false,
+        overlayShow: false,
+        overlayOpacity: 0.5,
         hideOnOverlayClick: true,
         hideOnContentClick: true
     };
