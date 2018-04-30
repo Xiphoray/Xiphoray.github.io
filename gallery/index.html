@@ -10,7 +10,8 @@ layout: default
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Xiphoray - Timeline</title>
-		<link href="css/css.css" type="text/css" rel="stylesheet" />
+
+		<link rel="stylesheet" href="css/lightbox.min.css">
 		<link rel="stylesheet" type="text/css" href="css/timeline.css" />
 
 	</head>
@@ -31,10 +32,19 @@ layout: default
 				</ul>
 			</div>
 		</div>
+		<script src="js/jquery.min.js"></script>
 		<script src="js/modernizr.custom.js"></script>
-		<script src="js/jqueryLibrary.min.js"></script>
 		
-		
+		<script src="js/lightbox.min.js"></script>
+		<script>
+			lightbox.option({
+				  'resizeDuration': 200,
+				  'wrapAround': true,
+
+				  'maxWidth': document.body.clientWidth*7/8,
+				  'maxHeight':document.body.clientHeight*7/8
+				})
+		</script>
 		<script type="text/javascript">	
 		
 		var data = [
@@ -52,7 +62,7 @@ layout: default
 			last = last >= data.length ? (data.length - 1) : last;
 			for (var i = (curr * nums - nums); i <= last; i++) {			
 				str = str.substr(0, str.length - 5); 
-				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i]+ '</time><a class=\"bigger\" href=\"images/' + data[i] + '.webp\"><img src=\"images/' + data[i] + '.webp\" alt=\"\"></a><ul></ul></div></li>';
+				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i]+ '</time><a  href=\"images/' + data[i] + '.webp\" data-lightbox=\"' +i + '\"><img src=\"images/' + data[i] + '.webp\" ></a><ul></ul></div></li>';
 				str += '</ul>'
 			}
 			return str;
@@ -69,21 +79,9 @@ layout: default
 				$('#btng').attr('disabled',"true");
 			}
 		};
-
 		
-		</script>
-		<script src="js/jquery.imgbox.pack.js"></script>
-		<script>(
-		function(){
-
-			$(".bigger").imgbox({
-				'speedIn'		: 0,
-				'speedOut'		: 0,
-				'alignment'		: 'center',
-				'overlayShow'	: true,
-				'allowMultiple'	: false
-			});
-		})(jQuery);
+		
+		
 		</script>
 	</body>
 </html>
