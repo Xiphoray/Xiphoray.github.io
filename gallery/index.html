@@ -32,7 +32,7 @@ layout: default
 			</div>
 		</div>
 		<script src="js/modernizr.custom.js"></script>
-		<script src="js/jquery.min.js"></script>
+		<script src="js/jqueryLibrary.min.js"></script>
 		<script src="js/jquery.imgbox.pack.js"></script>
 		
 		<script type="text/javascript">	
@@ -70,16 +70,16 @@ layout: default
 			}
 		};
 
-		$(document).ready(function() {
-			$(".bigger").imgbox({
-						'speedIn'		: 0,
-						'speedOut'		: 0,
-						'alignment'		: 'center',
-						'overlayShow'	: true,
-						'allowMultiple'	: false
+		(function(){
 
-				})
-			})(jQuery);
+			$(".bigger").imgbox({
+				'speedIn'		: 0,
+				'speedOut'		: 0,
+				'alignment'		: 'center',
+				'overlayShow'	: true,
+				'allowMultiple'	: false
+			});
+		})(jQuery);
 		</script>
 
 	</body>
