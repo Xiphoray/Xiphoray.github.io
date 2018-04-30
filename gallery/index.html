@@ -37,18 +37,19 @@ layout: default
 		</div>
 
 		<script>	
-		$.noConflict();
 		
-		(function($) {
-		$(".bigger").imgbox({
+
+	(function($) {
+		$(function() {
+			$(".bigger").imgbox({
 				'speedIn'		: 0,
 				'speedOut'		: 0,
 				'alignment'		: 'center',
 				'overlayShow'	: true,
-				'allowMultiple'	: true
+				'allowMultiple'	: false
 			});
-		})(jQuery);
-
+		});
+	})(jQuery);
 		
 		var data = [
 								"2018-2-2","2018-2-1","2018-1-31","2018-1-30","2018-1-29"
