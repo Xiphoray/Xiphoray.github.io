@@ -348,5 +348,12 @@
     };
     $(document).ready(function() {
         init()
+		$(".bigger").imgbox({
+				'speedIn'		: 0,
+				'speedOut'		: 0,
+				'alignment'		: 'center',
+				'overlayShow'	: true,
+				'allowMultiple'	: false
+			});
     })
 })(jQuery);
