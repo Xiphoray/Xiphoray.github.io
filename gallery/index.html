@@ -74,15 +74,17 @@ layout: default
 			}
 		}
 		
-		jQuery(function(){
-			jQuery(".bigger").imgbox({
+		jQuery(document).ready(function(){
+           jQuery(".bigger").imgbox({
 					'speedIn'		: 0,
 					'speedOut'		: 0,
 					'alignment'		: 'center',
 					'overlayShow'	: true,
 					'allowMultiple'	: false
 				});
-		});
+        });
+		
+
 		</script>
 	</body>
 </html>
