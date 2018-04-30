@@ -32,18 +32,13 @@ layout: default
 		</div>
 		<script src="js/jquery.js"></script>
 		<script>	
-		var data = [["images/2018-3-27.webp","2018-3-27"],
-							["images/2018-2-2.webp","2018-2-2"],["images/2018-2-1.webp","2018-2-1"],
-							["images/2018-1-31.webp","2018-1-31"],["images/2018-1-30.webp","2018-1-30"],
-							["images/2018-1-29.webp","2018-1-29"],["images/2018-1-28.webp","2018-1-28"],
-							["images/2018-1-27.webp","2018-1-27"],["images/2018-1-26.webp","2018-1-26"],
-							["images/2018-1-25.webp","2018-1-25"],["images/2018-1-24.webp","2018-1-24"],
-							["images/2018-1-23.webp","2018-1-23"],["images/2018-1-22.webp","2018-1-22"],
-							["images/2018-1-5.webp","2018.1.5"],["images/2018-1-4.webp","2018.1.4"],
-							["images/2018-1-3.webp","2018.1.3"],["images/2018-1-2.webp","2018.1.2"],
-							["images/2018-1-1.webp","2018.1.1"],["images/2017-12-31.webp","2017.12.31"],
-							["images/2017-12-30.webp","2017.12.30"],["images/2017-12-4.webp","2017.12.4"]
+		var data = [
+								"2018-2-2","2018-2-1","2018-1-31","2018-1-30","2018-1-29"
+							,"2018-1-28","2018-1-27","2018-1-26","2018-1-25","2018-1-24"
+							,"2018-1-23","2018-1-22","2018.1.5","2018.1.4","2018.1.3"
+							,"2018.1.2","2018.1.1","2017.12.31","2017.12.30","2017.12.4"
 							];	
+
 		var nums = 4;
 		var curr = 1;
 		var render = function(curr) {
@@ -52,7 +47,7 @@ layout: default
 			last = last >= data.length ? (data.length - 1) : last;
 			for (var i = (curr * nums - nums); i <= last; i++) {			
 				str = str.substr(0, str.length - 5); 
-				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i][1]+ '</time><img src=\"' + data[i][0] + '\"><ul></ul></div></li>';
+				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i]+ '</time><img src=\"images/' + data[i] + '.webp\"><ul></ul></div></li>';
 				str += '</ul>'
 			}
 			return str;
