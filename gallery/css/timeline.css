@@ -29,10 +29,8 @@ body, html {
 @font-face {
 	font-family: 'huxico';
 	src:url('../fonts/huxico.eot');
-	src:url('../fonts/huxico.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/huxico.woff') format('woff'),
-		url('../fonts/huxico.ttf') format('truetype'),
-		url('../fonts/huxico.svg#huxico') format('svg');
+	src:
+		url('../fonts/test.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 } /* Made with http://icomoon.io/ */
@@ -91,7 +89,9 @@ body, html {
 
 /* The date/time */
 .cbp_tmlabel time {
-	font-size: 1.0em;
+	font-family: 'huxico';
+	letter-spacing:4px;
+	font-size: 1.2em;
 	position: absolute;
 	top: 0px;
 	line-height: 64px;
