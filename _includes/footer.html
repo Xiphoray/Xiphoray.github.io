@@ -110,7 +110,18 @@
 </script>
 {% endif %}
 
-
+<script src='{{ site.baseurl }}/js/elevator.min.js'></script>
+<div class="elevator">
+		<img width="100%" src="{{ site.baseurl }}/img/elevator.png" style="position: fixed; margin-bottom:7px;margin-left:7px;">
+</div>
+<script>
+	var elementButton = document.querySelector('.elevator');
+	var elevator = new Elevator({
+		element: elementButton,
+		duration: 700,
+		endAudio:  '{{ site.baseurl }}/music/ding.mp3'
+	});
+</script>
 <!-- async load function -->
 <script>
     function async(u, c) {
