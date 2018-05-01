@@ -37,7 +37,7 @@
 </nav>
 
 <script src='{{ site.baseurl }}/js/elevator.min.js'></script>
-<div class="elevator">
+<div class="elevator" style="visibility:hidden;">
 		<img src="{{ site.baseurl }}/img/elevator.png" style="position: fixed;width: 50px;bottom: 30px;margin-left: 25px;box-shadow: 0px 3px 4px 2px #cacaca;">
 </div>
 <script>
@@ -52,17 +52,17 @@ if(document.body.clientWidth>'1024px'){
 		e = e || window.event;  
 		if (e.wheelDelta) {  //第一步：先判断浏览器IE，谷歌滑轮事件               
 			if (e.wheelDelta > 0) { //当滑轮向上滚动时  
-				elementButton.visibility = 'visible';
+				elementButton.style.visibility = 'visible';
 			}  
 			if (e.wheelDelta < 0) { //当滑轮向下滚动时  
-				elementButton.visibility = 'hidden';
+				elementButton.style.visibility = 'hidden';
 			}  
 		} else if (e.detail) {  //Firefox滑轮事件  
 			if (e.detail> 0) { //当滑轮向上滚动时  
-				elementButton.visibility = 'visible';
+				elementButton.style.visibility = 'visible';
 			}  
 			if (e.detail< 0) { //当滑轮向下滚动时  
-				elementButton.visibility = 'hidden';
+				elementButton.style.visibility = 'hidden';
 			}  
 		}  
 	}
