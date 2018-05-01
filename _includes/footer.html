@@ -112,6 +112,7 @@ if(document.body.clientWidth>1024 ){
 			var elementButton = document.querySelector('.elevator');
 			if(elementButton.style.display == "block"){
 			$("div.elevator").fadeOut(200);
+			}
 		}
        }
 	});
@@ -131,7 +132,7 @@ if(document.body.clientWidth>1024 ){
 			if (e.detail< 0) { //当滑轮向下滚动时  
 				$("div.elevator").fadeOut(200);
 			}  
-		} else if(elementButton.style.display == "block" && $(window).scrollTop()<500){
+		} else if(elementButton.style.display == "block" && $(window).scrollTop()=<500){
 			$("div.elevator").fadeOut(200);
 		}
 	}
