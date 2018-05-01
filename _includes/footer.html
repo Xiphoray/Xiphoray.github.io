@@ -107,7 +107,12 @@ if(document.body.clientWidth>1024 ){
 	var elevator = new Elevator({
 		element: elementButton,
 		duration: 700,
-		endAudio:  '{{ site.baseurl }}/music/ding.mp3'
+		endAudio:  '{{ site.baseurl }}/music/ding.mp3',
+		startCallback: function() {
+			if(elementButton.style.display == "block"){
+			$("div.elevator").fadeOut(200);
+		}
+       }
 	});
 	var scrollFunc = function (e) {  
 		e = e || window.event;  
