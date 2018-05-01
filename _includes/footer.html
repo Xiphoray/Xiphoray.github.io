@@ -109,6 +109,7 @@ if(document.body.clientWidth>1024 ){
 		duration: 700,
 		endAudio:  '{{ site.baseurl }}/music/ding.mp3',
 		startCallback: function() {
+			var elementButton = document.querySelector('.elevator');
 			if(elementButton.style.display == "block"){
 			$("div.elevator").fadeOut(200);
 		}
