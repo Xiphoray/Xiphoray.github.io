@@ -86,6 +86,7 @@ body, html {
 	margin: 0 0 30px 0;
 	font-weight: 400;
 	font-size: 95%;
+	box-shadow: 0px 3px 4px 2px #cacaca;
 }
 
 /* The date/time */
@@ -221,7 +222,7 @@ header img{
 
 .cbp_tmlabel img{
 	width: 100%;
-	margin-bottom: 1em;
+	margin-bottom: 0em;
 	border-top: 1px solid #eeefef;
 	border-bottom: 1px solid #eeefef;
 }
