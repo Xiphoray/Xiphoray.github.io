@@ -41,7 +41,9 @@
 		<img src="{{ site.baseurl }}/img/elevator.png" style="position: fixed;width: 50px;bottom: 30px;margin-left: 25px;box-shadow: 0px 3px 4px 2px #cacaca;">
 </div>
 <script>
+console.log("document.body.clientWidth");  
 if(document.body.clientWidth>'1024px'){
+	console.log("滑轮向下滚动");  
 	var elementButton = document.querySelector('.elevator');
 	var elevator = new Elevator({
 		element: elementButton,
