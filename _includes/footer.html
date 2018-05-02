@@ -119,20 +119,20 @@ if(document.body.clientWidth>1024 ){
 		var elementButton = document.querySelector('.elevator');
 		e = e || window.event;  
 		if (e.wheelDelta && $(window).scrollTop()>500) {  //第一步：先判断浏览器IE，谷歌滑轮事件               
-			if (elementButton.style.display == "none" && e.wheelDelta > 0) { //当滑轮向上滚动时  
+			if (e.wheelDelta > 0) { //当滑轮向上滚动时  
 				$("div.elevator").fadeIn(200);
 			}  
-			if (elementButton.style.display == "block" && e.wheelDelta < 0) { //当滑轮向下滚动时  
+			if (e.wheelDelta < 0) { //当滑轮向下滚动时  
 				$("div.elevator").fadeOut(200);
 			}  
 		} else if (e.detail && $(window).scrollTop()>500) {  //Firefox滑轮事件  
-			if (elementButton.style.display == "none" && e.detail> 0) { //当滑轮向上滚动时  
+			if (e.detail> 0) { //当滑轮向上滚动时  
 				$("div.elevator").fadeIn(200);
 			}  
-			if (elementButton.style.display == "block" && e.detail< 0) { //当滑轮向下滚动时  
+			if (e.detail< 0) { //当滑轮向下滚动时  
 				$("div.elevator").fadeOut(200);
 			}  
-		} else if(elementButton.style.display == "block" && $(window).scrollTop()<=500){
+		} else if($(window).scrollTop()<=500){
 			$("div.elevator").fadeOut(200);
 		}
 	}
