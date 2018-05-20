@@ -67,7 +67,7 @@ layout: default
 
 				<br/>
 
-				<div id="share-button-5" class="need-share-button-default need-share-button" data-share-position="middleRight" data-share-icon-style="box" data-share-networks="Wechat,QQZone,Weibo,Facebook,Douban">Share</div>
+				<div id="share-button-5" class="need-share-button-default need-share-button shownoshow" data-share-position="middleRight" data-share-icon-style="box" data-share-networks="Wechat,QQZone,Weibo,Facebook,Douban">Share</div>
 
 
 
@@ -251,5 +251,10 @@ s.setAttribute('data-timestamp', +new Date());
             margin-top : -0.1em;
         }
     }
+	.shownoshow:hover, .shownoshow:focus {
+    color: #fff;
+    background-color: #0085a1;
+    border: 1px solid #0085a1;
+	}
 </style>
 {% endif %}
