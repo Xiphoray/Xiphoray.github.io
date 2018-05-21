@@ -100,9 +100,13 @@ friends: [
          title: "万方",
          href: "http://altholin.com/blog/"
     },
+	{
+         title: "陶帅帅",
+         href: "https://rainmaple.github.io/"
+    },
     {
          title: "马哲",
          href: "http://blog.csdn.net/blueblueskyz"
     }
-        
+
 ]
