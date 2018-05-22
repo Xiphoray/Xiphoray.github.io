@@ -1,0 +1,69 @@
+---
+title: Bored
+layout: default
+---
+
+
+<script src="js/jquery.min.js"></script>
+<style>
+#wrap2{
+    display:block;
+    float:none;
+    width:100%:
+    posisiton:relative;
+}
+#cen2{
+    display:block;
+    width:50%;
+    height:auto;
+    margin:auto;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+#wrap1{
+    display:block;
+    float:none;
+    width:100%:
+    posisiton:relative;
+}
+#cen1{
+    display:block;
+    width:50%;
+    height:auto;
+    margin:auto;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+
+</style>
+<div id="wrap1">
+    <img id="cen1" src="./img/nothing1.png"></img>
+</div>
+<div id="wrap2">
+    <img id="cen2" src="./img/nothing2.png"></img>
+</div>
+<script>  
+$("#wrap2").hide();
+	console.log(document.getElementsByTagName('img'));  
+	document.getElementsByTagName('img')[0].onmousedown = function(e){  
+		$("#wrap1").hide();
+		$("#wrap2").show();
+		e.preventDefault();
+
+	};  
+	document.getElementsByTagName('img')[1].onmousedown = function(e){  
+		e.preventDefault();
+
+	};  
+		document.getElementsByTagName('img')[1].onmouseup = function(e){  
+		$("#wrap1").show();
+		$("#wrap2").hide();
+
+	};  
+</script>  
