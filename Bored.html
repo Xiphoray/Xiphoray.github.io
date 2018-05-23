@@ -78,4 +78,13 @@ $("#wrap2").hide();
 		$("#wrap2").hide();
 
 	};  
+	
+	document.getElementById('wrap1').addEventListener('touchstart', function(event) {
+		$("#wrap1").hide();
+		$("#wrap2").show();
+	}, false);
+	document.getElementById('wrap2').addEventListener('touchend', function(event) {
+		$("#wrap1").show();
+		$("#wrap2").hide();
+	}, false);
 </script>  
