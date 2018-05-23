@@ -1,4 +1,7 @@
-
+---
+title: Bored
+layout: default
+---
 <script src="js/jquery.min.js"></script>
 <style>
 #wrap2{
@@ -6,6 +9,7 @@
     float:none;
     width:100%:
     posisiton:relative;
+	z-index: 1999999;  
 }
 #cen2{
     display:block;
@@ -17,12 +21,14 @@
     right:0;
     top:0;
     bottom:0;
+	z-index: 1999999;  
 }
 #wrap1{
     display:block;
     float:none;
     width:100%:
     posisiton:relative;
+	z-index: 1999999;  
 }
 #cen1{
     display:block;
@@ -34,9 +40,20 @@
     right:0;
     top:0;
     bottom:0;
+	z-index: 1999999;  
 }
-
+#all{
+	height: 100%;  
+    width: 100%;  
+    position: absolute;  
+    top: 0px;  
+    bottom: 0px;  
+    background: #00FF00;  
+   z-index: 999999;  
+	overflow:hidden; word-break:break-all; 
+}
 </style>
+<div id="all"></div>
 <div id="wrap1">
     <img id="cen1" src="img/nothing1.png"></img>
 </div>
