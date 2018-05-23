@@ -63,13 +63,13 @@ layout: default
 <script>  
 $("#wrap2").hide();
 	console.log(document.getElementsByTagName('img'));  
-	document.getElementsByTagName('img')[0].onmousedown = function(e){  
+	document.getElementById('wrap1').onmousedown = function(e){  
 		$("#wrap1").hide();
 		$("#wrap2").show();
 		e.preventDefault();
 
 	};  
-	document.getElementsByTagName('img')[1].onmousedown = function(e){  
+	document.getElementById('wrap2').onmousedown = function(e){  
 		e.preventDefault();
 
 	};  
