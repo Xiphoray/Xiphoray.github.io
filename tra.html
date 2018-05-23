@@ -6,6 +6,9 @@ layout: default
 
 
 <script>  
-window.open("https://xiphoray.github.io/Bored/","_blank");    
+var a = $("<a href='https://xiphoray.github.io/Bored/' target='_blank' >test</a>").get(0);
+ var e = document.createEvent('MouseEvents');
+ e.initEvent('click', true, true);
+ a.dispatchEvent(e);
 history.go(-1); 
 </script>  
