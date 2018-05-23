@@ -93,7 +93,12 @@ $("#wrap2").hide();
 	document.getElementById('wrap1').addEventListener('touchstart', function(e) {
 		$("#wrap1").hide();
 		$("#wrap2").show();
-e.preventDefault();
+		e.preventDefault();
+	}, false);
+	document.getElementById('wrap1').addEventListener('touchend', function(e) {
+		$("#wrap1").hide();
+		$("#wrap2").show();
+		e.preventDefault();
 	}, false);
 	document.getElementById('wrap2').addEventListener('touchend', function(e) {
 		$("#wrap1").show();
