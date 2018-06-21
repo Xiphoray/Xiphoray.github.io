@@ -2,7 +2,28 @@
 title: Bored
 layout: default
 ---
+<style>
+#all{
+	height: 100%;  
+    width: 100%;  
+    position: absolute;  
+    top: 0px;  
+    bottom: 0px;  
+    background: #ffffff;  
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+   z-index: 999999;  
+	overflow:hidden; word-break:break-all; 
+}
+#mainContent{
+   z-index: 1999999;  
+}
+</style>
 <script src="{{ site.baseurl }}/js/jquery.min.js"></script>
+<div id="all"></div>
 <div id="mainContent"></div>
 <script type="text/javascript">
     $(document).ready(function() {
