@@ -2,18 +2,18 @@
     <style>
 		#mainback {
 			background: #111;
-			height: 100%;  
-			width: 100%;  
+			height: -webkit-fill-available;  
+			width: -webkit-fill-available;  
 			position: absolute;  
-			top: 0px;  
-			bottom: 0px;  
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
+
 		   z-index: 199900;  
-			overflow:hidden; word-break:break-all; 
+			
+		}
+		#timer {
+			background: #111;
+			width: 100%;  
+
+			
 		}
 		canvas {
 			background: #111;
@@ -53,10 +53,6 @@
 			position: absolute;
 			top: 47%;
 			z-index: 1999999;  
-		}
-		*{
-			margin: 0;
-			padding:0;
 		}
 		#panel{
 			list-style: none;
