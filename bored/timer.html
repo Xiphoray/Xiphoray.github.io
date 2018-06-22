@@ -1,5 +1,9 @@
 
     <style>
+		#mainback {
+			background: #111;
+			z-index: 1999999;  
+		}
 		canvas {
 			background: #111;
 
@@ -42,9 +46,8 @@
 		*{
 			margin: 0;
 			padding:0;
-			z-index: 1999999;  
 		}
-		ul{
+		#panel{
 			list-style: none;
 			position: relative;
 			background: #111;
@@ -56,7 +59,7 @@
 			top: 30%;
 			z-index: 1999999;  
 		}
-		ul li{
+		#panel li{
 			position: absolute;
 			top:0;
 			overflow: hidden;
@@ -64,16 +67,16 @@
 			height: 92px;
 			z-index: 1999999;  
 		}
-		ul li img{
+		#panel li img{
 			display: block;
 			position: absolute;
 			z-index: 1999999;  
 		}
-		ul li .pic01{
+		#panel li .pic01{
 			top:0;
 			z-index: 1999999;  
 		}
-		ul li .pic02{
+		#panel li .pic02{
 			top:92px;
 			z-index: 1999999;  
 		}
@@ -81,6 +84,7 @@
 	<script src="../js/prefixfree.min.js"></script>
 	<script type="text/javascript" src="../js/miaov.js"></script>
 	<script src="../js/timer.js"></script>
+	<div id="mainback">
 	<div id="date"></div>
 	<div id="precentage"></div>
 	<div id="timer">
@@ -112,6 +116,7 @@
  			<img src="" class="pic01"> <img src="" class="pic02">
  		</li>
  	</ul>
+	</div>
 	</div>
 	<script type="text/javascript">
 	 	window.onload=function(){
