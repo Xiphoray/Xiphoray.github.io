@@ -27,6 +27,16 @@ layout: default
 <div id="mainContent"></div>
 <script type="text/javascript">
     $(document).ready(function() {
-            $("#mainContent").load("{{ site.baseurl }}/bored/nothing.html");
+			var list = Math.floor(Math.random() * 2 ); 
+			switch (list)
+			{
+				case 1:
+					$("#mainContent").load("{{ site.baseurl }}/bored/nothing.html");
+					break;
+				case 2:
+					$("#mainContent").load("{{ site.baseurl }}/bored/timer.html");
+					break;
+			}
+			
     });
 </script>

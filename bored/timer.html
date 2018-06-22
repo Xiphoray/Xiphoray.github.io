@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Light Loader - CodePen</title>
+    <style>
+		body {
+			background: #111;
+		}
+		canvas {
+			background: #111;
+
+			display: block;
+			left: 50%;
+			width: 400px;
+			margin: -51px 0 0 -201px;
+			position: absolute;
+			top: 70%;
+		}
+		#date {
+			background: #111;
+			color:#fff;
+			display: block;
+			font-size:39px;
+			text-align:center;
+			right: 0px;
+			left: 0px;
+			margin-left: 0px;
+			margin-right: 0px;
+			position: absolute;
+			top: 10%;
+		}
+		#precentage {
+			background: #111;
+			color:#fff;
+			display: block;
+			font-size:39px;
+			text-align:center;
+			right: 0px;
+			left: 0px;
+			margin-left: 0px;
+			margin-right: 0px;
+			position: absolute;
+			top: 47%;
+		}
+		*{
+			margin: 0;
+			padding:0;
+		}
+		ul{
+			list-style: none;
+			position: relative;
+			background: #111;
+			border: 1px solid #171717;
+			display: block;
+			left: 48%;
+			margin: -51px 0 0 -201px;
+			position: absolute;
+			top: 30%;
+		}
+		ul li{
+			position: absolute;
+			top:0;
+			overflow: hidden;
+			width: 56px;
+			height: 92px;
+		}
+		ul li img{
+			display: block;
+			position: absolute;
+		}
+		ul li .pic01{
+			top:0;
+		}
+		ul li .pic02{
+			top:92px;
+		}
+	</style>
+	<script src="js/prefixfree.min.js"></script>
+	<script type="text/javascript" src="js/miaov.js"></script>
+</head>
+<body>
+	<script src="js/index.js"></script>
+	<div id="date"></div>
+	<div id="precentage"></div>
+	<div id="timer">
+	<ul id="panel">
+ 		<li>
+ 			<img src="" class="pic01"> <img src="" class="pic02">
+ 		</li>
+ 		<li>
+ 			<img src="" class="pic01"> <img src="" class="pic02">
+ 		</li>
+ 		<li>
+ 			<img src="">
+ 		 
+ 		</li>
+ 		<li>
+ 			<img src="" class="pic01"> <img src="" class="pic02">
+ 		</li>
+ 		<li>
+ 			<img src="" class="pic01"> <img src="" class="pic02">
+ 		</li>
+ 		<li>
+ 			<img src="">
+ 		 
+ 		</li>
+ 		<li>
+ 			<img src="" class="pic01"> <img src="" class="pic02">
+ 		</li>
+ 		<li>
+ 			<img src="" class="pic01"> <img src="" class="pic02">
+ 		</li>
+ 	</ul>
+	</div>
+	<script type="text/javascript">
+	 	window.onload=function(){
+	 		var arr=['images/0.png','images/1.png','images/2.png','images/3.png','images/4.png','images/5.png','images/6.png','images/7.png','images/8.png','images/9.png','images/mao.png',]
+	 		var panel=document.getElementById("panel");
+	 		var aLi=panel.getElementsByTagName("li");
+	 		var nTime=null;
+	 		var str=null;
+	 		var nstr;
+	 		for(var i=0;i<aLi.length;i++){
+	 			aLi[i].style.left=56*i+'px';
+	 		}
+
+		 	function showTime1(){
+		 		var iNow=new Date();
+		 		var nHours=iNow.getHours();
+		 		var nMinutes=iNow.getMinutes();
+		 		var nSecondes=iNow.getSeconds();
+		 		str=toTwo(nHours)+':'+toTwo(nMinutes)+':'+toTwo(nSecondes);
+		 	}
+
+		 	function showTime2(){
+		 		var iNow=new Date();
+		 		nTime=iNow.getTime()+1000;
+		 		iNew=new Date(nTime);
+		 		var tHours=iNew.getHours();
+		 		var tMinutes=iNew.getMinutes();
+		 		var tSecondes=iNew.getSeconds();
+		 		nstr=toTwo(tHours)+':'+toTwo(tMinutes)+':'+toTwo(tSecondes);
+		 	}
+
+		 	showTime1();
+		 	showTime2();
+ 			setInterval(function(){
+ 				showTime1();
+ 				showTime2();
+ 			},1000);
+ 		 	
+ 		 	function initial(aLi){
+ 		 		for(var i=0;i<aLi.length;i++){
+	 			if(i!=2&&i!=5){
+	 				aLi[i].getElementsByTagName("img")[0].src=arr[str.charAt(i)];
+	 				aLi[i].getElementsByTagName("img")[1].src=arr[nstr.charAt(i)];
+	 			}else{
+	 				aLi[i].getElementsByTagName("img")[0].src=arr[10];
+	 			}
+		 		}
+ 		 	}
+ 		 	initial(aLi);
+ 			
+		 	timeRoll(aLi,0);
+		 	timeRoll(aLi,1);
+		 	timeRoll(aLi,3);
+		 	timeRoll(aLi,4);
+		 	timeRoll(aLi,6);
+		 	timeRoll(aLi,7);
+		 
+		 	function timeRoll(obj,i){
+		 		setInterval(function(){
+		 			var pNumber=str.charAt(i);
+		 			var tNumber=nstr.charAt(i);
+		 			var pImg=obj[i].getElementsByTagName("img")[0];
+		 				var nImg=obj[i].getElementsByTagName("img")[1];
+		 			if(pNumber!==tNumber&&parseInt(getStyle(nImg,'top'))==92){
+		 				
+		 				nImg.src=arr[nstr.charAt(i)];
+		 				doMove(nImg,'top',5,0,function(){
+		 					 
+		 				});
+		 				doMove(pImg,'top',5,-92,function(){
+		 						pImg.style.top='92px';
+		 						pImg.src=arr[str.charAt(i)];
+
+		 				});
+		 				
+		 			}else if(pNumber!==tNumber&&parseInt(getStyle(pImg,'top'))==92){
+
+		 				pImg.src=arr[nstr.charAt(i)];
+		 				doMove(pImg,'top',5,0,function(){
+		 					 
+		 				});
+		 				doMove(nImg,'top',5,-92,function(){
+		 						nImg.style.top='92px';
+		 						nImg.src=arr[str.charAt(i)];
+
+		 				});
+		 			}
+		 		},1000)
+		 	};
+	 	}
+		
+		
+		var  nowDate = new Date();
+		
+		document.getElementById("date").innerHTML = nowDate.getFullYear()+"  .  "+nowDate.getMonth()+
+		"  .  "+nowDate.getDate(); 
+
+		var fullDate=new Date();
+		fullDate.setFullYear(nowDate.getFullYear(),11,31);
+		var zDate=new Date();
+		zDate.setFullYear(nowDate.getFullYear(),0,1);
+		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
+		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:60px;font-weight:bold\"> "+ a.toFixed(2)+"%  </font> left this year";
+	</script>
+</body>
+</html>
