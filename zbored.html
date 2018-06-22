@@ -15,7 +15,7 @@ layout: default
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-   z-index: 999999;  
+   z-index: 99999;  
 	overflow:hidden; word-break:break-all; 
 }
 #mainContent{
@@ -29,12 +29,12 @@ layout: default
     $(document).ready(function() {
 			var list = Math.floor(Math.random() * 2 ); 
 			console.log(list);
-			switch (2)
+			switch (list)
 			{
-				case 1:
+				case 0:
 					$("#mainContent").load("{{ site.baseurl }}/bored/nothing.html");
 					break;
-				case 2:
+				case 1:
 					$("#mainContent").load("{{ site.baseurl }}/bored/timer.html");
 					break;
 			}
