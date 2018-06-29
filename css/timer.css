@@ -1,20 +1,16 @@
 
 
 .clock {
-  height:200px;
-
+  height:calc(100%);
+  width:calc(100%);
   position:absolute;
-
-  left:50%;
-  margin-left:-450px;
-
   text-align:center;
   z-index: 1999999;  
 }
 
 .digit {
-  width:60px;
-  height:100px;
+  width:calc(7%);
+  padding-bottom:12%;
   margin:0 5px;
   position:relative;
   display:inline-block;
@@ -53,6 +49,7 @@
   display:inline-block;
   position:relative;
   z-index: 1999999;  
+  margin-bottom:1%;
 }
 
 .digit .segment:nth-child(1) {
