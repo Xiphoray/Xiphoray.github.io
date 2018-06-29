@@ -1,5 +1,51 @@
 
     <style>
+			.demo{
+			padding: 2em 0;
+			background: #fff;
+		}
+		.progress-title{
+		    font-size: 18px;
+		    font-weight: 700;
+		    color: #1c2647;
+		    margin: 0 0 10px;
+		}
+		.progress{
+		    height: 30px;
+		    background: #fff;
+		    border-top: 5px solid #1c2647;
+		    border-bottom: 5px solid #1c2647;
+		    border-radius: 0;
+		    margin-bottom: 25px;
+		    overflow: visible;
+		    position: relative;
+		}
+		.progress:before,
+		.progress:after{
+		    content: "";
+		    width: 5px;
+		    background: #1c2647;
+		    position: absolute;
+		    top: 0;
+		    left: -5px;
+		    bottom: 0;
+		}
+		.progress:after{
+		    left: auto;
+		    right: -5px;
+		}
+		.progress .progress-bar{
+		    border: none;
+		    box-shadow: none;
+		    -webkit-animation: 2s linear 0s normal none infinite running progress-bar-stripes,animate-positive 1s;
+		    animation: 2s linear 0s normal none infinite running progress-bar-stripes,animate-positive 1s;
+		}
+		@-webkit-keyframes animate-positive{
+		    0%{ width: 0; }
+		}
+		@keyframes animate-positive{
+		    0%{ width: 0; }
+		}
 		#mainback {
 			background: #111;
 			height: -webkit-fill-available;  
@@ -21,7 +67,7 @@
 			margin-left: 0px;
 			margin-right: 0px;
 			position: absolute;
-			top: 35%;
+			top: 25%;
 			z-index: 1999999;  
 		}
 		#date {
@@ -53,10 +99,15 @@
 			z-index: 1999999;  
 		}
 	</style>
+	<link rel="stylesheet" type="text/css" href="../css/htmleaf.css">
 	<link rel="stylesheet" type="text/css" href="../css/timer.css">
 	<div id="mainback">
 	<div id="date"></div>
-	<div id="precentage"></div>
+	<div id="precentage">
+		<div class="progress">
+			<div class="progress-bar progress-bar-danger progress-bar-striped active" id="precentager"style="width:0%;"></div>
+		 </div>
+	 </div>
 	<div id="timer">
 	<div class="clock">
 	  <div class="digit hours">
@@ -132,7 +183,7 @@
 		zDate.setFullYear(nowDate.getFullYear(),0,1);
 		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
 		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:60px;font-weight:bold\"> "+ a.toFixed(2)+"%  </font> left this year";
-		
+		document.getElementById("precentager").style.width=a.toFixed(2)+"%";
 	var digitSegments = [
 		[1,2,3,4,5,6],
 		[2,3],
