@@ -7,14 +7,14 @@
 		.progress-title{
 		    font-size: 18px;
 		    font-weight: 700;
-		    color: #1c2647;
+		    color: #9d9d9d;
 		    margin: 0 0 10px;
 		}
 		.progress{
 		    height: 30px;
 		    background: #fff;
-		    border-top: 5px solid #1c2647;
-		    border-bottom: 5px solid #1c2647;
+		    border-top: 5px solid #9d9d9d;
+		    border-bottom: 5px solid #9d9d9d;
 		    border-radius: 0;
 		    margin-bottom: 25px;
 		    overflow: visible;
@@ -24,7 +24,7 @@
 		.progress:after{
 		    content: "";
 		    width: 5px;
-		    background: #1c2647;
+		    background: #9d9d9d;
 		    position: absolute;
 		    top: 0;
 		    left: -5px;
@@ -200,11 +200,12 @@
 		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
 		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:60px;font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
 		document.getElementById("precentager").style.width=a.toFixed(2)+"%";
-		if(window.innerWidth < 600)
+		if(body.clientWidth < 700)
 		{
 			document.getElementById("precentage").style.font-size="16px";
 			document.getElementById("bigone").style.font-size="30px";
 		}
+		
 	var digitSegments = [
 		[1,2,3,4,5,6],
 		[2,3],
