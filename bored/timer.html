@@ -200,7 +200,7 @@
 		var zDate=new Date();
 		zDate.setFullYear(nowDate.getFullYear(),0,1);
 		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
-		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
+		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:45px;font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
 		document.getElementById("precentager").style.width=a.toFixed(2)+"%";
 		
 		
@@ -279,5 +279,6 @@
 			#precentage {
 				font-size: 39px; 
 			}
+
 		}
 </style>

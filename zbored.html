@@ -29,13 +29,16 @@ layout: default
     $(document).ready(function() {
 			var list = Math.floor(Math.random() * 2 ); 
 			console.log(list);
-			switch (1)
+			switch (2)
 			{
 				case 0:
 					$("#mainContent").load("{{ site.baseurl }}/bored/nothing.html");
 					break;
 				case 1:
 					$("#mainContent").load("{{ site.baseurl }}/bored/timer.html");
+					break;
+				case 2:
+					$("#mainContent").load("{{ site.baseurl }}/bored/peace.html");
 					break;
 			}
 			
