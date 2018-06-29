@@ -76,7 +76,7 @@ var digitSegments = [
     [1,2,7,3,6]
 ]
 
-document.addEventListener('onload', function() {
+window.onload=function(){
   var _hours = document.querySelectorAll('.hours');
   var _minutes = document.querySelectorAll('.minutes');
   var _seconds = document.querySelectorAll('.seconds');
@@ -94,7 +94,7 @@ document.addEventListener('onload', function() {
     setNumber(_seconds[0], Math.floor(seconds/10), 1);
     setNumber(_seconds[1], seconds%10, 1);
   }, 1000);
-});
+};
 
 var setNumber = function(digit, number, on) {
   var segments = digit.querySelectorAll('.segment');
