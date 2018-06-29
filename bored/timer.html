@@ -200,11 +200,7 @@
 		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
 		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:60px;font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
 		document.getElementById("precentager").style.width=a.toFixed(2)+"%";
-		if(body.clientWidth < 700)
-		{
-			document.getElementById("precentage").style.font-size="16px";
-			document.getElementById("bigone").style.font-size="30px";
-		}
+		
 		
 	var digitSegments = [
 		[1,2,3,4,5,6],
@@ -220,7 +216,11 @@
 	]
 
 	window.onload=function(){
-	
+	if(body.clientWidth < 700)
+		{
+			document.getElementById("precentage").style.font-size="16px";
+			document.getElementById("bigone").style.font-size="30px";
+		}
 	
 	  var _hours = document.querySelectorAll('.hours');
 	  var _minutes = document.querySelectorAll('.minutes');
