@@ -1,12 +1,4 @@
-html, body {
-  margin:0;
-  padding:0;
-  background:#000;
-  width:100%;
-  height:100%;
-  position:absolute;
-  min-width:900px;
-}
+
 
 .clock {
   height:200px;
@@ -17,6 +9,7 @@ html, body {
   margin-left:-450px;
   margin-top:-100px;
   text-align:center;
+  z-index: 1999999;  
 }
 
 .digit {
@@ -25,6 +18,7 @@ html, body {
   margin:0 5px;
   position:relative;
   display:inline-block;
+  z-index: 1999999;  
 }
 
 .digit .segment {
@@ -37,6 +31,7 @@ html, body {
   -ms-transition:opacity 0.2s;
   -moz-transition:opacity 0.2s;
   -o-transition:opacity 0.2s;
+  z-index: 1999999;  
 }
 
 .digit .segment.on, .separator {
@@ -47,6 +42,7 @@ html, body {
   -ms-transition:opacity 0s;
   -moz-transition:opacity 0s;
   -o-transition:opacity 0s;
+  z-index: 1999999;  
 }
 
 .separator {
@@ -57,6 +53,7 @@ html, body {
   display:inline-block;
   position:relative;
   top:-90px;
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(1) {
@@ -64,6 +61,7 @@ html, body {
   left:20px;
   right:20px;
   height:10px;
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(2) {
@@ -72,6 +70,7 @@ html, body {
   width:10px;
   height:75px;
   height:calc(50% - 25px);
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(3) {
@@ -80,6 +79,7 @@ html, body {
   width:10px;
   height:75px;
   height:calc(50% - 25px);
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(4) {
@@ -87,6 +87,7 @@ html, body {
   right:20px;
   height:10px;
   left:20px;
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(5) {
@@ -95,6 +96,7 @@ html, body {
   width:10px;
   height:75px;
   height:calc(50% - 25px);
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(6) {
@@ -103,6 +105,7 @@ html, body {
   width:10px;
   height:75px;
   height:calc(50% - 25px);
+  z-index: 1999999;  
 }
 
 .digit .segment:nth-child(7) {
@@ -111,4 +114,5 @@ html, body {
   right:20px;
   left:20px;
   height:10px;
+  z-index: 1999999;  
 }
