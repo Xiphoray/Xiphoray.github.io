@@ -113,20 +113,7 @@
 			z-index: 1999999;  
 		}
 
-		@media only screen and (min-width: 641px){
-			#timer {
-				font-size: 39px; 
-			}
-			#date {
-				font-size: 39px; 
-			}
-			#precentage {
-				font-size: 39px; 
-			}
-			#bigone {
-				font-size: 60px; 
-			}
-		}
+		
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/htmleaf.css">
 	<link rel="stylesheet" type="text/css" href="../css/timer.css">
@@ -213,7 +200,7 @@
 		var zDate=new Date();
 		zDate.setFullYear(nowDate.getFullYear(),0,1);
 		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
-		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:30px;font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
+		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
 		document.getElementById("precentager").style.width=a.toFixed(2)+"%";
 		
 		
@@ -281,3 +268,16 @@
 	
 	
 	</script>
+<style>
+	@media only screen and (min-width: 641px){
+			#timer {
+				font-size: 39px; 
+			}
+			#date {
+				font-size: 39px; 
+			}
+			#precentage {
+				font-size: 39px; 
+			}
+		}
+</style>
