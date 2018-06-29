@@ -28,8 +28,8 @@ layout: default
 <script type="text/javascript">
     $(document).ready(function() {
 			var list = Math.floor(Math.random() * 2 ); 
-			console.log(list);
-			switch (2)
+
+			switch (list)
 			{
 				case 0:
 					$("#mainContent").load("{{ site.baseurl }}/bored/nothing.html");
@@ -37,9 +37,7 @@ layout: default
 				case 1:
 					$("#mainContent").load("{{ site.baseurl }}/bored/timer.html");
 					break;
-				case 2:
-					$("#mainContent").load("{{ site.baseurl }}/bored/peace.html");
-					break;
+
 			}
 			
     });
