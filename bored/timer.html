@@ -195,10 +195,8 @@
 		document.getElementById("date").innerHTML = nowDate.getFullYear()+"  .  "+(nowDate.getMonth()+1)+
 		"  .  "+nowDate.getDate(); 
 
-		var fullDate=new Date();
-		fullDate.setFullYear(nowDate.getFullYear(),11,31);
-		var zDate=new Date();
-		zDate.setFullYear(nowDate.getFullYear(),0,1);
+		var fullDate=new  Date(nowDate.getFullYear()+1, 0, 1, 0, 0, 0, 0);
+		var zDate=new Date(nowDate.getFullYear(), 0, 1, 0, 0, 0, 0);
 		var a=(1- (nowDate-zDate)/(fullDate-zDate))*100;
 		document.getElementById("precentage").innerHTML = "You only have   <font color=\"red\" style=\"font-size:45px;font-weight:bold\" id=\"bigone\"> "+ a.toFixed(2)+"%  </font> left this year";
 		document.getElementById("precentager").style.width=a.toFixed(2)+"%";
