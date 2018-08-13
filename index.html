@@ -19,7 +19,7 @@ description: "我想去哪？我要去哪？"
         </div>
     </a>
     <p class="post-meta">
-        Posted with <span class="glyphicon glyphicon-heart " style="color: rgb(255, 0, 0);"></span> by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
+        Posted with <span class="glyphicon glyphicon-heart " style="color: rgb(255, 0, 0);"></span> by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date_to_string: "ordinal", "US" }}
     </p>
 </div>
 <hr>
