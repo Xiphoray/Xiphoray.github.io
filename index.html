@@ -41,17 +41,30 @@ description: "我想去哪？我要去哪？"
 </ul>
 {% endif %}
 <div id="area-render"></div>
-  <style>
-    #area-render {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      right: 4px;
-      bottom: 4px;
-      border: dashed 1px #ccc;
-	  z-index:-5
-    }
-  </style>
+<style>
+@media only screen and (max-width: 599px){
+		#area-render {
+			position: fixed;
+			width: 0;
+			height: 0;
+			right: 4px;
+			bottom: 4px;
+			border: dashed 1px #ccc;
+			z-index:-5
+		}
+	}
+@media only screen and (min-width: 599px){
+		#area-render {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			right: 4px;
+			bottom: 4px;
+			border: dashed 1px #ccc;
+			z-index:-5
+		}
+	}
+</style>
 <script type="text/javascript" src="js/canvas-nest.umd.js"></script>
 <script type="text/javascript">
   var cn = new CanvasNest(document.getElementById('area-render'), {
