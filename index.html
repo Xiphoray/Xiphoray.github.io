@@ -40,7 +40,7 @@ description: "我想去哪？我要去哪？"
     {% endif %}
 </ul>
 {% endif %}
-
+<div id="area-render"></div>
   <style>
     #area-render {
       position: fixed;
@@ -51,13 +51,12 @@ description: "我想去哪？我要去哪？"
       border: dashed 1px #ccc;
     }
   </style>
-<script type="text/javascript" color="255,0,0" opacity='0.7' zIndex="-2" count="100" src="js/canvas-nest.js"></script>
 <script type="text/javascript" src="js/canvas-nest.umd.js"></script>
 <script type="text/javascript">
   var cn = new CanvasNest(document.getElementById('area-render'), {
     color: '255,0,255',
-    opacity=0.9,
-    zIndex=-6,
-    count=200,
+    opacity:0.5,
+    zIndex:-2,
+    count:200,
   });
   </script>
