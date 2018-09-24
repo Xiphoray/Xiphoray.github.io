@@ -103,6 +103,9 @@
 <!-- Custom Theme JavaScript -->
 <script src="{{ "/js/hux-blog.min.js " | prepend: site.baseurl }}"></script>
 
+<!-- awesome-cursor JavaScript -->
+<script src="{{ "/js/jquery.awesome-cursor.min.js" | prepend: site.baseurl }}"></script>
+
 <script src='{{ site.baseurl }}/js/elevator.min.js'></script>
 <div class="elevator" style="display:none;">
 		<img src="{{ site.baseurl }}/img/elevator.png" style="position: fixed;width: 50px;bottom: 30px;margin-left: 30px;">
@@ -303,3 +306,10 @@ if(document.body.clientWidth>1024 ){
 </script>
 {% endif %}
 
+<script>
+    $('body').awesomeCursor('mouse-pointer', {
+	  color: '#ebebeb',
+	  size:23,
+	  outline: 'black'
+	});
+</script>
