@@ -80,7 +80,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"PingFa
         content: '';
         width: 100%;
         height: 1rem;
-        background-color: rgb(255, 0, 0);
+        background-color: rgba(245, 245, 245, 1);
         margin-bottom: 1rem;
         bottom: -5%;
         border-radius: 90% 90% 0% 0%;
