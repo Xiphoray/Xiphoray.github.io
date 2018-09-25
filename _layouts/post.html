@@ -69,7 +69,13 @@ layout: default
 
 				<div id="share-button-5" class="need-share-button-default need-share-button shownoshow" data-share-position="middleRight" data-share-icon-style="box" data-share-networks="Wechat,QQZone,Weibo,Facebook,Douban">Share</div>
 
-
+				<script>
+					$('#share-button-5').awesomeCursor('hand-point-up', {
+					  color: '#ebebeb',
+					  size:23,
+					  outline: 'black'
+					});
+				</script>
 
                 <ul class="pager">
                     {% if page.previous.url %}
