@@ -104,7 +104,15 @@
 <script src="{{ "/js/hux-blog.min.js " | prepend: site.baseurl }}"></script>
 
 <!-- awesome-cursor JavaScript -->
-<script src="{{ "/js/jquery.awesome-cursor.min.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/jquery.awesome-cursor.min.js " | prepend: site.baseurl }}"></script>
+
+<!-- audio JavaScript -->
+<script src="{{ "/js/audio.min.js " | prepend: site.baseurl }}"></script>
+<script>
+	audiojs.events.ready(function() {
+    var as = audiojs.createAll();
+  });
+</script>
 
 <script src='{{ site.baseurl }}/js/elevator.min.js'></script>
 <div class="elevator" style="display:none;">
