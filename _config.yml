@@ -90,13 +90,13 @@ service-worker: true
 friends: [
     {
          title: "重围",
-         href: "http://leanote.meetwhy.com/blog/ericwyn"
+         href: "https://blog.meetwhy.com"
     },
     {
          title: "益达",
          href: "https://zilchfp.github.io/"
     },
-	{
+    {
          title: "陶帅帅",
          href: "https://rainmaple.github.io/"
     },
