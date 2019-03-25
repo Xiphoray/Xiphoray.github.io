@@ -308,21 +308,22 @@ if(document.body.clientWidth>1024 ){
 <!-- awesome-cursor JavaScript -->
 <script src="{{ "/js/jquery.awesome-cursor.min.js " | prepend: site.baseurl }}"></script>
 <script>
-    $('body').awesomeCursor('fas fa-mouse-pointer', {
+$(document).ready(function(){
+    $('body').awesomeCursor('fa-mouse-pointer', {
 	  color: '#ebebeb',
 	  size:23,
 	  outline: 'black'
 	});
-	$('a').awesomeCursor('fas fa-mouse-pointer', {
+	$('a').awesomeCursor('fa-mouse-pointer', {
 	  color: '#ebebeb',
 	  size:23,
 	  outline: 'black'
 	});
-	$('img').awesomeCursor('fas fa-mouse-pointer', {
+	$('img').awesomeCursor('fa-mouse-pointer', {
 	  color: '#ebebeb',
 	  size:23,
 	  outline: 'black'
 	});
-
+});
     
 </script>
