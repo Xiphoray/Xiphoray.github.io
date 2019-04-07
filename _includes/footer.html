@@ -308,8 +308,8 @@ if(document.body.clientWidth>1024 ){
 <!-- awesome-cursor JavaScript -->
 <script src="{{ "/js/jquery.awesome-cursor.min.js " | prepend: site.baseurl }}"></script>
 <script>
-$(document).load(function(){
-
+$(document).ready(function(){
+setTimeout( function(){
  $('body').awesomeCursor('mouse-pointer', {
 	  color: '#ebebeb',
 	  size:23,
@@ -325,7 +325,7 @@ $(document).load(function(){
 	  size:23,
 	  outline: 'black'
 	});
-
+}, 100 );
    
 });
     
