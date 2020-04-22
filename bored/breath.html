@@ -1,0 +1,130 @@
+<script src="../js/jquery.min.js"></script>
+<style>
+body{
+	background-color: #181d1f;
+}
+#wrap1{
+    display:block;
+    float:none;
+    width:100%;
+    z-index: 1;
+}
+#cen1{
+    z-index: 1;
+    display:block;
+    width:0px;
+    height:0px;
+    margin:auto;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    transition-property:width,height;
+    -moz-transition-property:width,height;
+    -webkit-transition-property:width,height;
+    -o-transition-property:width,height;
+    transition-duration:5s;
+    -moz-transition-duration:5s;
+    -webkit-transition-duration:5s;
+    -o-transition-duration:5s;
+	border-radius: 50%;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+    box-shadow: inset 50% 50% 20% 10% black;
+}
+
+#stat{
+    position: absolute;
+    right: 5%;
+    top: 5%;
+    z-index: 4;
+    background-color: #1a171766;
+    color: #ffffffde;
+    height: 40px;
+    width: 100px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 5px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 2rem;
+
+}
+
+#mask{
+    position: absolute;
+    right: 10%;
+    top: 10%;
+    z-index: 4;
+    background-color: #ffffff00;
+    height: 55px;
+    width: 260px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 5px;
+
+}
+</style>
+
+<div id="stat" ></div>
+<div id="mask"></div>
+
+
+<div id="wrap1">
+    <div id="cen1"  oncontextmenu="return false;"></div>
+</div>
+<script>  
+inhale = "4000"
+hold = "7000";
+exhale = "8000";
+winHeight = document.documentElement.clientHeight;
+winWidth = document.documentElement.clientWidth;
+if(winWidth < winHeight){
+    rr = winWidth-100;
+}
+else{
+    rr = winHeight-100;
+}
+flag = 0;
+setInterval(breathing, 1000);
+function breathing(){
+    if(flag == 0){
+        document.getElementById("cen1").style.transitionDuration = inhale;
+        document.getElementById("cen1").style.webkitTransitionDuration = inhale;
+        document.getElementById("cen1").style.mozTransitionDuration = inhale;
+        document.getElementById("cen1").style.oTransitionDuration = inhale;
+        document.getElementById("stat").innerHTML = "Inhale";
+        document.getElementById("stat").style.color = "#34f5ff";
+        document.getElementById("cen1").style.backgroundImage = "radial-gradient(#34f5ff,#000)";
+        document.getElementById("cen1").style.width = rr;
+        document.getElementById("cen1").style.height = rr;
+    }
+    if(flag == 5){
+        document.getElementById("cen1").style.backgroundImage = "radial-gradient(#f18e48,#000)";
+        document.getElementById("stat").innerHTML = "Hold";
+        document.getElementById("stat").style.color = "#f18e48";
+    }
+    if(flag == 11){
+        document.getElementById("cen1").style.transitionDuration = exhale;
+        document.getElementById("cen1").style.webkitTransitionDuration = exhale;
+        document.getElementById("cen1").style.mozTransitionDuration = exhale;
+        document.getElementById("cen1").style.oTransitionDuration = exhale;
+        document.getElementById("stat").innerHTML = "Exhale";
+        document.getElementById("stat").style.color = "#89d364";
+        document.getElementById("cen1").style.backgroundImage = "radial-gradient(#89d364,#000)";
+        document.getElementById("cen1").style.width = 0;
+        document.getElementById("cen1").style.height = 0;
+    }
+    flag++;
+    if(flag == 16){
+        flag = 0;
+    }
+}
+
+</script>  

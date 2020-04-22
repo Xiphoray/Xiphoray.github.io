@@ -27,7 +27,7 @@ layout: default
 <div id="mainContent"></div>
 <script type="text/javascript">
     $(document).ready(function() {
-			var list = Math.floor(Math.random() * 3 ); 
+			var list = Math.floor(Math.random() * 4 ); 
 
 			switch (list)
 			{
@@ -39,6 +39,9 @@ layout: default
 					break;
 				case 2:
 					$("#mainContent").load("{{ site.baseurl }}/bored/keyboard.html");
+					break;
+				case 4:
+					$("#mainContent").load("{{ site.baseurl }}/bored/breath.html");
 					break;
 			}
 			
