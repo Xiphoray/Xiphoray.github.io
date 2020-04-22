@@ -92,7 +92,7 @@ if(winWidth < winHeight){
 else{
     halfrradio = winHeight-100;
 }
-console.log(halfrradio)
+
 flag = 0;
 setInterval(breathing, 1000);
 function breathing(){
@@ -106,7 +106,6 @@ function breathing(){
         document.getElementById("cen1").style.backgroundImage = "radial-gradient(#34f5ff,#000)";
         document.getElementById("cen1").style.width = halfrradio+"px";
         document.getElementById("cen1").style.height = halfrradio+"px";
-        console.log(halfrradio)
     }
     if(flag == 5){
         document.getElementById("cen1").style.backgroundImage = "radial-gradient(#f18e48,#000)";
