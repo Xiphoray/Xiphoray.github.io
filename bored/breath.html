@@ -1,16 +1,16 @@
 <script src="../js/jquery.min.js"></script>
 <style>
-body{
-	background-color: #181d1f;
-}
+
 #wrap1{
     display:block;
     float:none;
     width:100%;
-    z-index: 1;
+    height: 100%;
+    background-color: #181d1f;
+    z-index: 1999999;  
 }
 #cen1{
-    z-index: 1;
+    z-index: 1999999;  
     display:block;
     width:0px;
     height:0px;
@@ -43,7 +43,6 @@ body{
     position: absolute;
     right: 5%;
     top: 5%;
-    z-index: 4;
     background-color: #1a171766;
     color: #ffffffde;
     height: 40px;
@@ -54,30 +53,31 @@ body{
     line-height: 40px;
     text-align: center;
     font-size: 2rem;
+    z-index: 1999999;  
 
 }
 
 #mask{
     position: absolute;
-    right: 10%;
-    top: 10%;
-    z-index: 4;
+    right: 5%;
+    top: 5%;
     background-color: #ffffff00;
-    height: 55px;
-    width: 260px;
+    height: 40px;
+    width: 100px;
     padding-left: 8px;
     padding-right: 8px;
     border-radius: 5px;
-
+    z-index: 2000000;  
 }
 </style>
 
-<div id="stat" ></div>
-<div id="mask"></div>
+
 
 
 <div id="wrap1">
     <div id="cen1"  oncontextmenu="return false;"></div>
+    <div id="stat" ></div>
+    <div id="mask"></div>
 </div>
 <script>  
 inhale = "4000"
