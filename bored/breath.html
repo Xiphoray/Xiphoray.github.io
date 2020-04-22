@@ -92,6 +92,7 @@ if(winWidth < winHeight){
 else{
     rr = winHeight-100;
 }
+console.log(rr)
 flag = 0;
 setInterval(breathing, 1000);
 function breathing(){
@@ -123,7 +124,7 @@ function breathing(){
         document.getElementById("cen1").style.height = 0;
     }
     flag++;
-    if(rr == 0){
+    if(rr == "0"){
         winHeight = document.getElementById("wrap1").offsetHeight;
         winWidth = document.getElementById("wrap1").offsetWidth;
         if(winWidth < winHeight){
