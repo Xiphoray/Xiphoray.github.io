@@ -123,6 +123,17 @@ function breathing(){
         document.getElementById("cen1").style.height = 0;
     }
     flag++;
+    if(rr == 0){
+        winHeight = document.getElementById("wrap1").offsetHeight;
+        winWidth = document.getElementById("wrap1").offsetWidth;
+        if(winWidth < winHeight){
+            rr = winWidth-100;
+        }
+        else{
+            rr = winHeight-100;
+        }
+        flag = 0;
+    }
     if(flag == 16){
         flag = 0;
     }
