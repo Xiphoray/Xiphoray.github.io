@@ -81,9 +81,9 @@
     <div id="mask"></div>
 </div>
 <script>  
-inhale = "4000"
-hold = "7000";
-exhale = "8000";
+inhale = "4s"
+hold = "7s";
+exhale = "8s";
 winHeight = document.getElementById("wrap1").offsetHeight;
 winWidth = document.getElementById("wrap1").offsetWidth;
 if(winWidth < winHeight){
@@ -107,7 +107,7 @@ function breathing(){
         document.getElementById("cen1").style.width = halfrradio+"px";
         document.getElementById("cen1").style.height = halfrradio+"px";
     }
-    if(flag == 5){
+    if(flag == 4){
         document.getElementById("cen1").style.backgroundImage = "radial-gradient(#f18e48,#000)";
         document.getElementById("stat").innerHTML = "Hold";
         document.getElementById("stat").style.color = "#f18e48";
@@ -124,7 +124,7 @@ function breathing(){
         document.getElementById("cen1").style.height = 0;
     }
     flag++;
-    if(flag == 16){
+    if(flag == 19){
         flag = 0;
     }
 }
