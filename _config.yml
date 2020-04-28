@@ -8,7 +8,7 @@ keyword: "Xiphoray，伪程序猿，伪文青"
 url: ""              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
-timezone: Asia/Shanghai
+timezone: '+0800'
 
 
 # SNS settings
