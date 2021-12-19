@@ -1,0 +1,88 @@
+I"�
+<p>直接赋值会出现以下情况：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	&gt;&gt;&gt;a = [1, 2, 3]
+	
+	&gt;&gt;&gt;b = a
+	
+	&gt;&gt;&gt;print b
+	[1, 2, 3]
+	
+	&gt;&gt;&gt; a[0] = 0
+	
+	&gt;&gt;&gt; print b
+	[0, 2, 3]
+</code></pre></div></div>
+<p>解释：[1, 2, 3] 被视作一个对象，a，b 均为这个对象的引用，因此，改变 a[0],b 也随之改变</p>
+
+<ul>
+  <li>列表深拷贝和浅拷贝</li>
+</ul>
+
+<p>浅拷贝</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	&gt;&gt;&gt; import copy
+	
+	&gt;&gt;&gt; a = [1, 2, 3, [5, 6]]
+	
+	&gt;&gt;&gt; b = copy.copy(a)
+	
+	&gt;&gt;&gt; print b
+	[1, 2, 3, [5, 6]]
+	
+	&gt;&gt;&gt; a[3].append('c')
+	
+	&gt;&gt;&gt; print b
+	[1, 2, 3, [5, 6, 'c']]
+</code></pre></div></div>
+<p>深拷贝</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	&gt;&gt;&gt; a = [1, 2, 3, [5, 6]]
+	
+	&gt;&gt;&gt; b = copy.deepcopy(a)
+	
+	&gt;&gt;&gt; a[3].append('c')
+	
+	&gt;&gt;&gt; print b
+	[1, 2, 3, [5, 6]]
+</code></pre></div></div>
+<p>拷贝即是开辟一块新的内存空间，把被拷贝对象中的值复制过去。而浅拷贝并没有为子对象 [5,6] 开辟一块新的内存空间，而仅仅是实现对 a 中 [5，6] 的引用。所以改变 a 中 [5，6] 的值，b 中的值也会发生变化。
+深拷贝则是为子对象也开辟了一块新空间。所以改变 a 中 [5, 6] 的值，并不影响 b</p>
+
+<ul>
+  <li>数组切片问题</li>
+</ul>
+
+<p>数组赋值不能用切片来达到相同的目的</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	&gt;&gt;&gt; import numpy as np
+	
+	&gt;&gt;&gt; a = np.array([1, 2 ,3])
+	
+	&gt;&gt;&gt; b = a[:]
+	
+	&gt;&gt;&gt; a[0] = 5
+	
+	&gt;&gt;&gt; print a, b
+	[5 2 3] [5 2 3]
+</code></pre></div></div>
+
+<p>如上，虽然用切片，但不能达到修改 a 而不影响 b 的目的。说明 a , b 仍然指向同一块内存。</p>
+
+<ul>
+  <li>此时，只能用拷贝
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &gt;&gt;&gt; b = a.copy()
+	
+  &gt;&gt;&gt; a[0] = 5
+	
+  &gt;&gt;&gt; print a, b
+  [5 2 3] [1 2 3]
+</code></pre></div>    </div>
+    <p>此时修改 a 不会影响到 b 。其中的原因以后进一步深究。</p>
+  </li>
+</ul>
+
+<p>注意，列表的拷贝是<code class="language-plaintext highlighter-rouge">copy.copy(obj)</code>或<code class="language-plaintext highlighter-rouge">copy.deepcopy(obj)</code></p>
+
+<p>数组的拷贝是<code class="language-plaintext highlighter-rouge">obj.copy()</code></p>
+:ET

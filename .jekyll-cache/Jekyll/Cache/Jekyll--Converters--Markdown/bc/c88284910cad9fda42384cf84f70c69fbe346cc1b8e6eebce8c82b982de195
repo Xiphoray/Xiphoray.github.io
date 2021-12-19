@@ -1,0 +1,24 @@
+I"d<p><br />
+<br />
+<br /></p>
+
+<p>三年前高考完，怀着记录生活的心态，开始了我的博客之旅。断断续续写了三年，经历了很多，也记录了很多。从刚开始的在新浪博客上写，到后来转移到Github Page上，成了真正的自己的博客，还时不时往上加奇奇怪怪的东西。这段视频记录的是移植到Github后，用Git记录的每一次修改记录，通过Gource生成。以后会一直写下去吧。</p>
+
+<p><br />
+<br /></p>
+
+<iframe id="vedio" class="center-block" src="//player.bilibili.com/player.html?aid=24724057&amp;cid=41582952&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+<p><br />
+<br /></p>
+
+<style>
+	@media only screen and (min-width: 599px){
+			#vedio {
+				height: -webkit-fill-available;
+				width: 100%;
+			}
+		}
+</style>
+
+:ET

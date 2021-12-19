@@ -1,0 +1,292 @@
+I"�A<p>突然想写写身边一直在用的物，于是就有了篇东西。</p>
+
+<h1 id="手机">手机</h1>
+
+<p><img src="/img/2017-11-26-shen/app.jpg" alt="img" /></p>
+
+<p>这是我现在手机里的全部 App ，但其实我用的app流动性还是蛮大的，经常找新的 App 用，美其名曰「体验」，用完就卸了。那这里就挑几个常驻 App 吧。</p>
+
+<h5 id="小圆角">小圆角</h5>
+
+<p>顾名思义就是给手机界面加圆角的，我在酷安上偶然遇见的一个 App，耗电量和内存占比几乎可以忽略。其实这是个可有可无的东西，从视觉上来讲，是一个极其细微的改变，但只要用过后，想要改回来，就会觉得很扎眼。说到底是一个美观和习惯的问题。支持开机自启，所以只要打开了就基本上不用管它了。唯一有点碍眼的就是，图标一直挂着，没办法隐藏。</p>
+
+<p><img src="/img/2017-11-26-shen/xiao.png" alt="img" /></p>
+
+<h5 id="词ci">词ci</h5>
+
+<p>这东西估计待在我手机里得有两年时间了。这是个可以看各种词的 App ，界面特别简洁，而且支持简体和繁体字转换。里面有个功能是可以随机选一首词，我特别喜欢用它来练字。还有个功能是可以提供词牌来写词，它会即时检测平仄的正确与否，但这个我几乎没用过。</p>
+
+<p><img src="/img/2017-11-26-shen/ci.jpg" alt="img" /></p>
+
+<h5 id="幸运破解器">幸运破解器</h5>
+
+<p>一个不太正当的 App ，用于破解一些游戏的内购和广告。</p>
+
+<h5 id="知乎">知乎</h5>
+
+<p>看段子用的，大家都知道。</p>
+
+<h5 id="黑域">黑域</h5>
+
+<p>这个不得不说一下，一个特别优秀的限制后台程序的 App 。用过安卓的人都知道，程序乱唤醒是安卓一个很大的弊端，这直接导致耗电量大、占内存等各种问题。而黑域就是用来直接砍掉后台没用的却占着茅坑的那些流氓 App 。最开始它是需要通过电脑来打补丁的，后来慢慢可以用 root 来手动打补丁，现在是可以开机自启打补丁，方便了很多。但最近在酷安上看见关于它的那个专题里评论什么的全被删除了，也不知道发生了什么，可喜的是它还在默默更新。</p>
+
+<p><img src="/img/2017-11-26-shen/hei.png" alt="img" /></p>
+
+<h5 id="微博国际版">微博国际版</h5>
+
+<p>我也不是崇洋媚外的人，但是国际版是真的简洁。我已经不知道原版长什么样了。</p>
+
+<p><img src="/img/2017-11-26-shen/weibo.jpg" alt="img" /></p>
+
+<h5 id="哔哩哔哩">哔哩哔哩</h5>
+
+<p>看片用的，大家都知道。</p>
+
+<h5 id="网易云音乐">网易云音乐</h5>
+
+<p>听歌用的，大家都知道。</p>
+
+<h5 id="酷安">酷安</h5>
+
+<p>传说中的基安。开发者的乐园。很多中国独立开发者都选择把自己的 App 放在这里，偶尔胡撞见很有意思的 App 。可以说，行业的标准就是优秀的标准。在开发者之间找 App 肯定比在其他地方找 App 要优秀。</p>
+
+<h5 id="clean-master">Clean Master</h5>
+
+<p>就是猎豹的那个清理大师的国际版，同样是很干净。反正就是为了清洁一下空间，没必要找那些臃肿的 App 。</p>
+
+<p><img src="/img/2017-11-26-shen/clear.png" alt="img" /></p>
+
+<h5 id="es-file-explorer">ES File Explorer</h5>
+
+<p>老牌的文件浏览器，这个也是从我有手机开始就一直跟着我的一款 App 。Root 后支持直接查看修改系统文件，以前我经常用这个来查 Wi-Fi 的密码。</p>
+
+<h5 id="handshaker">HandShaker</h5>
+
+<p>老罗的锤子自带的文件传输 App 。以前用过什么快牙之类的，但传东西的时候真的很少，所以一直在找一个很小很小的文件传输 App 。它一开始是连图标都没有的，就类似一个几百 K 的驱动一样存在，后来升级后支持 Wi-Fi 传后就做成了一个完整的 App 。不得不说，老罗有的东西做得真的很用心很有情怀。</p>
+
+<p><img src="/img/2017-11-26-shen/hand.png" alt="img" /></p>
+
+<h5 id="ifu">IFU</h5>
+
+<p>这是个 Xposed 插件。我们用原生安卓的面部识别的时候，识别成功后，还得再划一下屏幕才能解锁。装了这个插件后，面部识别成功后就能直接跳过锁屏界面了。算是一个体验优化吧。</p>
+
+<p><img src="/img/2017-11-26-shen/IFU.png" alt="img" /></p>
+
+<h5 id="keep">Keep</h5>
+
+<p>G 家的笔记应用。因为可以直接连接 G 家的日历、闹钟之类的，很好的嵌入到整个生态里。我还放了个小工具在主屏上，方便查看添加笔记。</p>
+
+<p><img src="/img/2017-11-26-shen/keep.jpg" alt="img" /></p>
+
+<h5 id="lmt">LMT</h5>
+
+<p>一个我已经无法割舍的应用了，它甚至直接导致我用别人的手机，怎么用都不顺手了。这是个类似于悬浮球的 App ，但它是从屏幕侧边出来的。一开始用它是为了取消那三颗难看的虚拟按键，避免烧屏，后来越用越舒服，甚至导致大拇指越来越懒，因为退出返回什么的不用再申到下面去按了。自定义程度非常高，在我没刷走我 Moto 的原生系统之前，我根本不需要碰锁屏的那个实体键，返回、home 键锁屏全靠 LMT 就能完成。</p>
+
+<p><img src="/img/2017-11-26-shen/LMT.png" alt="img" /></p>
+
+<h5 id="longscreenshot">LongScreenshot</h5>
+
+<p>长截图用的，上面那个 App 全览就是用这个截的。很单纯的 App 。</p>
+
+<h5 id="markdownx">MarkdownX</h5>
+
+<p>一个写 Markdown 格式文件用的 App ，支持直接预览。Markdown 确实是一个很方便，用了就不想丢下的写作格式，我现在写一些记录之类的都是用它，比如之前校运会时写个一个运动员时间表。而且它还能直接将内容生成 <code class="language-plaintext highlighter-rouge">.html</code> 或者 <code class="language-plaintext highlighter-rouge">.png</code> 格式的文件，用来发布也非常方便。</p>
+
+<p><img src="/img/2017-11-26-shen/mark.png" alt="img" /></p>
+
+<h5 id="myandroidtools">MyAndroidTools</h5>
+
+<p>传说中的写轮眼，安卓神器，需要 root 。使用它能直接禁用 App 的服务、广播、活动等。之前也讲了，安卓成也开源败也开源，流氓 App 横行是现状，而这个写轮眼直接禁用服务广播，也就是说 App 想耍流氓都不行了。网上有很多写轮眼禁用的方案，我觉得结合自己实际最重要，因为有些广播是对某些人群适合的，不能盲目禁。</p>
+
+<p><img src="/img/2017-11-26-shen/my.png" alt="img" /></p>
+
+<h5 id="oysterx">OysterX</h5>
+
+<p>一个迷雾地图，其实没什么用，就是为了秀自己都去过些什么地方。</p>
+
+<p><img src="/img/2017-11-26-shen/OysterX.jpg" alt="img" /></p>
+
+<h5 id="ps-touch">PS Touch</h5>
+
+<p>Photoshop 的安卓版，可以做简单的类似扣图之类的 ps 操作。有些学校的很那种的海报我都是直接用这个随便做一张应付的。</p>
+
+<h5 id="snapseed">Snapseed</h5>
+
+<p>G 家的修图软件。满足我的简单修图需要。我其实也用过 VSCO ，然而，我的手机居然卡机了！我打游戏都不卡，开个修图软件居然卡机，这是什么软件啊！我只能说它的优化做得实在不好。这里插一句，之前在知乎看见有人问为什么现在的游戏越来越烧配置了，有一个回答是说，现在做游戏的越来越不注重游戏的优化，一直在往里面堆东西，让它出最好的效果，至于这个效果能不能出来就看玩家自己配置够不够，这是个很不负责任做法。</p>
+
+<p><img src="/img/2017-11-26-shen/snapseed.png" alt="img" /></p>
+
+<h5 id="sorcery">Sorcery</h5>
+
+<p>国内最好的图标应用，适应的 App 图标最多，适配的系统最多。真的，第二的差这个十万八千里。但它的图标我不太喜欢，风格比较不统一，我是把安装包反编译了，把里面的图标换成我喜欢的图标再用的。</p>
+
+<p><img src="/img/2017-11-26-shen/sorcery.jpg" alt="img" /></p>
+
+<h5 id="ssr">SSR</h5>
+
+<p>这个知道的人知道，不知道的也不需要知道。</p>
+
+<h5 id="taomix">TaoMix</h5>
+
+<p>一个很优秀的白噪音 App ，音源很多（破解之后），而且有个有趣的地方是，它的设计思路是使用者可以将各种声源放在不同平面地理位置，然后使用者自己可以固定在这个平面地理位置的某个地方，或者在这个平面上移动。</p>
+
+<p><img src="/img/2017-11-26-shen/TaoMix.png" alt="img" /></p>
+
+<h5 id="tim">TIM</h5>
+
+<p>腾讯家代替 QQ 的 App 。没有 QQ 的那些乱七八糟的东西，比较纯净。</p>
+
+<h5 id="weather-timeline">Weather Timeline</h5>
+
+<p>天气应用，比较简洁，但天气应用这种开发者入门应用满世界都是，至于准不准这个就看数据源了。它有五六个数据源可以选择，然而我试过有几个数据源的数据相差好几度。</p>
+
+<p><img src="/img/2017-11-26-shen/weather.png" alt="img" /></p>
+
+<h5 id="wifi万能钥匙">Wifi万能钥匙</h5>
+
+<p>去吃饭不用问 Wi-Fi 密码，直接打开就能用，而且上面有标定哪些 Wi-Fi 有安全认证，应该还是比较好的。这里提一下，优先选择国际版的，就是在 Play 上安装的，因为这个版本不会有那些什么热点新闻，广告也少很多。</p>
+
+<p><img src="/img/2017-11-26-shen/wifikey.png" alt="img" /></p>
+
+<h5 id="workingmusic">Workingmusic</h5>
+
+<p>这个是我写的 App （微笑），所以不用多说了（微笑）。<a href="https://github.com/Xiphoray/Workingmusic-App">献上网址。</a></p>
+
+<h1 id="xposed插件">Xposed插件</h1>
+
+<p>这个定位就有点尴尬了，我就顺便说一说好了。</p>
+
+<h5 id="网易云音乐插件">网易云音乐插件</h5>
+
+<p>自动签到。启动是自动跳过广告。隐藏广告 Banner 。可以把等级之类的东西作修改，但只是本地修改。</p>
+
+<p><img src="/img/2017-11-26-shen/nea.jpg" alt="img" /></p>
+
+<h5 id="微x模块">微X模块</h5>
+
+<p>防撤回等不厚道的操作。</p>
+
+<p><img src="/img/2017-11-26-shen/wex.png" alt="img" /></p>
+
+<h5 id="mdwechat">MDWechat</h5>
+
+<p>修改微信的样式，现在我的微信是这种样子的。</p>
+
+<p><img src="/img/2017-11-26-shen/MDWechat.jpg" alt="img" /></p>
+
+<h1 id="电脑">电脑</h1>
+
+<p>电脑里的软件就比较杂了，同样，我挑几个好用的说一下。</p>
+
+<p>我这里尽量找软件开发者的网址或者软件的官网，实在找不到就不放网址了。</p>
+
+<h5 id="gifcam"><a href="http://blog.bahraniapps.com/gifcam/">GifCam</a></h5>
+
+<p>一款小巧的 gif 截屏，如果只是想稍微截一下动态的屏幕，它是不二选择。</p>
+
+<h5 id="prtscr"><a href="http://www.fiastarta.com/PrtScr/">PrtScr</a></h5>
+
+<p>这个就是单纯的截图了，但是有一个非常炫酷的效果，截图后的图片会飞出来。而且没截的部分会自动高斯模糊。唯一的缺点是，它支持不规则截图，也就是说不能截出规则的矩形。</p>
+
+<p><img src="/img/2017-11-26-shen/PrtScr.jpg" alt="img" /></p>
+
+<h5 id="idm">IDM</h5>
+
+<p>支持多线程下载的一个下载器，最多可以有 32 条线同时下载。我就经常用这个下百度云的东西，间接跳过非会员限速。但据说现在百度云加上了反 IDM 的一些东西，然而感觉不太明显。这个百度贴吧有绿色版，原版是需要付费的。</p>
+
+<h5 id="ledimmer"><a href="https://sites.google.com/site/llemarie/ledimmer">LeDimmer</a></h5>
+
+<p>一款聚焦的软件。也许很多人对聚焦这个没什么概念，那是因为我们的屏幕不够大。一旦屏幕大了之后，满屏放窗口，很容易忘记当前的窗口在哪里。特别是程序员，几个代码窗口，一下子找不到光标在哪，想把代码敲这块窗口里面，却敲到了另外一个里面。这时候给当前窗口一个高亮，其他窗口稍微暗下去，就能起到聚焦的作用，而且还能提高专注。</p>
+
+<p><img src="/img/2017-11-26-shen/LeDimmer.jpg" alt="img" /></p>
+
+<h5 id="mactype"><a href="http://www.mactype.net/">MacType</a></h5>
+
+<p>一个美化字体的软件。也是一个可有可无的东西。是为了提高对字体的渲染，我曾经将我 Windows 的电脑字体做得和 Mac 一模一样，然而并没有什么特别的感觉。就是好看一点点。</p>
+
+<h5 id="peace"><a href="https://github.com/Xiphoray/peace">Peace</a></h5>
+
+<p>我做的软件，也不多说了（微笑）。<a href="https://github.com/Xiphoray/peace">献上网址。</a></p>
+
+<h5 id="showmeyourbackground"><a href="https://github.com/Xiphoray/showmeyourbackground">Showmeyourbackground</a></h5>
+
+<p>也是我写的软件，不说了（微笑）。<a href="https://github.com/Xiphoray/showmeyourbackground">献上网址。</a></p>
+
+<h5 id="traymond"><a href="https://github.com/fcFn/traymond">Traymond</a></h5>
+
+<p>一个可以将任何最小化到任务栏的软件放进托盘的程序。我经常把网页版的 keep 打开，然后用这个放在托盘里。可以使任务栏没这么多东西。</p>
+
+<h5 id="wallpaper-engine"><a href="http://store.steampowered.com/app/431960/Wallpaper_Engine/">Wallpaper Engine</a></h5>
+
+<p>Steam 上的一款桌面壁纸软件。特别炫酷，可以放视频，放软件，放网页。当然是付费的。</p>
+
+<h5 id="workingmusic-1"><a href="https://github.com/Xiphoray/workingmusic">Workingmusic</a></h5>
+
+<p>还是我写的软件，不说了（微笑）。<a href="https://github.com/Xiphoray/workingmusic">献上网址。</a></p>
+
+<h5 id="wox"><a href="http://www.getwox.com/">Wox</a></h5>
+
+<p>可以提高效率的软件。相当于一个本地的搜索引擎，用一个快捷键呼出后，可以快速搜索各种文件和软件，装上各种插件后还可以作计算器查天气翻译等等。有了它就不用一个一个文件夹打开去找文件了，当然前提是你有良好的文件规划习惯。</p>
+
+<p><img src="/img/2017-11-26-shen/Wox.jpg" alt="img" /></p>
+
+<h5 id="arctime"><a href="http://www.arctime.org/">Arctime</a></h5>
+
+<p>一个字幕编辑的软件，特别方便，功能特别强大，同时也很炫酷。而且制作者非常仔细地制作了详细的视频教程。</p>
+
+<h5 id="mediacoder"><a href="http://www.mediacoder.com.cn/">MediaCoder</a></h5>
+
+<p>一个音频转格式的软件，功能强大，专业性比格式工厂强。</p>
+
+<h5 id="picasa">Picasa</h5>
+
+<p>被 G 家抛弃的图片浏览软件，它的官网写着已经停止服务，但作为软件还是能用的，只不过不能上传到谷歌相册。</p>
+
+<p><img src="/img/2017-11-26-shen/Picasa.jpg" alt="img" /></p>
+
+<h5 id="potplayer"><a href="http://potplayer.daum.net/?lang=zh_CN">PotPlayer</a></h5>
+
+<p>我的御用视频浏览器，几乎可以解码所有视频文件。</p>
+
+<h5 id="幕布"><a href="https://mubu.com/">幕布</a></h5>
+
+<p>思维导图，这个应该是见仁见智了，有的人说好用，有的人说没用。我是拿来头脑风暴用的，看着一条条思路在延伸，能激发出不少东西。</p>
+
+<p><img src="/img/2017-11-26-shen/mubu.jpg" alt="img" /></p>
+
+<h5 id="netspeedmonitor">Netspeedmonitor</h5>
+
+<p>一个放在任务栏的网速监测，网页久久刷不出来的时候看一眼。这个我找不到官网，但其他渠道找到的都比较靠谱，好像还有汉化版的。</p>
+
+<h5 id="rime"><a href="http://rime.im/">Rime</a></h5>
+
+<p>一个特别开源的输入法，用了之后就不想换别的了。它在不同的系统有不同的名字，在 Windows 叫小狼毫，在 Mac 叫鼠鬚管。唯一麻烦的地方在于，它一开始需要使用者自己配置输入法，跟着网上教程也得折腾一段时间，但因为基本上都是自定义的，只要配置完，后面就用得很舒服。</p>
+
+<h1 id="chrome拓展程序">Chrome拓展程序</h1>
+
+<p>同样是一个定位有点尴尬的东西，也顺便讲一讲。这里就不给出网址了，直接到商店找就行了。</p>
+
+<h5 id="clutter-free">Clutter Free</h5>
+
+<p>可以将相同的两个页面合并，减少 Tab 。在搜资料的时候不用担心打开了重复的页面。</p>
+
+<h5 id="ink-for-google">Ink for Google™</h5>
+
+<p>让谷歌的各种页面都适配 Material Design ，看起来美观。</p>
+
+<h5 id="pakku">Pakku</h5>
+
+<p>B 站弹幕过滤器，将重复的弹幕合并，防止霸屏状态。</p>
+
+<h5 id="tampermonkey">Tampermonkey</h5>
+
+<p>俗称油猴，可以搭载各种插件，然后有很多炫酷的操作。尔雅什么的无压力通过。</p>
+
+<h5 id="简悦">简悦</h5>
+
+<p>很良心的一个插件，类似聚焦的功能，提供沉浸式阅读体验，而且适配了很多网站。</p>
+
+<p>软件篇基本上就这么多了。</p>
+
+<p><a href="https://xiphoray.github.io/2017/12/10/shen">这里是硬件篇。</a></p>
+:ET

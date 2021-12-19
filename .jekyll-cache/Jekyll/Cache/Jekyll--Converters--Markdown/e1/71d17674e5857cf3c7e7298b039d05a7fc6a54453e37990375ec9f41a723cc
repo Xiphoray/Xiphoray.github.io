@@ -1,0 +1,128 @@
+I"�!<p>先把传送门放出来：</p>
+
+<p><a href="https://chrome.google.com/webstore/detail/xitab/cjmbligkncaboobjpgeghakofokbpbjm">XiTAB 的 Chrome 网上应用店</a></p>
+
+<p><a href="https://github.com/Xiphoray/XiTAB">XiTAB 的 Github 源代码</a></p>
+
+<p>某种意义上，Chrome 是一个神奇的存在。因为它是那个不存在的网站的产品中少有地能在天朝里使用并且广泛使用的。符合相同条件的另外一个产品叫 Android 系统。但是考虑到市面上众多浏览器都是使用 Chromium 内核的，所以 Chrome 的占有率应该是 Android 远不能及的。</p>
+
+<p>当然，在天朝 Chrome 的功能会有一定程度上的阉割。因为网络的原因，一些像同步之类的功能就需要特殊手段才能实现了。而 Chrome Extension 或者说扩展程序就是功能中特殊的一个。</p>
+
+<p>也不是说扩展程序一定要翻墙才可以使用，毕竟可以打开开发者模式，然后通过一些其他手段将扩展安装包从本地装载。但这一系列操作下来其实还是有点繁琐的，而且似乎还会时不时弹出警告说正在使用开发者模式。所以扩展程序其实是介于黑白线中的一个功能。</p>
+
+<p>扩展程序其实应该算是小程序的前身，它们设计的理念都相当相似。在查看扩展程序的历史的时候，我惊奇地发现，最早发布扩展程序这个功能的浏览器居然是 IE。IE 远在1999年的时候就已经开始支持扩展程序了，然而它在 IE 里并没有发扬光大，甚至我根本没见过适用于 IE 的扩展程序。</p>
+
+<p>我做这个扩展程序的契机也很简单。我一直有装  New Tab 类型的扩展程序的习惯，主要是为了赏心悦目。最近发现我一直在用的一款 New Tab 扩展程序貌似停止服务了。也不是不能用，只是背景图和天气的刷新都停了。想找替代的却一直找不到合适，要不是功能太过复杂，要不是就只能在线时才有图。最后想想，还是自己造吧。</p>
+
+<p>上网查了下，发现也不难。它的内核其实就是网页，只不过要对浏览器做一些针对的设置和配置。</p>
+
+<p><code class="language-plaintext highlighter-rouge">manifest.json</code> 是最重要的一个文件。它相当于扩展程序的一个注册文件，Chrome 会根据它来注册扩展程序的名字、版本、图标甚至申请权限。其中 <code class="language-plaintext highlighter-rouge">manifest_version</code>、<code class="language-plaintext highlighter-rouge">name</code>、<code class="language-plaintext highlighter-rouge">version</code> 这三个配置项是必须要写的。如果只是自用， <code class="language-plaintext highlighter-rouge">description</code> 和 <code class="language-plaintext highlighter-rouge">icons</code> 似乎是可以不写，但是如果想上架商店，官方会规定一定要有插件描述和图标的 。还有，只有填了 <code class="language-plaintext highlighter-rouge">browser_action</code>，浏览器右上角的 icon 才会是激活的彩色。下面是一些常见的配置项和相关注释。（使用时要把注释去掉，json 不支持注释）</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{    
+	// 清单文件的版本，这个必须写，而且必须是2    
+	"manifest_version": 2,    
+	// 插件的名称    
+	"name": "demo",    
+	// 插件的版本    
+	"version": "1.0.0",    
+	// 插件描述    
+	"description": "简单的Chrome扩展demo",    
+	// 图标，一般偷懒全部用一个尺寸的也没问题    
+	"icons":    
+	{        
+		"16": "img/icon.png",        
+		"48": "img/icon.png",        
+		"128": "img/icon.png"        
+	},    
+	// 会一直常驻的后台JS或后台页面    
+	"background":    
+	{        
+		// 2种指定方式，如果指定JS，那么会自动生成一个背景页        
+		"page": "background.html"        
+		//"scripts": ["js/background.js"]        
+	},	
+	// 浏览器右上角图标设置，browser_action、page_action、app必须三选一	
+	"browser_action": 	
+	{	
+		"default_icon": "img/icon.png",		
+		// 图标悬停时的标题，可选		
+		"default_title": "这是一个示例Chrome插件",		
+		"default_popup": "popup.html"		
+	},	
+	// 当某些特定页面打开才显示的图标	
+	/*"page_action":	
+	{	
+		"default_icon": "img/icon.png",		
+		"default_title": "我是pageAction",		
+		"default_popup": "popup.html"		
+	},*/	
+	// 需要直接注入页面的JS	
+	"content_scripts": 	
+	[	
+		{		
+			//"matches": ["http://*/*", "https://*/*"],			
+			// "&lt;all_urls&gt;" 表示匹配所有地址			
+			"matches": ["&lt;all_urls&gt;"],			
+			// 多个JS按顺序注入			
+			"js": ["js/jquery-1.8.3.js", "js/content-script.js"],		
+			// JS的注入可以随便一点，但是CSS的注意就要千万小心了，因为一不小心就可能影响全局样式			
+			"css": ["css/custom.css"],			
+			// 代码注入的时间，可选值： "document_start", "document_end", or "document_idle"，最后一个表示页面空闲时，默认document_idle			
+			"run_at": "document_start"			
+		},		
+		// 这里仅仅是为了演示content-script可以配置多个规则		
+		{		
+			"matches": ["*://*/*.png", "*://*/*.jpg", "*://*/*.gif", "*://*/*.bmp"],			
+			"js": ["js/show-image-content-size.js"]			
+		}		
+	],	
+	// 权限申请	
+	"permissions":	
+	[	
+		"contextMenus", // 右键菜单		
+		"tabs", // 标签		
+		"notifications", // 通知		
+		"webRequest", // web请求		
+		"webRequestBlocking",		
+		"storage", // 插件本地存储		
+		"http://*/*", // 可以通过executeScript或者insertCSS访问的网站		
+		"https://*/*" // 可以通过executeScript或者insertCSS访问的网站		
+	],	
+	// 普通页面能够直接访问的插件资源列表，如果不设置是无法直接访问的	
+	"web_accessible_resources": ["js/inject.js"],	
+	// 插件主页，这个很重要，不要浪费了这个免费广告位	
+	"homepage_url": "https://www.baidu.com",	
+	// 覆盖浏览器默认页面	
+	"chrome_url_overrides":	
+	{	
+		// 覆盖浏览器默认的新标签页		
+		"newtab": "newtab.html"		
+	},	
+	// Chrome40以前的插件配置页写法	
+	"options_page": "options.html",	
+	// Chrome40以后的插件配置页写法，如果2个都写，新版Chrome只认后面这一个	
+	"options_ui":	
+	{	
+		"page": "options.html",		
+		// 添加一些默认的样式，推荐使用		
+		"chrome_style": true		
+	},	
+	// 向地址栏注册一个关键字以提供搜索建议，只能设置一个关键字	
+	"omnibox": { "keyword" : "go" },	
+	// 默认语言	
+	"default_locale": "zh_CN",	
+	// devtools页面入口，注意只能指向一个HTML文件，不能是JS文件	
+	"devtools_page": "devtools.html"	
+}
+</code></pre></div></div>
+
+<p>因为我要做的是 New Tab 的扩展程序，所以我在 <code class="language-plaintext highlighter-rouge">chrome_url_overrides</code> 中填上了对应的网页路径。剩下的就是正常的网页编程了。</p>
+
+<p>要注意一点的是，调用外部网页资源是会出现安全警告的，因此一些相关的 js 和 css 需要从本地加载。实在需要调用外部资源，就需要在权限里注册相关项。例如在我的扩展程序中调用了一个 Bing 图片的接口，所以我在权限里就把接口的链接写在了 <code class="language-plaintext highlighter-rouge">permissions</code> 和 <code class="language-plaintext highlighter-rouge">content_security_policy</code> 项中。</p>
+
+<p>在敲代码的时候遇到一个有意思的事。我一开始以为这种换背景图的，需要把图片下载下来放在特定地方，打开网页的时候调用这个图片为背景。但是我查看我之前用的那个 New Tab 扩展程序文件的时候，并没有找到它下的图片。于是我就去爬它的代码，发现了一个小技巧。在获取了图片之后，它并没有将图片下载下来，而是将图片转成 Base64，然后直接用浏览器的 <code class="language-plaintext highlighter-rouge">localStorage</code> 储存。这样就省去了图片下载的过程，因为 Chrome 对下载的规则是相当严格的，为的就是防止无故下载内容。</p>
+
+<p>简单说一下这个 XiTAB 扩展程序的功能。它每隔一个小时会换一次背景图，右上角的天气每十分钟会刷新一次。图源是用 Bing 的图片，并且会配上这个图的简介和版权。功能相当简单，甚至简单得不能在商店正式上架，只能通过链接访问。</p>
+
+<p>当然，这东西主要是自用，如果不是接口失效，估计是不会有更新的了。</p>
+:ET

@@ -1,0 +1,192 @@
+I"@4<p>五寸畦田的迭代更新一直是我的自豪点。从一开始的依附于新浪博客，到有了自己的独立页面，再到增添各种零碎的小彩蛋，再到后来有了独立的域名，甚至为了境内的访问体验，还辗转好几个国内的网页托管网站。这一路代表了一个小白到一个小有所成的技术宅的成长。</p>
+
+<p>如果说，之前的博客都是在云上，依附于别人家的服务器，那么现如今，它才真真正正地在物理上被我拥有着。因为我把它的数据源放进了我家。(并不完全是，因为境外源的解析还是指向了 GitHub)</p>
+
+<p>这一切都得从我搬家说起。</p>
+
+<p>其实应该从三年前说起，那时是大三的我，正狂热地捣鼓着单片机，一时脑抽，就入了一块树莓派 3B+。这块东西除了刚买回来的时候点亮了跑马灯，还跟敖厂长的风复刻了一版【寻剑】游戏外，就再也没用过了。一直到我上个月搬家。</p>
+
+<p>搬家前就有考虑在家里搭一个服务器了，首选的设备当然就是这块废弃已久的树莓派了。然后就是少不了的在网上查找各种资料，踩坑，再找各种资料，然后跳出来，然后继续踩坑，再找资料，再跳出来。如此往复，弄了大半个月。</p>
+
+<p>废话引言就讲这么多吧，下面就是我的踩坑教程了。</p>
+
+<h4 id="树莓派">树莓派</h4>
+
+<p>树莓派到手自然就是要装系统了。</p>
+
+<p>这里由衷地建议装有图形界面的系统，且要装你的设备跑得起的图形界面系统。</p>
+
+<p>命令行是落后时代迫不得已的选择，并不是什么炫酷的操作。而且用图形界面也是要用命令行的，图形界面只是为了方便你去使用一些在命令行里复杂到令人发指的操作，所以不要自以为耍帅地使用纯命令行系统。</p>
+
+<p>树莓派无论如何都是一个轻便为主的设备，性能实在是有限，因此有些庞大的图形界面系统是根本跑不动了。我的 B+ 跑 Ubuntu 的图形界面直接卡死，跑官方的 RaspberryOS 的图形界面才勉强能动，还会偶尔卡顿。所以，不要给你的设备堆上太多内存饕餮。</p>
+
+<p>照本宣科地装完系统后，我遇到了第一个坑：看不到。</p>
+
+<p>由于我家里没有屏幕，视频输出只能靠投影仪，但是却出现了树莓派视频输出没信号的问题。一顿搜索之后，才发现系统默认设置没有开一些东西。</p>
+
+<p>需要在将系统拷到内存卡后，在开机之前，直接修改文件 <code class="language-plaintext highlighter-rouge">/boot/config.txt</code> ，添加代码</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">hdmi_safe</span><span class="p">=</span><span class="s">1</span>
+<span class="py">overscan_left</span><span class="p">=</span><span class="s">-30</span>
+<span class="py">overscan_right</span><span class="p">=</span><span class="s">-30</span>
+<span class="py">overscan_top</span><span class="p">=</span><span class="s">-30</span>
+<span class="py">overscan_bottom</span><span class="p">=</span><span class="s">-30</span>
+<span class="py">hdmi_group</span><span class="p">=</span><span class="s">2</span>
+<span class="py">hdmi_mode</span><span class="p">=</span><span class="s">4</span>
+<span class="py">hdmi_drive</span><span class="p">=</span><span class="s">2</span>
+<span class="py">config_hdmi_boost</span><span class="p">=</span><span class="s">4</span>
+</code></pre></div></div>
+
+<p>当能在屏幕上看到图形界面，说明你的树莓派真正能用了。然后就是照本宣科地换更新源、更新软件了。</p>
+
+<h4 id="ruby--jekyll">Ruby + Jekyll</h4>
+
+<p>由于网页最早的时候是托管在 GitHub 上的，所以使用了 Jekyll 框架作为静态网页的生成器。现在要把网站部署到本地，就得在本地部署好 Jekyll 的编译环境。Jekyll 是用 Ruby 来运行的，所以还需要 Ruby。</p>
+
+<p>先安装 Ruby。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>ruby-full ruby-bundler
+</code></pre></div></div>
+
+<p>看到网上有说单纯使用 <code class="language-plaintext highlighter-rouge">sudo apt install ruby</code> 可能会导致后续安装 Jekyll 出错，所以安全起见还是安装完全包。</p>
+
+<p>然后通过 Ruby 安装 Jekyll。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>gem <span class="nb">install </span>jekyll
+</code></pre></div></div>
+
+<p>可以通过查看 Jekyll 的版本或者直接新建一个页面部署来测试 Jekyll 有没有安装成功。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll <span class="nt">-v</span>
+jekyll new new-site
+<span class="nb">cd </span>new-site
+jekyll serve
+</code></pre></div></div>
+
+<p>看命令行上显示的信息，打开网址就能看到。默认是本地的 4000 端口。</p>
+
+<p>如果你的网址使用了 Jekyll 的其他插件，需要单独安装。例如我装了 <code class="language-plaintext highlighter-rouge">jekyll-paginate</code> 这个插件，就需要运行 <code class="language-plaintext highlighter-rouge">sudo gem install jekyll-paginate</code> 来安装插件。</p>
+
+<p>如果 <code class="language-plaintext highlighter-rouge">jekyll serve</code> 网址部署失败，是不会显示报错的，需要使用 <code class="language-plaintext highlighter-rouge">-trace</code> 来查看具体报错。</p>
+
+<h4 id="内网穿透">内网穿透</h4>
+
+<p>能在本地端口查看到网页，就说明已经成功了一大半了，剩下就是把这个网页穿透出外网。方法有很多种，我就列举一下我尝试过的。</p>
+
+<h6 id="公网-ip">公网 IP</h6>
+
+<p>这是最简单直接的方法。直接打电话给网络供应商，让他们给你的网络分配一个公网 IP 就好。但由于我是住在租的房子里，网络是房东弄的，所以这个方法不方便操作。</p>
+
+<p>不过我倒是尝试了用 IPV6 地址作公网 IP。本来想的是，IPV6 资源这么多，供应商不会再转一次了吧？但结果是失败的，也不知道是什么原因，反正就是解析不出来。</p>
+
+<h6 id="蒲公英等内网穿透供应商">蒲公英等内网穿透供应商</h6>
+
+<p>也是一个简单省事的方法。缺点就是贵。</p>
+
+<p>大概原理就是他们会在你的设备里装一个客户端，然后通过 DDNS 获得你的动态 IP，然后解析在他们的域名上。所以，我看了一圈下来，似乎他们都得且只能使用他们家的域名。感觉有点像是在变相卖域名。</p>
+
+<p>因为我自己有域名，所以这样的方案似乎不太适合我。我也尝试过再把他们的域名解析到我的域名下面，但是发现好像会被过滤掉。最后只好作罢。</p>
+
+<h6 id="frp">FRP</h6>
+
+<p>FRP 的原理大概是：先在设备跟 FRP 服务器之间建立通讯，而且 FRP 服务器的公网 IP 是已知放，所以域名可以直接解析到 FRP 服务器，FRP 服务器收到访问后就会跟设备要对应的内容，再返回给访问方。所以 FRP 服务器充当了类似传递员的工作。跟蒲公英那种获取动态 IP 的方法不同，FRP 是把整个网页内容进行传递，所以 FRP 服务器要走的流量跟内容大小等同。</p>
+
+<p>基于 FRP 的原理，单独为它弄一个服务器其实是很脑残的做法，还不如直接把站建在服务器上。</p>
+
+<p>于是我就在网上找了 FRP 供应商。发现里面大多数的免费套餐已经适合我的需求了。最后找到一个 Sakura FRP 的供应商，它的付费方案是，只要你的流量超出了基础流量，在 24 小时内不会再超出某一个阈值，基础流量就会恢复到 3GB，而且每天登陆都能抽 1~4GB 的流量。所以只要是访问量少的个人网站，比如我的，就很适合这个白嫖方案。</p>
+
+<p>FRP 的使用方法分为服务器端和客户端两个部分，都是写好配置文件，然后直接运行对应的程序就可以了。不过一般用 FRP 供应商的话，服务器端他们会自己写自己运行，客户端的他们也会写好给你。</p>
+
+<p>服务端的配置文件大概如下:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>common]
+<span class="c">#监听地址</span>
+bind_addr <span class="o">=</span> 0.0.0.0
+<span class="c">#服务端口</span>
+bind_port <span class="o">=</span> 7000
+<span class="c">#认证token</span>
+token <span class="o">=</span> xxx
+<span class="c">#面板界面</span>
+dashboard_addr <span class="o">=</span> 0.0.0.0
+dashboard_port <span class="o">=</span> 7500
+dashboard_user <span class="o">=</span> xxx
+dashboard_pwd <span class="o">=</span> xxx
+<span class="c">#http服务端口</span>
+vhost_http_port <span class="o">=</span> 7080
+<span class="c">#https服务端口</span>
+vhost_https_port <span class="o">=</span> 7443
+　#日志  log_file <span class="o">=</span> ./frps.log  log_level <span class="o">=</span> info  log_max_days <span class="o">=</span> 3
+  <span class="c">#Web 服务增加自定义二级域名 </span>
+  subdomain_host <span class="o">=</span> <span class="k">***</span>.com  <span class="c">#其次在 FRP 客户端配置文件配置 subdomain 参数 通过 subdomain.subdomain_host 就可以访问到内网的 Web 服务</span>
+</code></pre></div></div>
+
+<p>客户端的配置文件大概如下，有些可以省略不写，’type’ 里写对应的的连接方式。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>common]
+<span class="c">#frps的ip地址</span>
+server_addr <span class="o">=</span> xxx.xxx.xxx.xxx
+<span class="c">#frps的端口</span>
+server_port <span class="o">=</span> 7000
+<span class="c">#认证token</span>
+token <span class="o">=</span> xxx
+<span class="c">#日志</span>
+log_file <span class="o">=</span> ./frpc.log
+log_level <span class="o">=</span> info
+log_max_days <span class="o">=</span> 3
+<span class="c">#远程桌面配置</span>
+<span class="o">[</span>dangkou]
+<span class="nb">type</span> <span class="o">=</span> tcp
+local_ip <span class="o">=</span> 127.0.0.1
+local_port <span class="o">=</span> 3389
+remote_port <span class="o">=</span> 3389
+use_encryption <span class="o">=</span> <span class="nb">true</span>
+<span class="c">#http配置</span>
+<span class="o">[</span>web-xinhu]
+<span class="nb">type</span> <span class="o">=</span> http
+<span class="c">#本地http服务地址</span>
+local_ip <span class="o">=</span> 127.0.0.1
+<span class="c">#本地http服务端口</span>
+local_port <span class="o">=</span> 80
+<span class="c">#使用压缩</span>
+use_compression <span class="o">=</span> <span class="nb">true</span>
+<span class="c">#分配自定义域名访问穿透服务 假如没有域名，则此处请填为frps服务端的服务器(IP)，写多个域名时，用','来分隔不同的域名</span>
+custom_domains <span class="o">=</span> xxx.xxx.xxx
+<span class="c">#设置认证的用户名</span>
+<span class="c">#http_user = abc</span>
+<span class="c">#设置认证的密码</span>
+<span class="c">#http_pwd = abc</span>
+<span class="c">#重定向到本地域名</span>
+host_header_rewrite <span class="o">=</span> xinhu.test
+<span class="c">#[ssh]</span>
+<span class="c">#type = tcp</span>
+<span class="c">#local_port = 22</span>
+<span class="c">#local_ip = 127.0.0.1</span>
+<span class="c">#在服务端注册端口 服务端将监听 7022 ssh root@118.118.118.118 -p 7022 即可代理到本机 ssh 登录</span>
+<span class="c">#remote_port = 7022</span>
+</code></pre></div></div>
+
+<p>然后有一个坑，如果要同时使用 http 和 https，就需要分别为它们俩建隧道，不然哪个建了就只能访问哪个。</p>
+
+<p>然后还有一个我遇到的坑。我的 https 不能被域名正确解析，我猜是因为证书的问题，于是我用 http 做了重定向，然后在域名网站上把证书下下来，在客户端 https 那块下面多加了一段。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>plugin <span class="o">=</span> https2http
+plugin_local_addr <span class="o">=</span> 172.17.0.1:80
+plugin_crt_path <span class="o">=</span> /root/cert/aaaaadomain.cn/fullchain.cer
+plugin_key_path <span class="o">=</span> /root/cert/aaaaadomain.cn/aaaaadomain.cn.key
+</code></pre></div></div>
+
+<p>然后 https 就能正确访问了，而且浏览器上面也会有小绿锁。</p>
+
+<h4 id="结语">结语</h4>
+
+<p>到此，我的建站旅程就又到了一段落。</p>
+
+<p>虽然还是有一点遗憾的地方，由于 FRP 的原理，页面中有一点点改变，都需要服务器将页面整体搬运刷新，所以以前的一些仿动态网页的操作就不能实现了。</p>
+
+<p>不过，就目前来说，这已经是我的个人网站最好的状态了。</p>
+
+<h4 id="one-more-thing">One More Thing</h4>
+
+<p>彩蛋页面新加了一个彩蛋，源于我在一次群聊中激发的想法。</p>
+
+:ET

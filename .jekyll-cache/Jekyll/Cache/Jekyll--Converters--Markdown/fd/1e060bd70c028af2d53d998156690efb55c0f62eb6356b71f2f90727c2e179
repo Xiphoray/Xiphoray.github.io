@@ -1,0 +1,382 @@
+I"�+<h1 id="列表">列表</h1>
+
+<p><strong>无序列表</strong></p>
+
+<p>无序列表使用 - 、 + 和 * 作为列表标记</p>
+
+<p>以下为样例：</p>
+
+<ul>
+  <li>第一</li>
+  <li>第二
+    <ul>
+      <li>很好
+        <ul>
+          <li>特别好
+            <ul>
+              <li>真的很好</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>第一</li>
+  <li>第二
+    <ul>
+      <li>很好
+        <ul>
+          <li>特别好
+            <ul>
+              <li>真的很好</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>第一</li>
+  <li>第二
+    <ul>
+      <li>很好
+        <ul>
+          <li>特别好
+            <ul>
+              <li>真的很好</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 第一
+* 第二
+	* 很好
+		* 特别好
+			* 真的很好
+			 
+- 第一
+- 第二
+	- 很好
+		- 特别好
+			- 真的很好
+			
++ 第一
++ 第二
+	+ 很好
+		+ 特别好
+			+ 真的很好
+</code></pre></div></div>
+
+<p><strong>有序列表</strong></p>
+
+<p>有序列表则使用数字 (或任意单个字母) 加英文句点 . 来表示
+(其实句点前面是什么并不重要，只要是1或a之后就会自动排序)</p>
+
+<p>以下为样例：</p>
+
+<ol>
+  <li>哈哈</li>
+  <li>嘿嘿</li>
+  <li>很好</li>
+  <li>是么</li>
+  <li>emmm</li>
+  <li>这。。不按套路出牌啊！</li>
+</ol>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 哈哈
+2. 嘿嘿
+1. 很好
+9. 是么
+10. emmm
+13. 这。。不按套路出牌啊！
+</code></pre></div></div>
+<hr />
+<h1 id="引用">引用</h1>
+
+<p>引用以 &gt; 来表示，引用中支持多级引用、标题、列表、代码块、分割线等常规语法</p>
+
+<p>以下为样例：</p>
+
+<blockquote>
+  <p>接下来我来讲两句。</p>
+</blockquote>
+
+<blockquote>
+  <p>没什么好讲的</p>
+  <blockquote>
+    <p>就是跟你们说一下</p>
+    <blockquote>
+      <p>这里可以嵌套引用</p>
+      <blockquote>
+        <p>反正你们也不会引用这么多的</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; 接下来我来讲两句。
+
+&gt; 没什么好讲的
+&gt;&gt; 就是跟你们说一下
+&gt;&gt;&gt; 这里可以嵌套引用
+&gt;&gt;&gt;&gt; 反正你们也不会引用这么多的
+</code></pre></div></div>
+<hr />
+<h1 id="强调">强调</h1>
+
+<p>两个 * 或 _ 代表加粗，一个 * 或 _ 代表斜体，~~ 代表删除</p>
+
+<p>以下为样例：</p>
+
+<p><strong>这样</strong> 和 <strong>这样</strong> 可以加粗</p>
+
+<p><em>这样</em> 和 <em>这样</em> 可以斜体</p>
+
+<p><del>而这样呢</del> 会被删除</p>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>**这样** 和 __这样__ 可以加粗
+
+*这样* 和 _这样_ 可以斜体
+
+~~而这样呢~~ 会被删除
+</code></pre></div></div>
+<hr />
+<h1 id="图片">图片</h1>
+
+<p>以下为样例：</p>
+
+<p><img src="/img/home-bg.jpg" alt="img" title="这是首页图片噢" /></p>
+
+<p>以下为代码：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![img](/img/home-bg.jpg "这是首页图片噢")
+![图片文本（可忽略）](图片地址 "图片标题"（可忽略）)
+</code></pre></div></div>
+<hr />
+<h1 id="链接">链接</h1>
+
+<p><strong>行内式链接</strong></p>
+
+<p>以下为样例：</p>
+
+<p><a href="xiphoray.github.io" title="这是我的博客噢">Xiphoray的博客</a></p>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Xiphoray的博客](xiphoray.github.io "这是我的博客噢")
+[文本](链接地址 "链接标题"（可忽略）)
+</code></pre></div></div>
+
+<p><strong>参考式链接</strong></p>
+
+<p>以下为样例：</p>
+
+<p><a href="xiphoray.github.io" title="我是Xiphoray">Xiphoray的博客</a></p>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Xiphoray的博客][url]
+[url]:xiphoray.github.io "我是Xiphoray"
+
+[url]为链接标记，可以在文中任意地方定义
+定义格式为：[标记名称]:链接地址 "链接标题"（可以忽略）
+该方式同样适用于图片
+</code></pre></div></div>
+
+<p><strong>自动链接</strong></p>
+
+<p>直接用 &lt;&gt; 括起来，链接要带有https://或http://字样</p>
+
+<p>以下为样例：</p>
+
+<p>看见了么 <a href="https://xiphoray.github.io">https://xiphoray.github.io</a> 是我的博客噢！</p>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>看见了么 &lt;https://xiphoray.github.io&gt; 是我的博客噢！
+</code></pre></div></div>
+<hr />
+<h1 id="代码">代码</h1>
+
+<p><strong>行内代码</strong></p>
+
+<p>用两个 ` 包起来，第一个表示开始，第二个表示结束</p>
+
+<p>以下为样例：</p>
+
+<p>导入 <code class="language-plaintext highlighter-rouge">include &lt;Xiphoray.h&gt;</code> 头文件至开头</p>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>导入 `include &lt;Xiphoray.h&gt;` 头文件至开头
+</code></pre></div></div>
+
+<p><strong>代码块</strong></p>
+
+<p>用两个 ``` 包起来，第一个表示开始，第二个表示结束，代码语法高亮在  ``` 后面加上空格和语言名称即可</p>
+
+<p>以下为样例：</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+	<span class="nx">loadDrawer</span><span class="p">();</span>
+	<span class="kd">var</span> <span class="nx">inst</span><span class="o">=</span><span class="k">new</span> <span class="nx">mdui</span><span class="p">.</span><span class="nx">Drawer</span><span class="p">(</span><span class="dl">'</span><span class="s1">#drawer</span><span class="dl">'</span><span class="p">,{</span><span class="na">swipe</span><span class="p">:</span><span class="kc">true</span><span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>		
+</code></pre></div></div>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\``` html  (忽视那个斜杠，那是为了显示三个点才加的)
+&lt;script&gt;
+	loadDrawer();
+	var inst=new mdui.Drawer('#drawer',{swipe:true});
+&lt;/script&gt;		
+\```
+</code></pre></div></div>
+<hr />
+<h1 id="表格">表格</h1>
+
+<ul>
+  <li>居左：<code class="language-plaintext highlighter-rouge">:----</code></li>
+  <li>居中：<code class="language-plaintext highlighter-rouge">:----:</code></li>
+  <li>居右：<code class="language-plaintext highlighter-rouge">----:</code></li>
+</ul>
+
+<p>以下为样例：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">标题</th>
+      <th style="text-align: center">标题</th>
+      <th style="text-align: right">标题</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">居左测试文本</td>
+      <td style="text-align: center">居中测试文本</td>
+      <td style="text-align: right">居右测试文本</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">居左测试文本1</td>
+      <td style="text-align: center">居中测试文本2</td>
+      <td style="text-align: right">居右测试文本3</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">居左测试文本11</td>
+      <td style="text-align: center">居中测试文本22</td>
+      <td style="text-align: right">居右测试文本33</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">居左测试文本111</td>
+      <td style="text-align: center">居中测试文本222</td>
+      <td style="text-align: right">居右测试文本333</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|标题|标题|标题|
+|:---|:---:|---:|
+|居左测试文本|居中测试文本|居右测试文本|
+|居左测试文本1|居中测试文本2|居右测试文本3|
+|居左测试文本11|居中测试文本22|居右测试文本33|
+|居左测试文本111|居中测试文本222|居右测试文本333|
+</code></pre></div></div>
+<hr />
+<h1 id="各种零碎的东西">各种零碎的东西</h1>
+
+<h4 id="分割线">分割线</h4>
+<p>在一行中用三个以上的 * 、 - 、 _ 来建立一个分隔线，行内不能有其他东西</p>
+
+<p>以下为样例：</p>
+
+<hr />
+<hr />
+<hr />
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* * *
+- - -
+_ _ _
+</code></pre></div></div>
+
+<h4 id="脚注">脚注</h4>
+
+<p>使用 <code class="language-plaintext highlighter-rouge">[^]</code> 来定义脚注，但如果有 header 的话，定位的位置可能会被header遮盖</p>
+
+<p>以下为样例：</p>
+
+<p>鲁迅在第一部作品中说过<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>，努力才有回报。</p>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>鲁迅在第一部作品中说过[^1]，努力才有回报。
+
+[^1]: 不，他并没有说过
+</code></pre></div></div>
+
+<hr />
+<h1 id="标题">标题</h1>
+
+<p><strong>用 # 标识</strong></p>
+
+<p>在 标题开头 加上1~6个#，依次代表一级标题、二级标题….六级标题</p>
+
+<p>以下为样例：</p>
+
+<h1 id="这里是标题">这里是标题</h1>
+<h2 id="这里是标题-1">这里是标题</h2>
+<h3 id="这里是标题-2">这里是标题</h3>
+<h4 id="这里是标题-3">这里是标题</h4>
+<p>##### 这里是标题</p>
+<h6 id="这里是标题-4">这里是标题</h6>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 这里是标题
+## 这里是标题
+### 这里是标题
+#### 这里是标题
+##### 这里是标题
+###### 这里是标题
+</code></pre></div></div>
+<hr />
+<p><strong>用 = 或 - 标识</strong></p>
+
+<p>在 标题底下 加上任意个=代表一级标题，-代表二级标题</p>
+
+<p>以下为样例：</p>
+
+<h1 id="这里是标题-5">这里是标题</h1>
+
+<h2 id="这里是标题-6">这里是标题</h2>
+
+<p>以下为代码：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>这里是标题
+===
+
+这里是标题
+---
+</code></pre></div></div>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>不，他并没有说过 <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+:ET
