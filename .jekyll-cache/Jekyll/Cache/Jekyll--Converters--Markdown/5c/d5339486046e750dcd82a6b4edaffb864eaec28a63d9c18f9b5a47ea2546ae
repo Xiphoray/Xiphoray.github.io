@@ -1,0 +1,23 @@
+I"<p>用以下方法代替</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	# python3版本
+	# imread
+
+	path_file = "sample"
+	img = cv2.imdecode(np.fromfile(path_file,dtype=np.uint8),-1)
+
+	#imwrite
+	_path = "sample"
+	cv2.imencode('.jpg',img)[1].tofile(_path)
+	
+	
+	# python 2版本
+	import cv2
+	import sys
+	reload(sys)
+	sys.setdefaultencoding('u8')
+	path_file = u"sample"
+	img = cv2.imread(path_file.decode('u8').encode('gbk'),-1)
+</code></pre></div></div>
+
+:ET

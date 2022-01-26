@@ -1,0 +1,103 @@
+I"<p>之前趁学生机的优惠入了一台 ThinkPad X1 Carbon Gen7，当时就想装双系统的。但无奈机器太新，Ubuntu 系统中没有即用的驱动，网上也没找到，只好作罢。</p>
+
+<p>最近学习需要只好再次尝试，发现只有 Wi-Fi 不能用，显示找不到 Wi-Fi 适配器。网上查找了一下，发现因为它用的是 Intel 9560 AC 无线网卡，是直接焊在主板上的。我装的 Ubuntu 18.04 系统没有即用的驱动，所以需要手动去编译一个驱动。</p>
+
+<h3 id="提前准备">提前准备</h3>
+
+<p>首先确定系统安装完全。我的 Ubuntu 18.04 系统就因为驱动不完善所以没有安装完全，甚至 gcc 这类编译必需品都没有。</p>
+
+<p>其次得确定能通过有线或者蓝牙连上网。ThinkPad X1 Carbon Gen7 的网线口是需要转接线的，我刚好忘记带了，于是用手机的 USB 线给电脑供网。另外使用蓝牙给电脑供网也是可以的，因为蓝牙的驱动比较单一，一般也是能装上的。不过我用蓝牙连接的时候经常断，也不知道是什么原因。当然，如果实在连不上网，只能通过别的电脑将所有安装包都下好，再放在本地离线安装了。</p>
+
+<p>最后，要在 BIOS 中关闭 secure boot。</p>
+
+<h3 id="编译驱动">编译驱动</h3>
+
+<p>编译驱动需要安装最基本的编译工具链：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>build-essential git
+</code></pre></div></div>
+
+<p>然后进行编译并安装：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>git build-essential
+git clone https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi.git
+<span class="nb">cd </span>backport-iwlwifi/
+make defconfig-iwlwifi-public
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'s/CPTCFG_IWLMVM_VENDOR_CMDS=y/# CPTCFG_IWLMVM_VENDOR_CMDS is not set/'</span> .config
+make <span class="nt">-j</span><span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
+<span class="nb">sudo </span>make <span class="nb">install
+sudo </span>modprobe iwlwifi
+</code></pre></div></div>
+
+<p>此时如果没有开启 secure boot，则无线网卡已经可以正常工作。</p>
+
+<h3 id="驱动签名">驱动签名</h3>
+
+<p>因为没有安全需求，我并没有试过这部分。</p>
+
+<p>如果需要开启 secure boot，那么如果此时执行 <code class="language-plaintext highlighter-rouge">sudo modprobe iwlwifi</code> 则可能会无法正常执行，你将会看到如下警告：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modprobe: ERROR: could not insert 'iwlwifi': Operation not permitted
+</code></pre></div></div>
+
+<p>由于 secure boot 开启时系统禁止加载所有无签名的驱动，因此需要对这些驱动进行签名。</p>
+
+<p>首先，生成签名用的证书：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">name</span><span class="o">=</span><span class="s2">"Kernel Modules Signing"</span>
+<span class="nv">out_dir</span><span class="o">=</span><span class="s1">'/root/module-signing'</span>
+<span class="nb">sudo mkdir</span> <span class="k">${</span><span class="nv">out_dir</span><span class="k">}</span>
+<span class="nb">sudo </span>openssl <span class="se">\</span>
+    req <span class="se">\</span>
+    <span class="nt">-new</span> <span class="se">\</span>
+    <span class="nt">-x509</span> <span class="se">\</span>
+    <span class="nt">-newkey</span> <span class="se">\ </span>   
+    rsa:2048 <span class="se">\ </span>   
+    <span class="nt">-keyout</span> <span class="k">${</span><span class="nv">out_dir</span><span class="k">}</span>/MOK.priv <span class="se">\ </span>   
+    <span class="nt">-outform</span> DER <span class="se">\ </span>   
+    <span class="nt">-out</span> <span class="k">${</span><span class="nv">out_dir</span><span class="k">}</span>/MOK.der <span class="se">\ </span>   
+    <span class="nt">-days</span> 36500 <span class="se">\ </span>   
+    <span class="nt">-subj</span> <span class="s2">"/CN=</span><span class="k">${</span><span class="nv">name</span><span class="k">}</span><span class="s2">/"</span>    
+<span class="nb">sudo chmod </span>600 <span class="k">${</span><span class="nv">out_dir</span><span class="k">}</span>/MOK<span class="k">*</span>
+</code></pre></div></div>
+
+<p>MOK 是 Machine-Owner Key 的缩写，通过添加 MOK 可以实现与 OEM 以及系统厂商一样的对驱动签名管理的能力。我们需要通过 mokutil 工具添加新生成的密钥。此处会需要两次输入管理密码，随后会在 MOK 的管理界面用到该密码。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mokutil <span class="nt">--import</span> /root/module-signing/MOK.der
+</code></pre></div></div>
+
+<p>重启后系统会进入 MOK manager EFI utility。这是用来密钥的界面。</p>
+
+<p>依次选择 Enroll MOK，Continue，Yes。然后输入之前输入的管理密码。最后选择 Reboot 重启。</p>
+
+<p>你可以通过如下命令确认密钥的加入：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dmesg | <span class="nb">grep</span> <span class="s1">'[U]EFI.*cert'</span>
+</code></pre></div></div>
+
+<p>最后一步是对驱动签名，此处有如下的模块需要签名 iwlwifi, iwlmvm, compat, cfg80211, mac80211，因此需要执行如下命令：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /root/module-signing/ 
+sudo /usr/src/linux-headers-$(uname -r)-generic/scripts/sign-file sha512 ./MOK.priv ./MOK.der $(modinfo -n iwlwifi)
+sudo /usr/src/linux-headers-$(uname -r)-generic/scripts/sign-file sha512 ./MOK.priv ./MOK.der $(modinfo -n iwlmvm)
+sudo /usr/src/linux-headers-$(uname -r)-generic/scripts/sign-file sha512 ./MOK.priv ./MOK.der $(modinfo -n compat)
+sudo /usr/src/linux-headers-$(uname -r)-generic/scripts/sign-file sha512 ./MOK.priv ./MOK.der $(modinfo -n cfg80211)
+sudo /usr/src/linux-headers-$(uname -r)-generic/scripts/sign-file sha512 ./MOK.priv ./MOK.der $(modinfo -n mac80211)
+</code></pre></div></div>
+
+<p>至此，驱动签名就已经完成了，你可以在开启 secure boot 的情况下使用 wifi。</p>
+
+<h3 id="参考资料">参考资料</h3>
+
+<p><a href="https://amefs.net/archives/2003.html">https://amefs.net/archives/2003.html</a></p>
+
+<p><a href="https://wiki.gentoo.org/wiki/Signed_kernel_module_support">https://wiki.gentoo.org/wiki/Signed_kernel_module_support</a></p>
+
+<p><a href="https://wiki.debian.org/SecureBoot">https://wiki.debian.org/SecureBoot</a></p>
+
+<p><a href="https://askubuntu.com/questions/1196706/ubuntu-18-04-fail-to-load-intel-9560-wireless-firmware">https://askubuntu.com/questions/1196706/ubuntu-18-04-fail-to-load-intel-9560-wireless-firmware</a></p>
+
+<p><a href="https://gist.github.com/reillysiemens/ac6bea1e6c7684d62f544bd79b2182a4">https://gist.github.com/reillysiemens/ac6bea1e6c7684d62f544bd79b2182a4</a></p>
+
+:ET

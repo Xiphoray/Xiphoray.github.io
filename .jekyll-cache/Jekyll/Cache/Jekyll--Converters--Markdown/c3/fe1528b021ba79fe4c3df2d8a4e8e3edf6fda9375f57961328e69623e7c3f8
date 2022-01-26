@@ -1,0 +1,28 @@
+I"f<p><br />
+<br />
+<br /></p>
+
+<p>暑假完成的「寻剑」游戏，基于python，可以在电脑和树莓派上运行。</p>
+
+<p>Github地址：https://github.com/Xiphoray/sword-of-ATARI</p>
+
+<p>致敬敖厂长</p>
+
+<p><br />
+<br /></p>
+
+<iframe id="vedio" class="center-block" src="//player.bilibili.com/player.html?aid=31046518&amp;cid=54222357&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+<p><br />
+<br /></p>
+
+<style>
+	@media only screen and (min-width: 599px){
+			#vedio {
+				height: -webkit-fill-available;
+				width: 100%;
+			}
+		}
+</style>
+
+:ET
