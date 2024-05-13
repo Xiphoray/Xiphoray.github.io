@@ -46,7 +46,7 @@ markdown: kramdown
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
 
-timezone: Asia/Shanghai
+timezone: +0800
 
 
 # Disqus settings
