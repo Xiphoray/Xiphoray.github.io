@@ -228,8 +228,8 @@
 <p>以下为样例：</p>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
-	<span class="nx">loadDrawer</span><span class="p">();</span>
-	<span class="kd">var</span> <span class="nx">inst</span><span class="o">=</span><span class="k">new</span> <span class="nx">mdui</span><span class="p">.</span><span class="nx">Drawer</span><span class="p">(</span><span class="dl">'</span><span class="s1">#drawer</span><span class="dl">'</span><span class="p">,{</span><span class="na">swipe</span><span class="p">:</span><span class="kc">true</span><span class="p">});</span>
+	<span class="nf">loadDrawer</span><span class="p">();</span>
+	<span class="kd">var</span> <span class="nx">inst</span><span class="o">=</span><span class="k">new</span> <span class="nx">mdui</span><span class="p">.</span><span class="nc">Drawer</span><span class="p">(</span><span class="dl">'</span><span class="s1">#drawer</span><span class="dl">'</span><span class="p">,{</span><span class="na">swipe</span><span class="p">:</span><span class="kc">true</span><span class="p">});</span>
 <span class="nt">&lt;/script&gt;</span>		
 </code></pre></div></div>
 
