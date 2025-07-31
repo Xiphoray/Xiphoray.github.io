@@ -102,14 +102,30 @@ layout: default
 				<br/>
 				<br/>
 				
-			 <!-- intensedebate 评论框 start -->
-				<script>
+				<!-- intensedebate 评论框 start -->
+				<!--<script>
 				var idcomments_acct = '0927afe34f22b7458b464a6ca26d9058';
 				var idcomments_post_id;
 				var idcomments_post_url;
 				</script>
 				<span id="IDCommentsPostTitle" style="display:none"></span>
-				<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+				<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>-->
+	
+				<!-- intensedebate 评论框 end -->	
+				<!-- isso 评论框 start -->
+				<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/css/comments.css">
+
+				<script data-isso="https://disc.xiphoray.cn/"
+						src="{{ site.baseurl }}/js/isso.embed.min.js"
+						data-isso-vote="true" data-isso-avatar="true"
+						data-isso-css="false"></script>
+
+				<section id="isso-thread"
+						 data-title="{{ page.title }}"
+						 data-isso-id="{{ page.id }}1"
+						 
+						 ></section>
+				<!-- isso 评论框 start -->
 				
                 {% if site.netease_comment %}
                 <!-- 网易云跟帖 评论框 start -->
