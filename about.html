@@ -73,15 +73,28 @@ header-img: "img/about-bg.jpg"
 			
 				<br/>
 				<br/>
-				
+				<!-- isso 评论框 start -->
+				<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/css/comments.css">
+
+				<script data-isso="https://disc.xiphoray.cn/"
+						src="{{ site.baseurl }}/js/isso.embed.min.js"
+						data-isso-vote="true" data-isso-avatar="true"
+						data-isso-css="false"></script>
+
+				<section id="isso-thread"
+						 data-title="about"
+						 data-isso-id="about"
+						 
+						 ></section>
+				<!-- isso 评论框 start -->
 			 <!-- intensedebate 评论框 start -->
-				<script>
+				<!--<script>
 				var idcomments_acct = '0927afe34f22b7458b464a6ca26d9058';
 				var idcomments_post_id;
 				var idcomments_post_url;
 				</script>
 				<span id="IDCommentsPostTitle" style="display:none"></span>
-				<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+				<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script> -->
 				
 {% if site.duoshuo_username %}
 <!-- 多说评论框 start -->
@@ -152,6 +165,7 @@ s.setAttribute('data-timestamp', +new Date());
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <!-- disqus 公共JS代码 end -->
 {% endif %}
+
 <style>
 	.shownoshow:hover, .shownoshow:focus {
     color: #fff;
