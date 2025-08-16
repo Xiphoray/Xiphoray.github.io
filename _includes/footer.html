@@ -38,7 +38,7 @@
                     {% endif %}
                     {% if site.weibo_username %}
                     <li>
-                        <a target="_blank" href="http://weibo.com/{{ site.weibo_username }}">
+                        <a target="_blank" href="https://weibo.com/{{ site.weibo_username }}">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
@@ -82,7 +82,7 @@
                 <p class="copyright text-muted">
                     Copyright &copy; {{ site.title }} {{ site.time | date: '%Y' }}
                     <br> 
-					Powered by <a href="http://huangxuan.me">Hux</a> |
+					Powered by <a href="https://huangxuan.me">Hux</a> |
                     <iframe
                         style="margin-left: 2px; margin-bottom:-5px;"
                         frameborder="0" scrolling="0" width="100px" height="20px"
@@ -194,11 +194,11 @@ if(document.body.clientWidth>1024 ){
 -->
 <!--
     <script>
-        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+        async("https://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
             hljs.initHighlightingOnLoad();
         })
     </script>
-    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
 -->
 
 <!-- jquery.tagcloud.js -->
@@ -223,7 +223,7 @@ if(document.body.clientWidth>1024 ){
 
 
 <!-- Google Analytics -->
-{% if site.ga_track_id %}
+<!-- {% if site.ga_track_id %}
 <script>
     // dynamic User by Hux
     var _gaId = '{{ site.ga_track_id }}';
@@ -238,7 +238,7 @@ if(document.body.clientWidth>1024 ){
     ga('create', _gaId, _gaDomain);
     ga('send', 'pageview');
 </script>
-{% endif %}
+{% endif %}-->
 
 
 <!-- Baidu Tongji -->

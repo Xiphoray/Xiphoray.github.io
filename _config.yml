@@ -5,7 +5,7 @@ header-img: img/home-bg.jpg
 email: a351014842@gmail.com
 description: "怎么说？"
 keyword: "Xiphoray，伪程序猿，伪文青"
-url: ""              # your host, for absolute URL
+url: "https://xiphoray.cn"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 future: true
@@ -104,15 +104,15 @@ friends: [
     },
     {
          title: "马哲",
-         href: "http://blog.csdn.net/blueblueskyz"
+         href: "https://blog.csdn.net/blueblueskyz"
     },
     {
          title: "Wogwan",
-         href: "http://blog.wogwan.cn"
+         href: "https://blog.wogwan.cn"
     },
     {
          title: "鲁大师",
-         href: "http://miracle67.xyz"
+         href: "https://miracle67.xyz"
     }
 
 ]
