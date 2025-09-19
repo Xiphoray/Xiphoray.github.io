@@ -7,6 +7,20 @@
     <meta name="keywords"  content="{{ site.keyword }}">
     <meta name="theme-color" content="{{ site.chrome-tab-theme-color }}">
 
+    <!-- Image to hack wechat -->
+    <meta property="og:title" content="{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}">
+    <meta property="og:url" content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+    <meta property="og:description" name="description" content="{{ page.subtitle }}">
+    <meta property="og:image" content="https://xiphoray.cn/img/icon_wechat.png">
+    <meta property="og:image:type" content="image/png">
+    {% if page.layout == 'post' %}
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="{{ page.date | date_to_xmlschema}}">
+    <meta property="article:author" content="{% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %}">
+    {% else %}
+    <meta property="og:type" content="website">
+    {% endif %}
+
     <title>{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}</title>
 
     <!-- Web App Manifest -->
@@ -27,15 +41,16 @@
 
     <!-- Pygments Github CSS -->
     <link rel="stylesheet" href="{{ "/css/syntax.css" | prepend: site.baseurl }}">
-	
+    
+    <!-- preload header image -->	
+    <link rel="preload" as="image" href="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" fetchpriority="high">
 
 
     <!-- Custom Fonts -->
-    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
     <!-- Hux change font-awesome CDN to qiniu -->
 	<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
-	<link href="https://https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> 
-
+	<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">  -->
+	<link href="{{ "/css/font-awesome.min.css" | prepend: site.baseurl }}" rel="stylesheet" type="text/css"> 
 <!-- needsharebutton Javascript file -->
 <script src="{{ "/js/needsharebutton.js" | prepend: site.baseurl }}"></script>
 <script src="{{ "/js/jr-qrcode.min.js" | prepend: site.baseurl }}"></script>
@@ -44,8 +59,8 @@
 
 	
     <!-- Hux Delete, sad but pending in China
-    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 -->
 
 
