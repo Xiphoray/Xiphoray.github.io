@@ -3,12 +3,12 @@
   "short_name": "Xiphoray Blog",
   "description": "life is short.",
   "icons": [{
-    "src": "icons/128.png",
+    "src": "https://pics.xiphoray.cn/icons/128.png",
     "sizes": "128x128",
     "type": "image/png"
   },
-{
-    "src": "icons/512.png",
+  {
+    "src": "https://pics.xiphoray.cn/icons/512.png",
     "sizes": "512x512",
     "type": "image/png"
   }],

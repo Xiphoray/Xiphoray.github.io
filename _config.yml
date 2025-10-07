@@ -1,7 +1,7 @@
 # Site settings
 title: Xiphoray Blog
 SEOTitle: 五寸畦田 | Xiphoray Blog
-header-img: img/home-bg.jpg
+header-img: https://pics.xiphoray.cn/img/home-bg.jpg
 email: a351014842@gmail.com
 description: "怎么说？"
 keyword: "Xiphoray，伪程序猿，伪文青"
@@ -72,7 +72,7 @@ netease_comment: false
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "Quando você quer alguma coisa, todo o universo conspira para que você realize o seu desejo."
-sidebar-avatar: /img/avatar-x.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: https://pics.xiphoray.cn/img/avatar-x.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 

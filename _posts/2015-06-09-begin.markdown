@@ -4,7 +4,7 @@ title:      "五寸畦田"
 subtitle:   " 「the begining of begining」" 
 date:       2015-06-09 22:00:00
 author:     "Xiphoray"
-header-img: "img/imgpost-bg-begin.jpg"
+header-img: "https://pics.xiphoray.cn/img/imgpost-bg-begin.jpg"
 catalog: true
 tags:     
     - 楔子
@@ -31,7 +31,7 @@ tags:
 
 高中三年留下一个叫「写随笔」的习惯。我虽然不是文科生，却也喜欢写字。以往的随笔本，我都遵循一个原则：观者不拒，不观者不邀。但人总是虚荣的，字写出来总希望有人看。以前有老师这个常驻读者。现在没了。于是就干脆放上博客。
 
-![img](/img/2015-06-09-begin/8155.jpg)
+![img](https://pics.xiphoray.cn/img/2015-06-09-begin/8155.jpg)
 
 > 现拥掌机五寸，能通四面，知参商。无奈宇宙无穷，所触甚微，是以井观风起云涌，管窥龙争虎斗。庶几尽蜉蝣力以聚江川之水，集丘峦之土，收星辰之辉，筑以为畦田。植留夷与揭车与其上，杂杜衡与芳芷间其中。闲叹南山之愿，吁桃源之梦。舟梦泽而汲其水，舆大椿而拾其叶，以沃畦田。
 

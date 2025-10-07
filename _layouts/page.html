@@ -3,7 +3,7 @@ layout: default
 ---
 
 <!-- Page Header -->
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+<header class="intro-header" style="background-image: url('{{ site.baseurl }}{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
@@ -105,7 +105,7 @@ layout: default
                     <hr><h5><a href="{{'/about/' | prepend: site.baseurl }}">ABOUT ME</a></h5>
                     <div class="short-about">
                         {% if site.sidebar-avatar %}
-                            <img src="{{site.sidebar-avatar}}" />
+                            <img src="{{site.sidebar-avatar}}" alt="Logo"/>
                         {% endif %}
                         {% if site.sidebar-about-description %}
                             <p>{{site.sidebar-about-description}}</p>
@@ -114,7 +114,7 @@ layout: default
                         <ul class="list-inline">
                             {% if site.RSS %}
                             <li>
-                                <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
+                                <a href="{{ "/feed.xml" | prepend: site.baseurl }}" aria-label="RSS订阅">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -124,7 +124,7 @@ layout: default
                             {% endif %}
                             {% if site.twitter_username %}
                             <li>
-                                <a href="https://twitter.com/{{ site.twitter_username }}">
+                                <a href="https://twitter.com/{{ site.twitter_username }}" aria-label="twitter">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
@@ -134,7 +134,7 @@ layout: default
                             {% endif %}
                             {% if site.zhihu_username %}
                             <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/{{ site.zhihu_username }}">
+                                <a target="_blank" href="https://www.zhihu.com/people/{{ site.zhihu_username }}" aria-label="知乎">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa  fa-stack-1x fa-inverse">知</i>
@@ -144,7 +144,7 @@ layout: default
                             {% endif %}
                             {% if site.weibo_username %}
                             <li>
-                                <a target="_blank" href="https://weibo.com/{{ site.weibo_username }}">
+                                <a target="_blank" href="https://weibo.com/{{ site.weibo_username }}" aria-label="微博">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
@@ -154,7 +154,7 @@ layout: default
                             {% endif %}
                             {% if site.facebook_username %}
                             <li>
-                                <a target="_blank" href="https://www.facebook.com/{{ site.facebook_username }}">
+                                <a target="_blank" href="https://www.facebook.com/{{ site.facebook_username }}" aria-label="facebook">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
@@ -164,7 +164,7 @@ layout: default
                             {% endif %}
                             {% if site.github_username %}
                             <li>
-                                <a target="_blank" href="https://github.com/{{ site.github_username }}">
+                                <a target="_blank" href="https://github.com/{{ site.github_username }}" aria-label="github">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -174,7 +174,7 @@ layout: default
                             {% endif %}
                             {% if site.linkedin_username %}
                             <li>
-                                <a target="_blank" href="https://www.linkedin.com/in/{{ site.linkedin_username }}">
+                                <a target="_blank" href="https://www.linkedin.com/in/{{ site.linkedin_username }}" aria-label="linkedin">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
