@@ -1,0 +1,364 @@
+
+<style>
+	body, html {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		background-color: #000;
+	}
+	#canvasbalcksun {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 119999;
+	}
+</style>
+
+<canvas id="canvasbalcksun"></canvas>
+
+<script>
+// ==========================================
+// 1. SimplexNoise 核心库
+// ==========================================
+
+const SimplexNoise = (function() {
+    const F2 = 0.5 * (Math.sqrt(3.0) - 1.0);
+    const G2 = (3.0 - Math.sqrt(3.0)) / 6.0;
+
+    class SimplexNoise {
+        constructor(seed = 12345) {
+            const P = new Uint8Array(256);
+            const permutation = new Uint8Array(512);
+            
+            let prng = (function() {
+                let s = seed % 2147483647;
+                if (s <= 0) s += 2147483646;
+                return function() {
+                    s = (s * 16807) % 2147483647;
+                    return (s - 1) / 2147483646;
+                };
+            })();
+
+            for (let i = 0; i < 256; i++) P[i] = i;
+            for (let i = 255; i >= 0; i--) {
+                const j = Math.floor(prng() * (i + 1));
+                [P[i], P[j]] = [P[j], P[i]];
+            }
+
+            for (let i = 0; i < 512; i++) permutation[i] = P[i & 255];
+            this.perm = permutation;
+        }
+
+        dot(g, x, y) { return g[0] * x + g[1] * y; }
+
+        noise2D(xin, yin) {
+            const perm = this.perm;
+            const grad2 = [
+                [1, 1], [-1, 1], [1, -1], [-1, -1],
+                [1, 0], [-1, 0], [0, 1], [0, -1]
+            ];
+
+            let n0, n1, n2;
+            const s = (xin + yin) * F2;
+            const i = Math.floor(xin + s);
+            const j = Math.floor(yin + s);
+            const t = (i + j) * G2;
+            const X0 = i - t;
+            const Y0 = j - t;
+            const x0 = xin - X0;
+            const y0 = yin - Y0;
+
+            let i1, j1;
+            if (x0 > y0) { i1 = 1; j1 = 0; } else { i1 = 0; j1 = 1; }
+
+            const x1 = x0 - i1 + G2;
+            const y1 = y0 - j1 + G2;
+            const x2 = x0 - 1.0 + 2.0 * G2;
+            const y2 = y0 - 1.0 + 2.0 * G2;
+
+            const ii = i & 255;
+            const jj = j & 255;
+            const gi0 = perm[ii + perm[jj]] % 8;
+            const gi1 = perm[ii + i1 + perm[jj + j1]] % 8;
+            const gi2 = perm[ii + 1 + perm[jj + 1]] % 8;
+
+            let t0 = 0.5 - x0 * x0 - y0 * y0;
+            if (t0 < 0) { n0 = 0.0; } else { t0 *= t0; n0 = t0 * t0 * this.dot(grad2[gi0], x0, y0); }
+
+            let t1 = 0.5 - x1 * x1 - y1 * y1;
+            if (t1 < 0) { n1 = 0.0; } else { t1 *= t1; n1 = t1 * t1 * this.dot(grad2[gi1], x1, y1); }
+
+            let t2 = 0.5 - x2 * x2 - y2 * y2;
+            if (t2 < 0) { n2 = 0.0; } else { t2 *= t2; n2 = t2 * t2 * this.dot(grad2[gi2], x2, y2); }
+
+            return 70.0 * (n0 + n1 + n2);
+        }
+    }
+    
+    SimplexNoise.fbm = function(noiseFunc, x, y, octaves = 4, persistence = 0.5) {
+        let total = 0;
+        let frequency = 1;
+        let amplitude = 1;
+        let maxValue = 0;
+
+        for (let i = 0; i < octaves; i++) {
+            total += noiseFunc(x * frequency, y * frequency) * amplitude;
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= 2;
+        }
+
+        return total / maxValue;
+    }
+
+    return SimplexNoise;
+})();
+
+const simplex = new SimplexNoise(); 
+
+
+/**
+ * 2. 配置项与状态管理
+ */
+const config = {
+    bgColor: '#000000',
+    sunColor: '#000000',
+    flameColorStart: 'rgba(255, 255, 255, 1)', 
+    flameColorEnd: 'rgba(255, 255, 255, 0)',
+    baseRadiusRatio: 0.15,
+    flameAmp: 40,          //基础火焰振幅（波动噪声的原始最大,影响半径控制尖锐突起以外的最大高度。
+    deepSpaceProb: 0.03,   
+    coreFlareProb: 0.03,
+    timeStep: 0.01,
+    flareChance: 0.2, 
+    flareLifetime: 30,
+    noiseOctaves: 4,        
+    noisePersistence: 0.5,  
+    noiseBaseFrequency: 8,  //噪声基础频率,数字越大，火焰突起越密、波长越短
+    flameAmplitudeFactor: 2,//火焰振幅的倍增因子,控制所有尖锐突起的最大值（即整体高度）。
+    noiseSpikePower: 4.0, //尖锐突起塑形幂次,数字越大，火焰基座越低，突起越尖锐。
+    resolution: 720 // 分片数量
+};
+
+const state = {
+    width: 0, height: 0, centerX: 0, centerY: 0, radius: 0,
+    isDeepSpace: false, hasCoreFlare: false, stars: [],
+    flares: [] 
+};
+
+const canvas = document.getElementById('canvasbalcksun');
+const ctx = canvas.getContext('2d');
+
+// --- 概率与背景初始化 (保持不变) ---
+function initProbabilities() {
+    state.isDeepSpace = Math.random() < config.deepSpaceProb;
+    state.hasCoreFlare = Math.random() < config.coreFlareProb;
+    if (state.isDeepSpace) generateStars();
+}
+
+function generateStars() {
+    state.stars = [];
+    for (let i = 0; i < 300; i++) {
+        state.stars.push({ x: Math.random(), y: Math.random(), size: Math.random() * 1.5, alpha: Math.random() });
+    }
+}
+
+// --- 窗口适配 (保持不变) ---
+function resize() {
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
+    canvas.width = state.width;
+    canvas.height = state.height;
+    state.centerX = state.width / 2;
+    state.centerY = state.height / 2;
+    const minDim = Math.min(state.width, state.height);
+    state.radius = minDim * config.baseRadiusRatio;
+}
+
+window.addEventListener('resize', resize);
+
+
+/**
+ * 3. 绘图循环
+ */
+let time = 0;
+
+function draw() {
+    ctx.fillStyle = config.bgColor;
+    ctx.fillRect(0, 0, state.width, state.height);
+
+    // 绘制深空背景
+    if (state.isDeepSpace) {
+        ctx.fillStyle = '#FFFFFF';
+        state.stars.forEach(star => {
+            ctx.globalAlpha = star.alpha * (0.5 + 0.5 * Math.sin(time * 3 + star.x * 10));
+            ctx.beginPath();
+            ctx.arc(star.x * state.width, star.y * state.height, star.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1.0;
+    }
+
+    ctx.save();
+    ctx.translate(state.centerX, state.centerY);
+
+    // ==========================================
+    // 4. 绘制日焰 (分片 + 动态线形渐变)
+    // ==========================================
+    
+    // 动态波长计算
+    const waveCompression = 1.75 + 0.25 * Math.sin(time * 0.1); 
+    const noiseFrequency = config.noiseBaseFrequency / waveCompression;
+    
+    const resolution = config.resolution; 
+    const baseRadius = state.radius * 1.01;
+    
+    // 设置全局阴影，只需设置一次
+    ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+    ctx.shadowBlur = 50; 
+    
+    // 循环绘制每个切片
+    for (let i = 0; i < resolution; i++) {
+        // 计算当前角度和下一个角度
+        const angle1 = (i / resolution) * Math.PI * 2;
+        const angle2 = ((i + 1) / resolution) * Math.PI * 2 + 1e-2; 
+
+        // 1. 计算 P1 (当前点) 的噪声和半径
+        const xCoord1 = Math.cos(angle1) * noiseFrequency;
+        const yCoord1 = Math.sin(angle1) * noiseFrequency;
+        
+        let noise1 = SimplexNoise.fbm(
+            (x, y) => simplex.noise2D(x + time * 0.5, y + time * 0.5), 
+            xCoord1, 
+            yCoord1, 
+            config.noiseOctaves, 
+            config.noisePersistence
+        );
+        let transformedNoise1 = Math.pow((noise1 + 1.0) / 2.0, config.noiseSpikePower); 
+        const currentRadius1 = baseRadius + (transformedNoise1 * config.flameAmp * config.flameAmplitudeFactor);
+        
+        // 2. 计算 P2 (下一个点) 的噪声和半径
+        const xCoord2 = Math.cos(angle2) * noiseFrequency;
+        const yCoord2 = Math.sin(angle2) * noiseFrequency;
+
+        let noise2 = SimplexNoise.fbm(
+            (x, y) => simplex.noise2D(x + time * 0.5, y + time * 0.5), 
+            xCoord2, 
+            yCoord2, 
+            config.noiseOctaves, 
+            config.noisePersistence
+        );
+        let transformedNoise2 = Math.pow((noise2 + 1.0) / 2.0, config.noiseSpikePower); 
+        const currentRadius2 = baseRadius + (transformedNoise2 * config.flameAmp * config.flameAmplitudeFactor);
+        
+        // 3. 定义 4 个顶点
+        const P_base1 = { x: Math.cos(angle1) * baseRadius, y: Math.sin(angle1) * baseRadius };
+        const P_flame1 = { x: Math.cos(angle1) * currentRadius1, y: Math.sin(angle1) * currentRadius1 };
+        const P_base2 = { x: Math.cos(angle2) * baseRadius, y: Math.sin(angle2) * baseRadius };
+        const P_flame2 = { x: Math.cos(angle2) * currentRadius2, y: Math.sin(angle2) * currentRadius2 };
+        
+        // 4. 定义线形渐变 (从 P_base1 到 P_flame1，长度取决于尖刺高度)
+        const gradient = ctx.createLinearGradient(P_base1.x, P_base1.y, P_flame1.x, P_flame1.y);
+        
+        // 颜色停止点：根部白 -> 中间黑灰 -> 尖端透明
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)'); 
+        gradient.addColorStop(0.5, 'rgba(255, 255, 255, 1)'); 
+        gradient.addColorStop(1, 'rgba(50, 50, 50, 0.7)'); 
+        //gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); 
+        
+        ctx.fillStyle = gradient;
+        
+        // 5. 绘制并填充梯形切片
+        ctx.beginPath();
+        ctx.moveTo(P_base1.x, P_base1.y);
+        ctx.lineTo(P_flame1.x, P_flame1.y);
+        ctx.lineTo(P_flame2.x, P_flame2.y);
+        ctx.lineTo(P_base2.x, P_base2.y);
+        ctx.closePath();
+        ctx.fill();
+    }
+    
+    ctx.shadowBlur = 0; // 重置阴影
+
+    // 5. 绘制日心 (遮挡)
+    ctx.beginPath();
+    ctx.arc(0, 0, state.radius, 0, Math.PI * 2);
+    ctx.fillStyle = config.sunColor;
+    ctx.fill();
+
+    // 6. 内部日珥 (3% 概率)
+    if (state.hasCoreFlare) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(0, 0, state.radius, 0, Math.PI * 2);
+        ctx.clip(); 
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; 
+        ctx.lineWidth = 2;
+        for (let j = 0; j < 6; j++) {
+            ctx.beginPath();
+            ctx.moveTo(-state.radius, Math.sin(time + j) * 50);
+            ctx.bezierCurveTo(
+                -state.radius / 2, Math.sin(time * 2 + j) * 90,
+                state.radius / 2, Math.cos(time * 1.5 + j) * 90,
+                state.radius, Math.sin(time + j) * 50
+            );
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+    
+    // 7. 随机炫光 (Flares)
+    if (Math.random() < config.flareChance) {
+        const flareAngle = Math.random() * Math.PI * 2;
+        const baseRadius = state.radius * 1.01;
+        const flareRadius = baseRadius + Math.random() * (state.radius * 0.5); 
+        
+        state.flares.push({
+            x: Math.cos(flareAngle) * flareRadius,
+            y: Math.sin(flareAngle) * flareRadius,
+            life: config.flareLifetime, 
+            maxLife: config.flareLifetime 
+        });
+    }
+
+    // 绘制并衰减炫光
+    ctx.shadowColor = 'white'; 
+    for (let i = state.flares.length - 1; i >= 0; i--) {
+        const flare = state.flares[i];
+        
+        flare.life -= 1;
+        const alpha = flare.life / flare.maxLife;
+        
+        if (flare.life <= 0) {
+            state.flares.splice(i, 1);
+            continue;
+        }
+        
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = 'white';
+        ctx.shadowBlur = 10 + 20 * alpha; 
+        
+        ctx.beginPath();
+        ctx.arc(flare.x, flare.y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.globalAlpha = 1.0;
+    ctx.shadowBlur = 0;
+
+
+    ctx.restore();
+    
+    time += config.timeStep;
+    requestAnimationFrame(draw);
+}
+
+// 启动
+initProbabilities();
+resize();
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

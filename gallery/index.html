@@ -3,124 +3,117 @@ title: Gallery
 layout: default
 ---
 
-<!DOCTYPE html>
-<html class="no-js">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Xiphoray - Gallery</title>
+<head>
 
-		<link rel="stylesheet" href="css/lightbox.min.css">
-		<link rel="stylesheet" type="text/css" href="css/timeline.css" />
+	<link rel="stylesheet" href="css/lightbox.min.css">
+	<link rel="stylesheet" type="text/css" href="css/timeline.css" />
 
-	</head>
-	<body>
-		<div class="container" style="margin:0;padding:0;width:100%;">
-			<header>
-				<img width="175" height="175" style="border-radius:50%;" src="images/iconhead.gif">
-				<h3>Xiphoray</h3>
-			</header>
-			<div class="main">
-				<ul class="cbp_tmtimeline">
-					<div class="cc">
-						<div id="box" class = "box"></div>
-						<Br/>
-						<Br/>
-						<div id="btng" class="btng" style="text-decoration:none;"><a href="javascript:;" >More</a></div>
-					</div>
-				</ul>
+</head>
+<div class="container" style="margin:0;padding:0;width:100%;">
+	<header>
+		<img width="175" height="175" style="border-radius:50%;" src="https://pics.xiphoray.cn/gallery/images/iconhead.gif">
+		<h3>Xiphoray</h3>
+	</header>
+	<div class="main">
+		<ul class="cbp_tmtimeline">
+			<div class="cc">
+				<div id="box" class = "box"></div>
+				<Br/>
+				<Br/>
+				<div id="btng" class="btng" style="text-decoration:none;"><a href="javascript:;" >More</a></div>
 			</div>
-		</div>
-		<!-- <script src="js/jquery.min.js"></script>-->
-		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.3.min.js"></script>
-		<script src="js/modernizr.custom.js"></script>
-		
-		<script src="js/lightbox.min.js"></script>
-		<script>
-		if(document.body.clientHeight<document.body.clientWidth){
-			lightbox.option({
-				  'resizeDuration': 600,
-					'positionFromTop':25
-				})
-		}
-		else{
-			lightbox.option({
-				  'resizeDuration': 600,
-				  'positionFromTop':100
-				})
-		}
-			
-		</script>
-		<script type="text/javascript">	
-		
-		var nums = 4;
+		</ul>
+	</div>
+</div>
+<!-- <script src="js/jquery.min.js"></script>-->
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.3.min.js"></script>
+<script src="js/modernizr.custom.js"></script>
+
+<script src="js/lightbox.min.js"></script>
+<script>
+if(document.body.clientHeight<document.body.clientWidth){
+	lightbox.option({
+		  'resizeDuration': 600,
+			'positionFromTop':25
+		})
+}
+else{
+	lightbox.option({
+		  'resizeDuration': 600,
+		  'positionFromTop':100
+		})
+}
+	
+</script>
+<script type="text/javascript">	
+
+var nums = 4;
 var curr = 1;
 var data = [];
 
 function render(curr) {
-    var str = '<ul class="list"></ul>',
-        last = curr * nums - 1;
-    last = last >= data.length ? (data.length - 1) : last;
-    for (var i = (curr * nums - nums); i <= last; i++) {			
-        str = str.substr(0, str.length - 5); 
-        str += '<li><div class="cbp_tmlabel"><h2 id="boxoffice"></h2><time>'  + data[i]+ '</time><a  href="images/' + data[i] + '.webp" data-lightbox="' +i + '"><img src="images/' + data[i] + '.webp" ></a><ul></ul></div></li>';
-        str += '</ul>';
-    }
-    return str;
+var str = '<ul class="list"></ul>',
+last = curr * nums - 1;
+last = last >= data.length ? (data.length - 1) : last;
+for (var i = (curr * nums - nums); i <= last; i++) {			
+str = str.substr(0, str.length - 5); 
+str += '<li><div class="cbp_tmlabel"><h2 id="boxoffice"></h2><time>'  + data[i]+ '</time><a  href="https://pics.xiphoray.cn/gallery/images/' + data[i] + '.webp" data-lightbox="' +i + '"><img src="https://pics.xiphoray.cn/gallery/images/' + data[i] + '.webp" ></a><ul></ul></div></li>';
+str += '</ul>';
+}
+return str;
 }
 
 function initGallery() {
-    var boxDom = document.getElementById("box");
-    boxDom.innerHTML = render(curr);
-    document.getElementById("btng").onclick = function() {
-        curr++;
-        boxDom.innerHTML += render(curr);
-        if (curr * nums - 1 >= data.length - 1) {
-            $('.cbp_tmtimeline .btng').html("<p>You have touched my bottom...</p>");
-            $('.cbp_tmtimeline .btng').removeAttr('onclick');
-            $('#btng').attr('disabled',"true");
-        }
-    };
+var boxDom = document.getElementById("box");
+boxDom.innerHTML = render(curr);
+document.getElementById("btng").onclick = function() {
+curr++;
+boxDom.innerHTML += render(curr);
+if (curr * nums - 1 >= data.length - 1) {
+	$('.cbp_tmtimeline .btng').html("<p>You have touched my bottom...</p>");
+	$('.cbp_tmtimeline .btng').removeAttr('onclick');
+	$('#btng').attr('disabled',"true");
+}
+};
 }
 
 // 从外部 data.json 读取
 fetch('data.json')
-    .then(response => response.json())
-    .then(jsonData => {
-        data = jsonData;
-        initGallery();
-    })
-    .catch(err => console.error('加载 data.json 出错:', err));	
+.then(response => response.json())
+.then(jsonData => {
+data = jsonData;
+initGallery();
+})
+.catch(err => console.error('加载 data.json 出错:', err));	
 
-		var nums = 4;
-		var curr = 1;
-		var render = function(curr) {
-			var str = '<ul class=\"list\"></ul>',
-				last = curr * nums - 1;
-			last = last >= data.length ? (data.length - 1) : last;
-			for (var i = (curr * nums - nums); i <= last; i++) {			
-				str = str.substr(0, str.length - 5); 
-				str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i]+ '</time><a  href=\"images/' + data[i] + '.webp\" data-lightbox=\"' +i + '\"><img src=\"images/' + data[i] + '.webp\" ></a><ul></ul></div></li>';
-				str += '</ul>'
-			}
-			return str;
-		};
-		var boxDom = document.getElementById("box");
-		boxDom.innerHTML = render(curr);
-		document.getElementById("btng").onclick = function() {
-			curr++;
-			boxDom.innerHTML += render(curr);
-			if (curr * nums - 1 >= data.length - 1) {
-				
-				$('.cbp_tmtimeline .btng').html("<p>You have touched my bottom...</p>");
-				$('.cbp_tmtimeline .btng').removeAttr('onclick');
-				$('#btng').attr('disabled',"true");
-			}
-		};
+/*
+var nums = 4;
+var curr = 1;
+var render = function(curr) {
+	var str = '<ul class=\"list\"></ul>',
+		last = curr * nums - 1;
+	last = last >= data.length ? (data.length - 1) : last;
+	for (var i = (curr * nums - nums); i <= last; i++) {			
+		str = str.substr(0, str.length - 5); 
+		str += '<li><div class=\"cbp_tmlabel\"><h2 id=\"boxoffice\"></h2><time>'  + data[i]+ '</time><a  href=\"images/' + data[i] + '.webp\" data-lightbox=\"' +i + '\"><img src=\"images/' + data[i] + '.webp\" ></a><ul></ul></div></li>';
+		str += '</ul>'
+	}
+	return str;
+};
+var boxDom = document.getElementById("box");
+boxDom.innerHTML = render(curr);
+document.getElementById("btng").onclick = function() {
+	curr++;
+	boxDom.innerHTML += render(curr);
+	if (curr * nums - 1 >= data.length - 1) {
 		
-		
-		
-		</script>
-	</body>
-</html>
+		$('.cbp_tmtimeline .btng').html("<p>You have touched my bottom...</p>");
+		$('.cbp_tmtimeline .btng').removeAttr('onclick');
+		$('#btng').attr('disabled',"true");
+	}
+};
+
+*/
+
+</script>
+

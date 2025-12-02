@@ -27,9 +27,8 @@ layout: default
 <div id="mainContent"></div>
 <script type="text/javascript">
     $(document).ready(function() {
-			var list = Math.floor(Math.random() * 7 ); 
-			<!--  list = 5; -->
-			
+			var list = Math.floor(Math.random() * 8 ); 
+			<!--  list = 7; -->
 			switch (list)
 			{
 				case 0:
@@ -52,6 +51,9 @@ layout: default
 					break;
 				case 6:
 					$("#mainContent").load("{{ site.baseurl }}/bored/salaryclock.html");
+					break;
+				case 7:
+					$("#mainContent").load("{{ site.baseurl }}/bored/blacksun.html");
 					break;
 			}
 			
