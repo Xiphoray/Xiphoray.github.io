@@ -1,0 +1,25 @@
+---
+layout: none
+---
+
+[
+  {% for post in site.posts %}
+    {
+      "title": "{{ post.title | escape }}",
+      "url": "{{ site.baseurl }}{{ post.url }}",
+      "date": "{{ post.date }}",
+      "content": "{{ post.content
+        | strip_html
+        | strip_newlines
+        | truncate: 200
+        | replace: '\', '\\\\'
+        | replace: '"', '\\\"'
+        | replace: '	', '.'
+        | replace: '\u200b', '' 
+        | replace: '\u200c', '' 
+        | replace: '\u200d', ''
+        | escape
+      }}"
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
