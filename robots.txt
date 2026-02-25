@@ -1,0 +1,24 @@
+# 默认允许所有搜索引擎的爬虫访问
+User-agent: *
+Allow: /
+
+# 禁止爬取常见的后台/敏感目录（静态博客通常没有，但写上无妨）
+Disallow: /admin/
+Disallow: /cgi-bin/
+Disallow: /login/
+
+# 明确允许主流搜索引擎爬虫
+User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# 如果您不希望搜索引擎收录特定的非内容页面（例如 /zbored/ 页面），可以取消下面这行的注释
+# Disallow: /zbored/
+
+# 指定站点地图的位置（建议确保网站已生成 sitemap.xml）
+Sitemap: https://xiphoray.cn/sitemap.xml
