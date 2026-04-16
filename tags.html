@@ -10,7 +10,7 @@ header-img: "https://pics.xiphoray.cn/img/tag-bg.jpg"
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading"><!--  id="tag-heading">-->
+                <div class="site-heading">
                     <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
                     <span class="subheading">{{ page.description }}</span>
                 </div>
@@ -21,52 +21,178 @@ header-img: "https://pics.xiphoray.cn/img/tag-bg.jpg"
 
 <!-- Main Content -->
 <div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- 标签云 -->
-			<div id='tag_cloud' class="tags">
-				{% for tag in site.tags %}
-				<a href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}
-				<sup>{{tag[1].size}}</sup>
-				</a>
-				{% endfor %}
-			</div>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-            <!--<blockquote class="tag-comments">
-                标签命名规范：
-                    <li>行业观察、职位、公司优先使用中文</li>
-                    <li>外国产品、术语优先使用英文</li>
-            </blockquote>-->
+            <!-- 切换按钮 -->
+            <div class="view-toggle">
+                <button id="btn-tags" class="toggle-btn active" onclick="switchView('tags')">
+                    <span class="fa fa-tag"></span> 标签
+                </button>
+                <button id="btn-date" class="toggle-btn" onclick="switchView('date')">
+                    <span class="fa fa-calendar"></span> 日期
+                </button>
+            </div>
 
-            <!-- 标签列表 -->
-			{% for tag in site.tags %}
-			<div class="one-tag-list">
-			  	<span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
-                    <span class="tag-text">{{ tag[0] }}</span>
-                </span>
-				{% for post in tag[1] %}
-				  <!-- <li class="listing-item">
-				  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-				  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-				  </li> -->
-				 <div class="post-preview">
-				    <a href="{{ post.url | prepend: site.baseurl }}">
-				        <h2 class="post-title">
-                            {{ post.title }}
-				        </h2>
-				        {% if post.subtitle %}
-				        <h3 class="post-subtitle">
-				            {{ post.subtitle }}
-				        </h3>
-				        {% endif %}
-				    </a>
-				    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-				</div>
-				<hr>
-				{% endfor %}
-			</div>
-			{% endfor %}
+            <!-- ========== 按标签归类视图 ========== -->
+            <div id="view-tags">
+                <!-- 标签云 -->
+                <div id='tag_cloud' class="tags">
+                    {% for tag in site.tags %}
+                    <a href="#tag-{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}
+                    <sup>{{tag[1].size}}</sup>
+                    </a>
+                    {% endfor %}
+                </div>
 
-		</div>
-	</div>
+                <!-- 标签列表 -->
+                {% for tag in site.tags %}
+                <div class="one-tag-list">
+                    <span class="fa fa-tag listing-seperator" id="tag-{{ tag[0] }}">
+                        <span class="tag-text">{{ tag[0] }}</span>
+                    </span>
+                    {% for post in tag[1] %}
+                    <div class="post-preview">
+                        <a href="{{ post.url | prepend: site.baseurl }}">
+                            <h2 class="post-title">{{ post.title }}</h2>
+                            {% if post.subtitle %}
+                            <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- ========== 按日期归类视图 ========== -->
+            <div id="view-date" style="display:none;">
+                <!-- 年份云 -->
+                <div id="year_cloud" class="tags">
+                    {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+                    {% for year_group in posts_by_year %}
+                    <a href="#year-{{ year_group.name }}" title="{{ year_group.name }}" rel="{{ year_group.items.size }}">
+                        {{ year_group.name }}<sup>{{ year_group.items.size }}</sup>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <!-- 年份文章列表 -->
+                {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+                {% for year_group in posts_by_year %}
+                <div class="one-tag-list">
+                    <span class="fa fa-calendar listing-seperator" id="year-{{ year_group.name }}">
+                        <span class="tag-text">{{ year_group.name }}</span>
+                    </span>
+                    {% for post in year_group.items %}
+                    <div class="post-preview">
+                        <a href="{{ post.url | prepend: site.baseurl }}">
+                            <h2 class="post-title">
+                                <span class="post-date-inline">{{ post.date | date: "%m/%d" }}</span>
+                                {{ post.title }}
+                            </h2>
+                            {% if post.subtitle %}
+                            <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
 </div>
+
+<style>
+/* 切换按钮组 */
+.view-toggle {
+    display: flex;
+    gap: 0;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    width: fit-content;
+}
+
+.toggle-btn {
+    background: #fff;
+    border: none;
+    padding: 8px 22px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+}
+
+.toggle-btn:first-child {
+    border-right: 1px solid #ddd;
+}
+
+.toggle-btn.active {
+    background: #0085a18c;
+    color: #fff;
+}
+
+.toggle-btn:not(.active):hover {
+    background: #f5f5f5;
+}
+
+.toggle-btn .fa {
+    margin-right: 5px;
+}
+
+/* subtitle 与 title 文字左边对齐（跳过日期徽章宽度） */
+#view-date .post-preview h3.post-subtitle {
+    padding-left: 4.6em;
+}
+
+/* 日期视图中标题前的日期标记 */
+.post-date-inline {
+    display: inline-block;
+    font-size: 0.72em;
+    color: #888;
+    background: #f5f5f5;
+    border-radius: 3px;
+    padding: 1px 7px;
+    margin-right: 8px;
+    font-weight: normal;
+    vertical-align: middle;
+    letter-spacing: 0.03em;
+    font-family: monospace;
+}
+
+.one-tag-list .tag-text {
+    font-weight: 500;
+}
+</style>
+
+<script>
+function switchView(view) {
+    var tagView  = document.getElementById('view-tags');
+    var dateView = document.getElementById('view-date');
+    var btnTags  = document.getElementById('btn-tags');
+    var btnDate  = document.getElementById('btn-date');
+
+    if (view === 'tags') {
+        tagView.style.display  = '';
+        dateView.style.display = 'none';
+        btnTags.classList.add('active');
+        btnDate.classList.remove('active');
+    } else {
+        tagView.style.display  = 'none';
+        dateView.style.display = '';
+        btnDate.classList.add('active');
+        btnTags.classList.remove('active');
+    }
+
+}
+
+
+</script>

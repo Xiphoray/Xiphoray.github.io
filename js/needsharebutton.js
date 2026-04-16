@@ -89,7 +89,7 @@
 	  root.share = {
 	  	'weibo': function (el) {
             var myoptions = getOptions(el);
-	  		var url = 'http://v.t.sina.com.cn/share/share.php?title='
+	  		var url = 'https://service.weibo.com/share/share.php?title='
 	  		+ encodeURIComponent(myoptions.title)
 	  		+ "&url="+encodeURIComponent(myoptions.url)
 	  		+ "&pic="+encodeURIComponent(myoptions.image);
@@ -112,15 +112,20 @@
 	  	},
         'douban': function (el) {
             var myoptions = getOptions(el);
-            var url = 'https://www.douban.com/share/service?name='
-            + encodeURIComponent(myoptions.title)
-            + "&href="+encodeURIComponent(myoptions.url)
-            + "&image="+encodeURIComponent(myoptions.image);
+            // 避免空参数导致豆瓣报错
+            var title = encodeURIComponent(opt.title || '');
+            var url   = encodeURIComponent(opt.url || location.href);
+            var image = opt.image ? encodeURIComponent(opt.image) : '';
+
+            var shareUrl = "https://www.douban.com/share/service?"
+                + "name=" + title
+                + "&href=" + url
+                + (image ? "&image=" + image : "");
             root.popup(url);
         },
         'qqzone': function (el) {
             var myoptions = getOptions(el);
-            var url = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title='
+            var url = 'https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title='
             + encodeURIComponent(myoptions.title)
             + "&url="+encodeURIComponent(myoptions.url)
             + "&pics="+encodeURIComponent(myoptions.image)
