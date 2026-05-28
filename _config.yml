@@ -93,6 +93,10 @@ service-worker: true
 # Friends
 friends: [
     {
+         title: "博客星系",
+         href: "https://meet-blog.buyixiao.xyz/?random=on&ref=https%3A%2F%2Fxiphoray.cn"
+    },
+    {
          title: "重围",
          href: "https://blog.meetwhy.com/"
     },
@@ -101,20 +105,8 @@ friends: [
          href: "https://zilchfp.github.io/"
     },
     {
-         title: "陶帅帅",
-         href: "https://rainmaple.github.io/"
-    },
-    {
          title: "马哲",
          href: "https://blog.csdn.net/blueblueskyz"
-    },
-    {
-         title: "Wogwan",
-         href: "https://blog.wogwan.cn"
-    },
-    {
-         title: "鲁大师",
-         href: "https://miracle67.xyz"
     }
 
 ]
