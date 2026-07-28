@@ -7,6 +7,7 @@ description: "怎么说？"
 keyword: "Xiphoray，伪程序猿，伪文青"
 url: "https://xiphoray.cn"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+llms_summary: "个人生活随笔：日常、观察、旅行与技术札记。作者 Xiphoray（伪程序猿 / 伪文青）。"
 
 future: true
 

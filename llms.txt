@@ -1,0 +1,45 @@
+---
+layout: null
+permalink: /llms.txt
+---
+# {{ site.SEOTitle | default: site.title }}
+
+> {{ site.llms_summary | default: site.description }} 本文件面向 LLM / AI 助手，提供精简导航；请优先阅读下列正文链接，忽略导航、评论与页脚。
+
+站点：{{ site.url }}{{ site.baseurl }}/
+生成时间：{{ site.time | date: "%Y-%m-%d" }}
+文章总数：{{ site.posts.size }}
+
+## 关于本站
+
+- [关于]({{ site.url }}{{ site.baseurl }}/about/)：作者与博客简介
+- [首页]({{ site.url }}{{ site.baseurl }}/)：最新文章列表
+- [RSS]({{ site.url }}{{ site.baseurl }}/feed.xml)：最近文章订阅
+- [Sitemap]({{ site.url }}{{ site.baseurl }}/sitemap.xml)：可索引 URL 列表
+- [全文精选 llms-full.txt](https://xiphoray.cn/llms-full.txt)：近 30 篇正文纯文本合集（约 200KB）
+
+## 近期文章
+（按日期倒序，最多 20 篇；更多见 llms-full / sitemap）
+{% for post in site.posts limit: 20 -%}
+- [{{ post.title }}]({{ url }})：{{ post.date | date: "%Y-%m-%d" }}{% if post.description %} — {{ post.description | strip_html | strip | truncate: 40 }}{% endif %}
+{% endfor %}
+
+## 站外
+
+- [GitHub @{{ site.github_username }}](https://github.com/{{ site.github_username }})
+{% if site.linkedin_username -%}
+- [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
+{% endif %}
+
+## Optional
+
+- [Gallery]({{ site.url }}{{ site.baseurl }}/gallery/)
+- [Bored 小实验]({{ site.url }}{{ site.baseurl }}/zbored/)：与正文无关的前端小玩具，默认可忽略
+- [robots.txt]({{ site.url }}{{ site.baseurl }}/robots.txt)
+
+## 使用说明
+
+- 语言：中文为主
+- 引用时请标注来源 URL 与文章标题
+- 评论系统非正文（若页面含 Isso 等组件，请忽略）
+- 训练爬取策略以 /robots.txt 为准；本文件仅供理解与检索，不构成训练授权

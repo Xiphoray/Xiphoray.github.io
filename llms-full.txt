@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /llms-full.txt
+---
+# {{ site.SEOTitle }} — Full
+
+> 近 30 篇正文纯文本合集。目录与站点说明见 /llms.txt。
+> 选取规则：按日期倒序最近 N 篇；已 strip HTML；图片仅保留alt或已省略。
+> 引用请带 URL；训练策略见 /robots.txt。
+生成时间：{{ site.time | date: "%Y-%m-%d" }}
+
+{% assign llms_full_limit = site.llms_full_limit | default: 30 %}
+{% for post in site.posts limit: llms_full_limit %}
+## {{ post.title | strip_html | strip }}
+URL: {{ post.url | prepend: site.baseurl | prepend: site.url }}
+Date: {{ post.date | date: "%Y-%m-%d" }}
+{% if post.tags.size > 0 %}Tags: {{ post.tags | join: ", " }}{% endif %}
+{% assign body = post.content | strip_html | strip | replace: "#", "＃" %}
+{{ body }}
+
+---
+{% endfor %}
