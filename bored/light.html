@@ -1,0 +1,2964 @@
+<style>
+  /*
+   * ============================================================
+   * Xiphoray Light — Bored 子页碎片
+   * 规范：bored/DEVELOPMENT.md · 根 #xiphoray-light-root · z≥199999
+   *
+   * 技术致谢 / License
+   * - MIT：原 HTML-Light-Demo 概念与实现启发
+   *   https://github.com/jinruozai/HTML-Light-Demo
+   * - 原始灯光/HTML-in-Canvas 概念：@kaolti
+   * - three.js r185 + three-html-render (HTMLTexture polyfill)
+   * - 本页表面：Xiphoray 符号涂鸦墙 + 灯光控制面板（非 MORS² 文案）
+   * ============================================================
+   */
+  #xiphoray-light-root {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 199999;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+    box-sizing: border-box;
+    color-scheme: dark;
+    background:
+      radial-gradient(circle at 50% 8%, rgba(45, 53, 70, 0.16), transparent 32%),
+      #010204;
+    color: #f4f5f8;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  #xiphoray-light-root *,
+  #xiphoray-light-page *,
+  #xiphoray-light-root *::before,
+  #xiphoray-light-page *::before,
+  #xiphoray-light-root *::after,
+  #xiphoray-light-page *::after {
+    box-sizing: border-box;
+  }
+
+  #xiphoray-light-root button,
+  #xiphoray-light-page button,
+  #xiphoray-light-root input,
+  #xiphoray-light-page input {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* —— 全屏壳（后续 WebGL canvas 会铺满这里） —— */
+  #xiphoray-light-root .xl-shell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  #xiphoray-light-root .xl-shell::after {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    content: "";
+    background:
+      radial-gradient(circle at 50% 48%, transparent 46%, rgba(0, 0, 0, 0.4) 100%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.36));
+    mix-blend-mode: multiply;
+  }
+
+  /* WebGL 画布：page-source 必须是其子节点 */
+  #xiphoray-light-root .xl-webgl {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    touch-action: none;
+    cursor: grab;
+    background: #010204;
+  }
+
+  #xiphoray-light-root .xl-webgl.is-pulling-light,
+  #xiphoray-light-root.is-pulling-light .xl-webgl {
+    cursor: grabbing;
+  }
+
+  #xiphoray-light-page.is-adjusting-beam,
+  #xiphoray-light-root .xl-page.is-adjusting-beam {
+    cursor: ew-resize;
+  }
+
+  /* 加载期 2D 预览（page 的视觉替身，无交互） */
+  #xiphoray-light-root .xl-preview {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 420ms ease, visibility 0s linear;
+    background:
+      radial-gradient(circle at 50% 8%, rgba(45, 53, 70, 0.16), transparent 32%),
+      #010204;
+  }
+
+  #xiphoray-light-root .xl-preview.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 420ms ease, visibility 0s linear 420ms;
+  }
+
+  #xiphoray-light-root .xl-preview-card {
+    width: min(86vw, 1100px);
+    aspect-ratio: 1440 / 810;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background:
+      linear-gradient(140deg, #0a0c12 0%, #05060a 56%, #080811 100%);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+    display: grid;
+    place-items: center;
+    color: rgba(246, 247, 251, 0.45);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+  }
+
+  #xiphoray-light-root .xl-page,
+  #xiphoray-light-page {
+    --lamp-color: #ffb36b;
+    position: relative;
+    width: 1440px;
+    height: 810px;
+    flex: none;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 28px;
+    color: #f6f7fb;
+    /* 在 canvas 子树内由 HTMLTexture 采样；不做屏幕 scale */
+    transform: none;
+    box-shadow: none;
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+      linear-gradient(rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+      radial-gradient(circle at 74% 28%, color-mix(in srgb, var(--lamp-color) 10%, transparent), transparent 29%),
+      linear-gradient(140deg, #080a10 0%, #05060a 56%, #080811 100%);
+    background-size: 56px 56px, 56px 56px, auto, auto;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  /* 符号噪点层 */
+  #xiphoray-light-root .xl-page::before,
+  #xiphoray-light-page::before {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    opacity: 0.11;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.28) 0.7px, transparent 0.7px);
+    background-size: 7px 7px;
+    mask-image: linear-gradient(145deg, black, transparent 70%);
+    z-index: 1;
+  }
+
+  /* —— Header —— */
+  #xiphoray-light-root .xl-header,
+  #xiphoray-light-page .xl-header {
+    position: relative;
+    z-index: 2;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 54px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+  }
+
+  #xiphoray-light-root .xl-brand,
+  #xiphoray-light-page .xl-brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-size: 17px;
+    font-weight: 780;
+    letter-spacing: -0.03em;
+  }
+
+  #xiphoray-light-root .xl-brand-mark,
+  #xiphoray-light-page .xl-brand-mark {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: #f4f5f8;
+    color: #0a0b10;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.06em;
+  }
+
+  #xiphoray-light-root .xl-brand-suffix,
+  #xiphoray-light-page .xl-brand-suffix {
+    margin-left: 2px;
+    color: rgba(238, 240, 247, 0.42);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+  }
+
+  #xiphoray-light-root .xl-status-pill,
+  #xiphoray-light-page .xl-status-pill {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: rgba(239, 241, 247, 0.54);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+  }
+
+  #xiphoray-light-root .xl-status-pill > i,
+  #xiphoray-light-page .xl-status-pill > i {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--lamp-color, #f0a45f);
+    box-shadow: 0 0 16px var(--lamp-color, #f0a45f);
+  }
+
+  /* —— Main —— */
+  #xiphoray-light-root .xl-main,
+  #xiphoray-light-page .xl-main {
+    position: relative;
+    z-index: 2;
+    height: 638px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.48fr) minmax(360px, 0.52fr);
+    align-items: stretch;
+    gap: 48px;
+    padding: 36px 54px 28px;
+  }
+
+  /* 涂鸦墙：title-art + 涂鸦 + 喷漆/光晕 */
+  #xiphoray-light-root .xl-wall,
+  #xiphoray-light-page .xl-wall {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.42);
+  }
+
+  /* 喷漆污渍 / 色块 */
+  #xiphoray-light-root .xl-wall-spray,
+  #xiphoray-light-page .xl-wall-spray {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background:
+      radial-gradient(circle at 12% 22%, color-mix(in srgb, var(--lamp-color) 26%, transparent) 0 30px, transparent 56px),
+      radial-gradient(circle at 88% 18%, rgba(199, 156, 255, 0.18) 0 24px, transparent 50px),
+      radial-gradient(circle at 18% 78%, rgba(143, 220, 255, 0.14) 0 36px, transparent 72px),
+      radial-gradient(circle at 76% 82%, rgba(255, 95, 127, 0.16) 0 28px, transparent 60px),
+      radial-gradient(circle at 52% 12%, rgba(255, 217, 163, 0.1) 0 20px, transparent 48px),
+      radial-gradient(circle at 40% 88%, color-mix(in srgb, var(--lamp-color) 12%, transparent) 0 40px, transparent 80px),
+      radial-gradient(circle at 48% 40%, rgba(255, 255, 255, 0.03) 0 80px, transparent 140px);
+  }
+
+  /* 标题背后光晕（随 --lamp-color） */
+  #xiphoray-light-root .xl-title-glow,
+  #xiphoray-light-page .xl-title-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 82%;
+    height: 48%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--lamp-color) 22%, transparent) 0%,
+      color-mix(in srgb, var(--lamp-color) 8%, transparent) 38%,
+      transparent 70%
+    );
+  }
+
+  /* 散落涂鸦贴纸层 */
+  #xiphoray-light-root .xl-wall-doodles,
+  #xiphoray-light-page .xl-wall-doodles {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  #xiphoray-light-root .xl-doodle,
+  #xiphoray-light-page .xl-doodle {
+    position: absolute;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    user-select: none;
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  #xiphoray-light-root .xl-doodle.is-outline,
+  #xiphoray-light-page .xl-doodle.is-outline {
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    padding: 3px 8px;
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  #xiphoray-light-root .xl-doodle.is-stamp,
+  #xiphoray-light-page .xl-doodle.is-stamp {
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    letter-spacing: 0;
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  #xiphoray-light-root .xl-doodle.is-arrow,
+  #xiphoray-light-page .xl-doodle.is-arrow {
+    font-size: 22px;
+    letter-spacing: 0;
+    opacity: 0.4;
+  }
+
+  #xiphoray-light-root .xl-doodle.is-big-symbol,
+  #xiphoray-light-page .xl-doodle.is-big-symbol {
+    font-size: 28px;
+    letter-spacing: 0;
+    opacity: 0.28;
+    font-weight: 400;
+  }
+
+  #xiphoray-light-root .xl-wall-center,
+  #xiphoray-light-page .xl-wall-center {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    pointer-events: none;
+  }
+
+  /* 大号方块字 banner：只用 █ 与空格，跨字体稳定 */
+  #xiphoray-light-root .xl-title-art,
+  #xiphoray-light-page .xl-title-art {
+    margin: 0;
+    max-width: 100%;
+    color: #f7f7fa;
+    font-family: ui-monospace, "Cascadia Mono", "Consolas", "Courier New", monospace;
+    font-size: clamp(12px, 1.35vw, 18px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    white-space: pre;
+    text-align: left;
+    overflow: hidden;
+    text-shadow:
+      0 0 28px color-mix(in srgb, var(--lamp-color) 55%, transparent),
+      0 0 8px color-mix(in srgb, var(--lamp-color) 35%, transparent),
+      2px 3px 0 rgba(0, 0, 0, 0.75);
+    transform: rotate(-1deg);
+    transition: opacity 180ms ease, filter 180ms ease, text-shadow 180ms ease;
+  }
+
+  /* 电源关闭：墙面标题与喷漆变暗（2D 预演 T4 关灯） */
+  #xiphoray-light-root .xl-page.is-lamp-off .xl-title-art,
+  #xiphoray-light-page.is-lamp-off .xl-title-art {
+    opacity: 0.28;
+    filter: grayscale(0.35);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.75);
+  }
+
+  #xiphoray-light-root .xl-page.is-lamp-off .xl-wall-spray,
+  #xiphoray-light-page.is-lamp-off .xl-wall-spray,
+  #xiphoray-light-root .xl-page.is-lamp-off .xl-title-glow,
+  #xiphoray-light-page.is-lamp-off .xl-title-glow {
+    opacity: 0.2;
+  }
+
+  #xiphoray-light-root .xl-page.is-lamp-off .xl-wall-doodles,
+  #xiphoray-light-page.is-lamp-off .xl-wall-doodles {
+    opacity: 0.45;
+  }
+
+  #xiphoray-light-root .xl-wall-spray,
+  #xiphoray-light-page .xl-wall-spray,
+  #xiphoray-light-root .xl-title-glow,
+  #xiphoray-light-page .xl-title-glow,
+  #xiphoray-light-root .xl-wall-doodles,
+  #xiphoray-light-page .xl-wall-doodles {
+    transition: opacity 180ms ease;
+  }
+
+  #xiphoray-light-root .xl-controls.is-disabled .xl-control-row input[type="range"],
+  #xiphoray-light-page .xl-controls.is-disabled .xl-control-row input[type="range"] {
+    opacity: 0.45;
+  }
+
+  /* —— 灯光控制面板 —— */
+  #xiphoray-light-root .xl-controls,
+  #xiphoray-light-page .xl-controls {
+    align-self: center;
+    width: 100%;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 19px;
+    background: rgba(13, 15, 21, 0.93);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  }
+
+  #xiphoray-light-root .xl-control-heading,
+  #xiphoray-light-page .xl-control-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 29px;
+  }
+
+  #xiphoray-light-root .xl-control-heading p,
+  #xiphoray-light-page .xl-control-heading p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 720;
+    letter-spacing: 0.12em;
+  }
+
+  #xiphoray-light-root .xl-control-heading div > span,
+  #xiphoray-light-page .xl-control-heading div > span {
+    display: block;
+    margin-top: 6px;
+    color: rgba(237, 239, 246, 0.34);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+  }
+
+  #xiphoray-light-root .xl-power,
+  #xiphoray-light-page .xl-power {
+    height: 31px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    color: rgba(244, 245, 249, 0.45);
+    background: rgba(255, 255, 255, 0.035);
+    cursor: pointer;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+
+  #xiphoray-light-root .xl-power > span,
+  #xiphoray-light-page .xl-power > span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #656974;
+  }
+
+  #xiphoray-light-root .xl-power.is-on,
+  #xiphoray-light-page .xl-power.is-on {
+    border-color: color-mix(in srgb, var(--lamp-color) 40%, transparent);
+    color: #fff;
+  }
+
+  #xiphoray-light-root .xl-power.is-on > span,
+  #xiphoray-light-page .xl-power.is-on > span {
+    background: var(--lamp-color);
+    box-shadow: 0 0 12px var(--lamp-color);
+  }
+
+  #xiphoray-light-root .xl-control-row,
+  #xiphoray-light-page .xl-control-row {
+    display: block;
+    margin-top: 22px;
+  }
+
+  #xiphoray-light-root .xl-control-label,
+  #xiphoray-light-page .xl-control-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  #xiphoray-light-root .xl-control-label b,
+  #xiphoray-light-page .xl-control-label b,
+  #xiphoray-light-root .xl-control-label output,
+  #xiphoray-light-page .xl-control-label output {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: 0.11em;
+  }
+
+  #xiphoray-light-root .xl-control-label b,
+  #xiphoray-light-page .xl-control-label b {
+    color: rgba(244, 245, 249, 0.58);
+    font-weight: 550;
+  }
+
+  #xiphoray-light-root .xl-control-label output,
+  #xiphoray-light-page .xl-control-label output {
+    color: rgba(244, 245, 249, 0.86);
+  }
+
+  #xiphoray-light-root .xl-control-row input[type="range"],
+  #xiphoray-light-page .xl-control-row input[type="range"] {
+    width: 100%;
+    height: 4px;
+    display: block;
+    margin: 0;
+    border-radius: 999px;
+    accent-color: var(--lamp-color);
+    cursor: ew-resize;
+    touch-action: pan-x;
+  }
+
+  #xiphoray-light-root .xl-color-control,
+  #xiphoray-light-page .xl-color-control {
+    margin-top: 25px;
+  }
+
+  #xiphoray-light-root .xl-color-options,
+  #xiphoray-light-page .xl-color-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #xiphoray-light-root .xl-swatch,
+  #xiphoray-light-page .xl-swatch,
+  #xiphoray-light-root .xl-custom-color,
+  #xiphoray-light-page .xl-custom-color {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 50%;
+    background: var(--swatch, transparent);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  #xiphoray-light-root .xl-swatch::after,
+  #xiphoray-light-page .xl-swatch::after {
+    position: absolute;
+    inset: -4px;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: "";
+  }
+
+  #xiphoray-light-root .xl-swatch.is-active::after,
+  #xiphoray-light-page .xl-swatch.is-active::after {
+    border-color: rgba(255, 255, 255, 0.76);
+  }
+
+  #xiphoray-light-root .xl-custom-color,
+  #xiphoray-light-page .xl-custom-color {
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+  }
+
+  #xiphoray-light-root .xl-custom-color input,
+  #xiphoray-light-page .xl-custom-color input {
+    position: absolute;
+    inset: -8px;
+    width: 42px;
+    height: 42px;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  #xiphoray-light-root .xl-reset,
+  #xiphoray-light-page .xl-reset {
+    width: 100%;
+    height: 39px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 26px;
+    padding: 0 13px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: rgba(245, 246, 250, 0.52);
+    background: rgba(255, 255, 255, 0.026);
+    cursor: pointer;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 8px;
+    letter-spacing: 0.13em;
+  }
+
+  #xiphoray-light-root .xl-reset:hover,
+  #xiphoray-light-page .xl-reset:hover {
+    color: #fff;
+    border-color: color-mix(in srgb, var(--lamp-color) 35%, transparent);
+  }
+
+  /* —— Footer —— */
+  #xiphoray-light-root .xl-footer,
+  #xiphoray-light-page .xl-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    height: 90px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 30px;
+    padding: 0 54px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(239, 241, 247, 0.28);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 8px;
+    letter-spacing: 0.13em;
+  }
+
+  #xiphoray-light-root .xl-footer > p,
+  #xiphoray-light-page .xl-footer > p {
+    margin: 0;
+  }
+
+  #xiphoray-light-root .xl-footer > p:last-child,
+  #xiphoray-light-page .xl-footer > p:last-child {
+    text-align: right;
+  }
+
+  #xiphoray-light-root .xl-drag-hint,
+  #xiphoray-light-page .xl-drag-hint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #xiphoray-light-root .xl-drag-hint div,
+  #xiphoray-light-page .xl-drag-hint div {
+    display: grid;
+    gap: 3px;
+  }
+
+  #xiphoray-light-root .xl-drag-hint b,
+  #xiphoray-light-page .xl-drag-hint b {
+    color: rgba(247, 248, 252, 0.76);
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  #xiphoray-light-root .xl-drag-hint div span,
+  #xiphoray-light-page .xl-drag-hint div span {
+    color: rgba(239, 241, 247, 0.34);
+    font-size: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  #xiphoray-light-root .xl-drag-orbit,
+  #xiphoray-light-page .xl-drag-orbit {
+    position: relative;
+    width: 34px;
+    height: 24px;
+    display: block;
+    border: 1px solid rgba(255, 255, 255, 0.21);
+    border-radius: 50%;
+    transform: rotate(-14deg);
+  }
+
+  #xiphoray-light-root .xl-drag-orbit i,
+  #xiphoray-light-page .xl-drag-orbit i {
+    position: absolute;
+    top: 1px;
+    right: 3px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--lamp-color);
+    box-shadow: 0 0 8px var(--lamp-color);
+  }
+
+  /* 场景级 status（T3+ 会用；T1 显示 2D 模式提示） */
+  #xiphoray-light-root .xl-scene-status {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    z-index: 5;
+    transform: translateX(-50%);
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.56);
+    background: rgba(5, 6, 9, 0.8);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    transition: opacity 400ms ease, transform 400ms ease;
+  }
+
+  #xiphoray-light-root .xl-scene-status > i {
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: #ffb36b;
+    box-shadow: 0 0 12px #ffb36b;
+  }
+
+  #xiphoray-light-root .xl-scene-status.is-hidden {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+    pointer-events: none;
+  }
+
+  #xiphoray-light-root .xl-scene-error {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    z-index: 6;
+    transform: translateX(-50%);
+    width: min(460px, calc(100vw - 36px));
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 180, 120, 0.28);
+    border-radius: 14px;
+    color: #ffd8c2;
+    background: rgba(5, 6, 9, 0.92);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    line-height: 1.45;
+    text-align: center;
+    white-space: normal;
+  }
+
+  #xiphoray-light-root .xl-scene-error[hidden] {
+    display: none !important;
+  }
+
+  #xiphoray-light-root.is-scene-ready .xl-shell::after {
+    opacity: 1;
+  }
+
+  /* page 在 canvas 内按逻辑分辨率排版；窄屏改 portrait 尺寸供纹理采样 */
+  @media (max-width: 700px) {
+    #xiphoray-light-root .xl-page {
+      width: 720px;
+      height: 1180px;
+      border-radius: 34px;
+      background-size: 48px 48px, 48px 48px, auto, auto;
+    }
+
+    #xiphoray-light-root .xl-header,
+  #xiphoray-light-page .xl-header {
+      height: 88px;
+      padding: 0 34px;
+    }
+
+    #xiphoray-light-root .xl-main,
+  #xiphoray-light-page .xl-main {
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: 40px 34px 116px;
+    }
+
+    #xiphoray-light-root .xl-wall,
+    #xiphoray-light-page .xl-wall {
+      min-height: 480px;
+    }
+
+    #xiphoray-light-root .xl-title-art,
+  #xiphoray-light-page .xl-title-art {
+      font-size: 9px;
+      transform: rotate(-0.5deg);
+    }
+
+    #xiphoray-light-root .xl-doodle.is-stamp {
+      width: 44px;
+      height: 44px;
+      font-size: 9px;
+    }
+
+    #xiphoray-light-root .xl-footer,
+  #xiphoray-light-page .xl-footer {
+      height: 98px;
+      grid-template-columns: 1fr auto;
+      padding: 0 34px;
+    }
+
+    #xiphoray-light-root .xl-footer > p:first-child,
+    #xiphoray-light-page .xl-footer > p:first-child {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #xiphoray-light-root .xl-page,
+    #xiphoray-light-page,
+  #xiphoray-light-page,
+  #xiphoray-light-root .xl-preview,
+  #xiphoray-light-root .xl-scene-status {
+      transition-duration: 0.01ms !important;
+    }
+  }
+#xiphoray-light-page {
+    pointer-events: auto !important;
+  }
+
+  /* polyfill 把 page 挪到 body host：抬高可点层，避免被 root(z=199999) 盖住 */
+  [data-host-of="xiphoray-light-gl"],
+  [data-html-in-canvas-host] {
+    z-index: 2000000 !important;
+    pointer-events: auto !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+  }
+  #xiphoray-light-page,
+  #xiphoray-light-page * {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-user-drag: none !important;
+  }
+  /* 控件仍允许交互；range/color 本身不依赖文本选中 */
+  #xiphoray-light-page {
+    pointer-events: auto !important;
+  }
+  /* 拉灯/调束期间：全局禁选，避免背后 DOM 被拖出选区导致整页重排抖 */
+  html.xl-is-dragging,
+  html.xl-is-dragging body,
+  html.xl-is-dragging body * {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    cursor: grabbing !important;
+  }
+  html.xl-is-adjusting-beam,
+  html.xl-is-adjusting-beam body {
+    cursor: ew-resize !important;
+  }
+
+</style>
+
+<div id="xiphoray-light-root" role="application" aria-label="Xiphoray light study">
+  <div class="xl-shell" id="xiphoray-light-shell">
+    <!--
+      T3：page-source 必须是 canvas 的子节点（HTMLTexture / polyfill 硬约束）。
+      layoutsubtree 属性由脚本 setAttribute 再设一次，保证存在。
+    -->
+    <canvas
+      class="xl-webgl"
+      id="xiphoray-light-gl"
+      layoutsubtree
+      aria-label="Xiphoray light WebGL surface"
+    >
+      <div class="xl-page" id="xiphoray-light-page" style="--lamp-color:#ffb36b">
+        <header class="xl-header">
+          <div class="xl-brand">
+            <div class="xl-brand-mark" aria-hidden="true">X</div>
+            <span>Xiphoray</span>
+            <span class="xl-brand-suffix">LIGHT</span>
+          </div>
+          <div class="xl-status-pill">
+            <i aria-hidden="true"></i>
+            SYMBOL WALL · T7 READY
+          </div>
+        </header>
+
+        <div class="xl-main">
+          <section class="xl-wall" aria-label="Xiphoray symbol graffiti wall">
+            <div class="xl-wall-spray" aria-hidden="true"></div>
+            <div class="xl-wall-doodles" id="xiphoray-light-doodles" aria-hidden="true"></div>
+            <div class="xl-title-glow" aria-hidden="true"></div>
+            <div class="xl-wall-center">
+              <pre class="xl-title-art" id="xiphoray-light-title-art" aria-label="Xiphoray"></pre>
+            </div>
+          </section>
+
+          <aside class="xl-controls" aria-label="Light controls">
+            <div class="xl-control-heading">
+              <div>
+                <p>LIGHT CONTROL</p>
+                <span>BEAM · POWER · PIGMENT</span>
+              </div>
+              <button type="button" class="xl-power is-on" id="xiphoray-light-power" aria-pressed="true" aria-label="Toggle lamp power">
+                <span aria-hidden="true"></span>
+                ON
+              </button>
+            </div>
+
+            <label class="xl-control-row">
+              <span class="xl-control-label">
+                <b>BEAM</b>
+                <output id="xiphoray-light-beam-out" for="xiphoray-light-beam">58°</output>
+              </span>
+              <input
+                id="xiphoray-light-beam"
+                type="range"
+                min="16"
+                max="58"
+                step="1"
+                value="58"
+                aria-label="Beam angle"
+              />
+            </label>
+
+            <label class="xl-control-row">
+              <span class="xl-control-label">
+                <b>BRIGHTNESS</b>
+                <output id="xiphoray-light-bright-out" for="xiphoray-light-bright">1450 lm</output>
+              </span>
+              <input
+                id="xiphoray-light-bright"
+                type="range"
+                min="200"
+                max="3200"
+                step="50"
+                value="1450"
+                aria-label="Brightness"
+              />
+            </label>
+
+            <div class="xl-color-control">
+              <span class="xl-control-label">
+                <b>COLOR</b>
+                <output id="xiphoray-light-color-out">#ffb36b</output>
+              </span>
+              <div class="xl-color-options" id="xiphoray-light-swatches" role="listbox" aria-label="Color presets">
+                <button type="button" class="xl-swatch is-active" data-color="#ffb36b" style="--swatch:#ffb36b" aria-label="Color ffb36b" role="option" aria-selected="true"></button>
+                <button type="button" class="xl-swatch" data-color="#ffd9a3" style="--swatch:#ffd9a3" aria-label="Color ffd9a3" role="option" aria-selected="false"></button>
+                <button type="button" class="xl-swatch" data-color="#8fdcff" style="--swatch:#8fdcff" aria-label="Color 8fdcff" role="option" aria-selected="false"></button>
+                <button type="button" class="xl-swatch" data-color="#c79cff" style="--swatch:#c79cff" aria-label="Color c79cff" role="option" aria-selected="false"></button>
+                <button type="button" class="xl-swatch" data-color="#ff5f7f" style="--swatch:#ff5f7f" aria-label="Color ff5f7f" role="option" aria-selected="false"></button>
+                <label class="xl-custom-color" title="Custom color" aria-label="Custom color">
+                  +
+                  <input id="xiphoray-light-custom-color" type="color" value="#ffb36b" />
+                </label>
+              </div>
+            </div>
+
+            <button type="button" class="xl-reset" id="xiphoray-light-reset" aria-label="Reset light">
+              <span>RESET LIGHT</span>
+              <span>INITIAL PRESET</span>
+            </button>
+          </aside>
+        </div>
+
+        <footer class="xl-footer">
+          <p>MIT · AFTER HTML-LIGHT-DEMO / @kaolti</p>
+          <div class="xl-drag-hint">
+            <span class="xl-drag-orbit" aria-hidden="true"><i></i></span>
+            <div>
+              <b>DRAG THE LAMP</b>
+              <span>LMB pull · RMB beam · ?list=9</span>
+            </div>
+          </div>
+          <p>XIPHORAY · SYMBOL GRAFFITI</p>
+        </footer>
+      </div>
+    </canvas>
+
+    <div class="xl-preview" id="xiphoray-light-preview" aria-hidden="true">
+      <div class="xl-preview-card">PREPARING HTML SURFACE</div>
+    </div>
+
+    <div class="xl-scene-status" id="xiphoray-light-scene-status">
+      <i aria-hidden="true"></i>
+      <span id="xiphoray-light-status-text">T4 · LOADING</span>
+    </div>
+
+    <div class="xl-scene-error" id="xiphoray-light-error" hidden></div>
+  </div>
+</div>
+
+<script>
+/*
+ * Xiphoray Light — runtime (IIFE)
+ * MIT-inspired recreation of HTML-Light-Demo (jinruozai) / concept @kaolti
+ * Delivered as Bored fragment: /zbored.html?list=9
+ * Stack: three@0.185.1 + three-html-render@0.1.2 + Verlet lamp + SpotLight
+ */
+(function () {
+  'use strict';
+
+  /* =========================================================
+   * [config]
+   * ========================================================= */
+  var COLOR_PRESETS = ['#ffb36b', '#ffd9a3', '#8fdcff', '#c79cff', '#ff5f7f'];
+  var BEAM_RANGE = { min: 16, max: 58, step: 1 };
+  var INITIAL_LIGHT = {
+    enabled: true,
+    /* 默认光束开到最大（搭档指定） */
+    angle: 58,
+    brightness: 1450,
+    color: '#ffb36b'
+  };
+  var BRIGHT_RANGE = { min: 200, max: 3200, step: 50 };
+  var WALL_COPY = {
+    brand: 'Xiphoray',
+    mode: 'SYMBOL WALL',
+    study: 'LIGHT STUDY'
+  };
+
+  /* CDN 固定版本（规划 M0） */
+  var CDN = {
+    three: 'https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js',
+    addons: 'https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/',
+    polyfill: 'https://cdn.jsdelivr.net/npm/three-html-render@0.1.2/dist/polyfill.mjs'
+  };
+
+  var BLOCK_FONT = {
+    X: ['█   █', ' █ █ ', '  █  ', ' █ █ ', '█   █'],
+    I: ['█████', '  █  ', '  █  ', '  █  ', '█████'],
+    P: ['████ ', '█   █', '████ ', '█    ', '█    '],
+    H: ['█   █', '█   █', '█████', '█   █', '█   █'],
+    O: [' ███ ', '█   █', '█   █', '█   █', ' ███ '],
+    R: ['████ ', '█   █', '████ ', '█  █ ', '█   █'],
+    A: [' ███ ', '█   █', '█████', '█   █', '█   █'],
+    Y: ['█   █', ' █ █ ', '  █  ', '  █  ', '  █  '],
+    ' ': ['     ', '     ', '     ', '     ', '     ']
+  };
+
+  var DOODLES = [
+    { text: 'XIPHO', cls: 'is-outline', top: '7%', left: '5%', rot: -12, size: '11px', color: 'rgba(255,179,107,0.72)' },
+    { text: 'RAY', cls: 'is-outline', top: '12%', left: '74%', rot: 8, size: '13px', color: 'rgba(143,220,255,0.68)' },
+    { text: 'ON AIR', cls: 'is-outline', top: '76%', left: '8%', rot: -6, size: '10px', color: 'rgba(255,95,127,0.72)' },
+    { text: 'SPOT', cls: 'is-outline', top: '84%', left: '70%', rot: 14, size: '11px', color: 'rgba(199,156,255,0.72)' },
+    { text: 'WALL', cls: 'is-outline', top: '46%', left: '3%', rot: -90, size: '10px', color: 'rgba(246,247,251,0.38)' },
+    { text: 'BEAM', cls: 'is-outline', top: '28%', left: '78%', rot: 6, size: '10px', color: 'rgba(255,179,107,0.55)' },
+    { text: 'GLOW', cls: 'is-outline', top: '68%', left: '76%', rot: -10, size: '10px', color: 'rgba(143,220,255,0.55)' },
+    { text: 'MARK', cls: 'is-outline', top: '90%', left: '52%', rot: 3, size: '9px', color: 'rgba(255,217,163,0.5)' },
+    { text: 'HTML', cls: 'is-stamp', top: '20%', left: '86%', rot: 18, size: '10px', color: 'rgba(255,217,163,0.78)' },
+    { text: '3D', cls: 'is-stamp', top: '60%', left: '6%', rot: -20, size: '12px', color: 'rgba(143,220,255,0.72)' },
+    { text: 'FX', cls: 'is-stamp', top: '8%', left: '56%', rot: 12, size: '11px', color: 'rgba(255,95,127,0.6)' },
+    { text: 'OK', cls: 'is-stamp', top: '72%', left: '88%', rot: -8, size: '11px', color: 'rgba(199,156,255,0.65)' },
+    { text: '→→→', cls: 'is-arrow', top: '26%', left: '58%', rot: -8, size: '20px', color: 'rgba(255,255,255,0.38)' },
+    { text: '←←', cls: 'is-arrow', top: '70%', left: '38%', rot: 12, size: '18px', color: 'rgba(255,179,107,0.42)' },
+    { text: '↗↗', cls: 'is-arrow', top: '18%', left: '32%', rot: -18, size: '16px', color: 'rgba(143,220,255,0.4)' },
+    { text: '※', cls: 'is-big-symbol', top: '9%', left: '42%', rot: 0, size: '32px', color: 'rgba(255,255,255,0.28)' },
+    { text: '◆', cls: 'is-big-symbol', top: '54%', left: '90%', rot: 25, size: '26px', color: 'rgba(199,156,255,0.38)' },
+    { text: '★', cls: 'is-big-symbol', top: '88%', left: '42%', rot: -15, size: '24px', color: 'rgba(255,179,107,0.38)' },
+    { text: '●', cls: 'is-big-symbol', top: '34%', left: '8%', rot: 0, size: '22px', color: 'rgba(143,220,255,0.3)' },
+    { text: '╳╳╳', cls: 'is-big-symbol', top: '42%', left: '12%', rot: -5, size: '18px', color: 'rgba(255,95,127,0.32)' },
+    { text: '█▓▒░', cls: '', top: '36%', left: '80%', rot: 4, size: '12px', color: 'rgba(246,247,251,0.3)' },
+    { text: '// LIGHT', cls: '', top: '5%', left: '26%', rot: -3, size: '10px', color: 'rgba(255,179,107,0.48)' },
+    { text: '#NOISE', cls: '', top: '92%', left: '22%', rot: 2, size: '10px', color: 'rgba(143,220,255,0.42)' },
+    { text: '::DRIP', cls: '', top: '58%', left: '70%', rot: 7, size: '10px', color: 'rgba(255,95,127,0.4)' }
+  ];
+
+  /* =========================================================
+   * [state + DOM]
+   * ========================================================= */
+  var ROOT_ID = 'xiphoray-light-root';
+  var root = document.getElementById(ROOT_ID);
+  if (!root) {
+    console.warn('[xiphoray-light] root not found');
+    return;
+  }
+
+  var state = {
+    lighting: {
+      enabled: INITIAL_LIGHT.enabled,
+      angle: INITIAL_LIGHT.angle,
+      brightness: INITIAL_LIGHT.brightness,
+      color: INITIAL_LIGHT.color
+    },
+    ready: false,
+    mode: 'boot',
+    colorIndex: 0,
+    error: '',
+    htmlCanvasReady: false
+  };
+
+  var page = document.getElementById('xiphoray-light-page');
+  var glCanvas = document.getElementById('xiphoray-light-gl');
+  var preview = document.getElementById('xiphoray-light-preview');
+  var errorBox = document.getElementById('xiphoray-light-error');
+  var statusEl = document.getElementById('xiphoray-light-scene-status');
+  var controls = root.querySelector('.xl-controls');
+  var doodlesHost = document.getElementById('xiphoray-light-doodles');
+  var titleArt = document.getElementById('xiphoray-light-title-art');
+  var powerBtn = document.getElementById('xiphoray-light-power');
+  var beamInput = document.getElementById('xiphoray-light-beam');
+  var beamOut = document.getElementById('xiphoray-light-beam-out');
+  var brightInput = document.getElementById('xiphoray-light-bright');
+  var brightOut = document.getElementById('xiphoray-light-bright-out');
+  var colorOut = document.getElementById('xiphoray-light-color-out');
+  var swatchBox = document.getElementById('xiphoray-light-swatches');
+  var customColor = document.getElementById('xiphoray-light-custom-color');
+  var resetBtn = document.getElementById('xiphoray-light-reset');
+  var statusText = document.getElementById('xiphoray-light-status-text');
+
+  var sceneApi = {
+    THREE: null,
+    renderer: null,
+    scene: null,
+    camera: null,
+    pageGroup: null,
+    pageMesh: null,
+    backing: null,
+    pageTexture: null,
+    disposed: false,
+    animationFrame: 0,
+    resizeFrame: 0,
+    /* T4 lamp */
+    lampRoot: null,
+    ceilingCap: null,
+    cable: null,
+    lightRig: null,
+    activeColor: null,
+    anchor: null,
+    lampPosition: null,
+    ropeLength: 1.22,
+    pageTopToAnchor: 1.18,
+    disposables: [],
+    interactions: null,
+    hitHost: null,
+    /* T5 physics */
+    lampPrevious: null,
+    aimTarget: null,
+    pointerVelocity: null,
+    lastPointerTarget: null,
+    currentLightDirection: null,
+    gravity: null,
+    fixedStep: 1 / 120,
+    pulling: false,
+    pullPointerId: -1,
+    pullStrength: 0,
+    lastPointerTime: 0,
+    beamPointerId: -1,
+    beamStartX: 0,
+    beamStartY: 0,
+    beamStartAngle: 58,
+    beamDragged: false,
+    stableFrames: 0,
+    animFrameCount: 0,
+    lastTime: 0,
+    accumulator: 0,
+    raycaster: null,
+    pointerNdcVec: null,
+    lampNdc: null,
+    interactionPlane: null,
+    _tmpA: null,
+    _tmpB: null,
+    _tmpC: null,
+    _velocity: null,
+    _ropeDir: null,
+    _lightDir: null,
+    _midpoint: null,
+    _quatA: null,
+    _quatB: null,
+    pointerBound: false,
+    captureEl: null,
+    /* T6：面板拖滑条期间保持 rAF，矩阵不掉线 */
+    uiInteracting: false,
+    controlsBound: false
+  };
+
+  var _paintListeners = [];
+  var _wakeListeners = [];
+
+  /* =========================================================
+   * [hooks]
+   * ========================================================= */
+  function requestPaint() {
+    if (glCanvas && typeof glCanvas.requestPaint === 'function') {
+      try {
+        glCanvas.requestPaint();
+      } catch (err) {
+        console.warn('[xiphoray-light] requestPaint failed', err);
+      }
+    }
+    var i;
+    for (i = 0; i < _paintListeners.length; i++) {
+      try {
+        _paintListeners[i](state);
+      } catch (err2) {
+        console.warn('[xiphoray-light] paint listener', err2);
+      }
+    }
+  }
+
+  function wake() {
+    var i;
+    for (i = 0; i < _wakeListeners.length; i++) {
+      try {
+        _wakeListeners[i](state);
+      } catch (err) {
+        console.warn('[xiphoray-light] wake listener', err);
+      }
+    }
+    sceneApi.stableFrames = 0;
+    if (sceneApi.renderer && !sceneApi.disposed && !sceneApi.animationFrame) {
+      sceneApi.lastTime = performance.now();
+      sceneApi.animationFrame = requestAnimationFrame(renderLoop);
+    }
+  }
+
+  function renderLoop(time) {
+    sceneApi.animationFrame = 0;
+    if (sceneApi.disposed || !sceneApi.renderer) return;
+
+    if (typeof time !== 'number') time = performance.now();
+    var fixedStep = sceneApi.fixedStep || 1 / 120;
+    var delta = Math.min((time - (sceneApi.lastTime || time)) / 1000, 0.05);
+    sceneApi.lastTime = time;
+    sceneApi.accumulator = Math.min((sceneApi.accumulator || 0) + delta, fixedStep * 5);
+
+    while (sceneApi.accumulator >= fixedStep) {
+      stepPhysics();
+      sceneApi.accumulator -= fixedStep;
+    }
+
+    updateLampPose();
+
+    if (sceneApi.pageMesh) sceneApi.pageMesh.updateMatrixWorld(true);
+    if (sceneApi.camera) sceneApi.camera.updateMatrixWorld();
+    if (sceneApi.interactions) sceneApi.interactions.update();
+
+    /* host 可能晚一帧才出现；首几帧补钉 z-index */
+    if (!sceneApi.hitHost) {
+      var h =
+        document.querySelector('[data-host-of="xiphoray-light-gl"]') ||
+        document.querySelector('[data-html-in-canvas-host]');
+      if (h) {
+        h.style.zIndex = '2000000';
+        h.style.pointerEvents = 'auto';
+        sceneApi.hitHost = h;
+        bindPointerIfNeeded();
+      }
+    }
+
+    sceneApi.renderer.render(sceneApi.scene, sceneApi.camera);
+    sceneApi.animFrameCount = (sceneApi.animFrameCount || 0) + 1;
+
+    /*
+     * T5 idle + T6：未拉灯、未拖面板、stableFrames≥80 则停 rAF。
+     * 面板拖滑条时 uiInteracting=true，矩阵持续刷新避免命中漂移。
+     */
+    if (
+      !sceneApi.disposed &&
+      (sceneApi.pulling ||
+        sceneApi.uiInteracting ||
+        sceneApi.beamPointerId !== -1 ||
+        sceneApi.stableFrames < 80 ||
+        sceneApi.animFrameCount < 4)
+    ) {
+      sceneApi.animationFrame = requestAnimationFrame(renderLoop);
+    }
+  }
+
+  function onPaint(fn) {
+    if (typeof fn === 'function') _paintListeners.push(fn);
+  }
+
+  function onWake(fn) {
+    if (typeof fn === 'function') _wakeListeners.push(fn);
+  }
+
+  function setStatus(text) {
+    if (statusText) statusText.textContent = text;
+  }
+
+  function showError(message) {
+    state.error = message || 'Unknown error';
+    state.mode = 'error';
+    if (errorBox) {
+      errorBox.hidden = false;
+      errorBox.textContent = state.error;
+    }
+    if (statusEl) statusEl.classList.add('is-hidden');
+    if (preview) preview.classList.remove('is-hidden');
+    console.warn('[xiphoray-light]', state.error);
+  }
+
+  function setSceneReady(flag) {
+    state.ready = !!flag;
+    if (flag) {
+      state.mode = 'webgl-surface';
+      root.classList.add('is-scene-ready');
+      if (preview) preview.classList.add('is-hidden');
+      if (statusEl) statusEl.classList.add('is-hidden');
+      setStatus('T7 READY · BORED #9');
+    }
+  }
+
+  /* =========================================================
+   * [wall]
+   * ========================================================= */
+  function buildBlockWord(word) {
+    var rows = ['', '', '', '', ''];
+    var i;
+    var r;
+    var ch;
+    var glyph;
+    for (i = 0; i < word.length; i++) {
+      ch = word.charAt(i).toUpperCase();
+      glyph = BLOCK_FONT[ch] || BLOCK_FONT.X;
+      for (r = 0; r < 5; r++) {
+        rows[r] += glyph[r] + (i < word.length - 1 ? ' ' : '');
+      }
+    }
+    return rows.join('\n');
+  }
+
+  function paintTitle() {
+    if (!titleArt) return;
+    titleArt.textContent = buildBlockWord('XIPHORAY');
+  }
+
+  function paintDoodles() {
+    if (!doodlesHost) return;
+    doodlesHost.textContent = '';
+    var i;
+    for (i = 0; i < DOODLES.length; i++) {
+      var d = DOODLES[i];
+      var node = document.createElement('span');
+      node.className = 'xl-doodle' + (d.cls ? ' ' + d.cls : '');
+      node.textContent = d.text;
+      node.style.top = d.top;
+      node.style.left = d.left;
+      node.style.transform = 'rotate(' + d.rot + 'deg)';
+      node.style.fontSize = d.size;
+      node.style.color = d.color;
+      doodlesHost.appendChild(node);
+    }
+  }
+
+  /* =========================================================
+   * [dom-ui]
+   * ========================================================= */
+  function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
+  }
+
+  function normalizeColor(hex) {
+    if (!hex || typeof hex !== 'string') return INITIAL_LIGHT.color;
+    var s = hex.trim().toLowerCase();
+    if (s.charAt(0) !== '#') s = '#' + s;
+    if (/^#[0-9a-f]{6}$/.test(s)) return s;
+    if (/^#[0-9a-f]{3}$/.test(s)) {
+      return (
+        '#' +
+        s.charAt(1) +
+        s.charAt(1) +
+        s.charAt(2) +
+        s.charAt(2) +
+        s.charAt(3) +
+        s.charAt(3)
+      );
+    }
+    return INITIAL_LIGHT.color;
+  }
+
+  function findColorIndex(color) {
+    var c = normalizeColor(color);
+    var i;
+    for (i = 0; i < COLOR_PRESETS.length; i++) {
+      if (COLOR_PRESETS[i] === c) return i;
+    }
+    return -1;
+  }
+
+  function syncControlDOM(lighting) {
+    var on = !!lighting.enabled;
+    var color = normalizeColor(lighting.color);
+
+    if (page) {
+      page.style.setProperty('--lamp-color', color);
+      page.classList.toggle('is-lamp-off', !on);
+    }
+    if (controls) controls.classList.toggle('is-disabled', !on);
+
+    if (powerBtn) {
+      powerBtn.classList.toggle('is-on', on);
+      powerBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      powerBtn.innerHTML = '<span aria-hidden="true"></span>' + (on ? 'ON' : 'OFF');
+    }
+
+    if (beamInput) {
+      beamInput.min = String(BEAM_RANGE.min);
+      beamInput.max = String(BEAM_RANGE.max);
+      beamInput.step = String(BEAM_RANGE.step);
+      if (document.activeElement !== beamInput) beamInput.value = String(lighting.angle);
+    }
+    if (beamOut) beamOut.textContent = lighting.angle + '°';
+
+    if (brightInput) {
+      brightInput.min = String(BRIGHT_RANGE.min);
+      brightInput.max = String(BRIGHT_RANGE.max);
+      brightInput.step = String(BRIGHT_RANGE.step);
+      if (document.activeElement !== brightInput) brightInput.value = String(lighting.brightness);
+    }
+    if (brightOut) brightOut.textContent = lighting.brightness + ' lm';
+
+    if (colorOut) colorOut.textContent = color;
+    if (customColor && document.activeElement !== customColor) customColor.value = color;
+
+    if (swatchBox) {
+      var buttons = swatchBox.querySelectorAll('.xl-swatch');
+      var idx;
+      for (idx = 0; idx < buttons.length; idx++) {
+        var active = normalizeColor(buttons[idx].getAttribute('data-color')) === color;
+        buttons[idx].classList.toggle('is-active', active);
+        buttons[idx].setAttribute('aria-selected', active ? 'true' : 'false');
+      }
+    }
+
+    state.colorIndex = findColorIndex(color);
+  }
+
+  function setLighting(patch, opts) {
+    opts = opts || {};
+    var next = {
+      enabled: state.lighting.enabled,
+      angle: state.lighting.angle,
+      brightness: state.lighting.brightness,
+      color: state.lighting.color
+    };
+
+    if (patch && typeof patch.enabled === 'boolean') next.enabled = patch.enabled;
+    if (patch && patch.angle != null && !isNaN(Number(patch.angle))) {
+      next.angle = clamp(Math.round(Number(patch.angle)), BEAM_RANGE.min, BEAM_RANGE.max);
+    }
+    if (patch && patch.brightness != null && !isNaN(Number(patch.brightness))) {
+      next.brightness = clamp(
+        Math.round(Number(patch.brightness) / BRIGHT_RANGE.step) * BRIGHT_RANGE.step,
+        BRIGHT_RANGE.min,
+        BRIGHT_RANGE.max
+      );
+    }
+    if (patch && patch.color != null) next.color = normalizeColor(String(patch.color));
+
+    state.lighting.enabled = next.enabled;
+    state.lighting.angle = next.angle;
+    state.lighting.brightness = next.brightness;
+    state.lighting.color = next.color;
+
+    syncControlDOM(state.lighting);
+    applyLightingToRig(state.lighting);
+
+    if (!opts.silent) {
+      requestPaint();
+      wake();
+    }
+  }
+
+  function resetLighting() {
+    setLighting({
+      enabled: INITIAL_LIGHT.enabled,
+      angle: INITIAL_LIGHT.angle,
+      brightness: INITIAL_LIGHT.brightness,
+      color: INITIAL_LIGHT.color
+    });
+    /* T5：RESET 同时复位摆动（源 demo resetLight 行为） */
+    if (typeof resetMotion === 'function') resetMotion();
+  }
+
+  function cycleColor(dir) {
+    var step = dir < 0 ? -1 : 1;
+    var idx = state.colorIndex;
+    if (idx < 0) idx = 0;
+    idx = (idx + step + COLOR_PRESETS.length) % COLOR_PRESETS.length;
+    setLighting({ color: COLOR_PRESETS[idx] });
+  }
+
+  function refreshControlRefs() {
+    /* polyfill 迁移 page 后节点仍是同一引用，但保险从 page 再取一次 */
+    if (!page) return;
+    if (!powerBtn || !powerBtn.isConnected) powerBtn = page.querySelector('#xiphoray-light-power');
+    if (!beamInput || !beamInput.isConnected) beamInput = page.querySelector('#xiphoray-light-beam');
+    if (!beamOut || !beamOut.isConnected) beamOut = page.querySelector('#xiphoray-light-beam-out');
+    if (!brightInput || !brightInput.isConnected) brightInput = page.querySelector('#xiphoray-light-bright');
+    if (!brightOut || !brightOut.isConnected) brightOut = page.querySelector('#xiphoray-light-bright-out');
+    if (!colorOut || !colorOut.isConnected) colorOut = page.querySelector('#xiphoray-light-color-out');
+    if (!swatchBox || !swatchBox.isConnected) swatchBox = page.querySelector('#xiphoray-light-swatches');
+    if (!customColor || !customColor.isConnected) {
+      customColor = page.querySelector('#xiphoray-light-custom-color');
+    }
+    if (!resetBtn || !resetBtn.isConnected) resetBtn = page.querySelector('#xiphoray-light-reset');
+    if (!controls || !controls.isConnected) controls = page.querySelector('.xl-controls');
+  }
+
+  function beginUiInteract() {
+    sceneApi.uiInteracting = true;
+    sceneApi.stableFrames = 0;
+    wake();
+  }
+
+  function endUiInteract() {
+    sceneApi.uiInteracting = false;
+    /* 给几帧收尾刷新，再允许 idle */
+    sceneApi.stableFrames = 0;
+    wake();
+  }
+
+  function bindControls() {
+    if (sceneApi.controlsBound) return;
+    sceneApi.controlsBound = true;
+    refreshControlRefs();
+
+    function onRangeStart() {
+      beginUiInteract();
+    }
+    function onRangeEnd() {
+      endUiInteract();
+    }
+
+    if (powerBtn) {
+      powerBtn.addEventListener('click', function () {
+        setLighting({ enabled: !state.lighting.enabled });
+      });
+      powerBtn.addEventListener('pointerdown', beginUiInteract);
+      powerBtn.addEventListener('pointerup', endUiInteract);
+    }
+    if (beamInput) {
+      beamInput.addEventListener('pointerdown', onRangeStart);
+      beamInput.addEventListener('pointerup', onRangeEnd);
+      beamInput.addEventListener('pointercancel', onRangeEnd);
+      beamInput.addEventListener('touchstart', onRangeStart, { passive: true });
+      beamInput.addEventListener('touchend', onRangeEnd, { passive: true });
+      beamInput.addEventListener('input', function () {
+        beginUiInteract();
+        setLighting({ angle: Number(beamInput.value) });
+      });
+      beamInput.addEventListener('change', onRangeEnd);
+    }
+    if (brightInput) {
+      brightInput.addEventListener('pointerdown', onRangeStart);
+      brightInput.addEventListener('pointerup', onRangeEnd);
+      brightInput.addEventListener('pointercancel', onRangeEnd);
+      brightInput.addEventListener('touchstart', onRangeStart, { passive: true });
+      brightInput.addEventListener('touchend', onRangeEnd, { passive: true });
+      brightInput.addEventListener('input', function () {
+        beginUiInteract();
+        setLighting({ brightness: Number(brightInput.value) });
+      });
+      brightInput.addEventListener('change', onRangeEnd);
+    }
+    if (swatchBox) {
+      swatchBox.addEventListener('click', function (e) {
+        var btn = e.target.closest('.xl-swatch');
+        if (!btn || !swatchBox.contains(btn)) return;
+        var color = btn.getAttribute('data-color');
+        if (color) setLighting({ color: color });
+      });
+      swatchBox.addEventListener('pointerdown', beginUiInteract);
+      swatchBox.addEventListener('pointerup', endUiInteract);
+    }
+    if (customColor) {
+      customColor.addEventListener('input', function () {
+        beginUiInteract();
+        setLighting({ color: customColor.value });
+      });
+      customColor.addEventListener('change', function () {
+        setLighting({ color: customColor.value });
+        endUiInteract();
+      });
+    }
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        resetLighting();
+      });
+      resetBtn.addEventListener('pointerdown', beginUiInteract);
+      resetBtn.addEventListener('pointerup', endUiInteract);
+    }
+  }
+
+  /* =========================================================
+   * [compat]
+   * ========================================================= */
+  function installThreeHtmlTextureCompatibility() {
+    if (!window.__HTML_IN_CANVAS_POLYFILL__) return;
+    var ctors = [window.WebGLRenderingContext, window.WebGL2RenderingContext];
+    var c;
+    for (c = 0; c < ctors.length; c++) {
+      var Ctor = ctors[c];
+      if (!Ctor) continue;
+      var proto = Ctor.prototype;
+      var upload = proto.texElementImage2D;
+      if (!upload || upload.length !== 3) continue;
+      Object.defineProperty(proto, 'texElementImage2D', {
+        configurable: true,
+        writable: true,
+        value: function (target, level, internalFormat, format, type, source) {
+          return upload.call(this, target, level, internalFormat, format, type, source);
+        }
+      });
+    }
+  }
+
+  /* =========================================================
+   * [lamp] T4 吊灯 mesh + SpotLight（姿态静态下垂；T5 再接 Verlet）
+   * ========================================================= */
+  function trackDisposable(obj) {
+    if (obj) sceneApi.disposables.push(obj);
+    return obj;
+  }
+
+  function createGlowTexture(THREE) {
+    var textureCanvas = document.createElement('canvas');
+    textureCanvas.width = 64;
+    textureCanvas.height = 64;
+    var context = textureCanvas.getContext('2d');
+    if (context) {
+      var gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.16, 'rgba(255,222,172,0.8)');
+      gradient.addColorStop(0.46, 'rgba(255,170,94,0.22)');
+      gradient.addColorStop(1, 'rgba(255,140,70,0)');
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 64, 64);
+    }
+    var texture = new THREE.CanvasTexture(textureCanvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return trackDisposable(texture);
+  }
+
+  function buildLampRig(THREE, scene) {
+    var DOWN = new THREE.Vector3(0, -1, 0);
+    var UP = new THREE.Vector3(0, 1, 0);
+
+    var ropeLength = sceneApi.ropeLength;
+    var anchor = new THREE.Vector3(0, 4.72, 1.18);
+    var lampPosition = new THREE.Vector3(0.16, anchor.y - ropeLength, anchor.z + 0.08);
+
+    var lampRoot = new THREE.Group();
+    scene.add(lampRoot);
+
+    var ceilingCap = new THREE.Mesh(
+      trackDisposable(new THREE.CylinderGeometry(0.24, 0.3, 0.11, 24)),
+      trackDisposable(
+        new THREE.MeshStandardMaterial({ color: 0x101218, roughness: 0.64, metalness: 0.7 })
+      )
+    );
+    ceilingCap.position.copy(anchor).add(new THREE.Vector3(0, 0.08, 0));
+    scene.add(ceilingCap);
+
+    var cable = new THREE.Mesh(
+      trackDisposable(new THREE.CylinderGeometry(0.014, 0.014, 1, 10)),
+      trackDisposable(
+        new THREE.MeshStandardMaterial({ color: 0x121318, roughness: 0.5, metalness: 0.55 })
+      )
+    );
+    scene.add(cable);
+
+    var shadeGroup = new THREE.Group();
+    lampRoot.add(shadeGroup);
+
+    var shadeProfile = [
+      new THREE.Vector2(0.08, 0.08),
+      new THREE.Vector2(0.18, 0.02),
+      new THREE.Vector2(0.43, -0.1),
+      new THREE.Vector2(0.82, -0.25),
+      new THREE.Vector2(1.08, -0.36),
+      new THREE.Vector2(1.1, -0.41)
+    ];
+    var shadeMaterial = trackDisposable(
+      new THREE.MeshStandardMaterial({
+        color: 0x101116,
+        roughness: 0.36,
+        metalness: 0.74,
+        side: THREE.DoubleSide
+      })
+    );
+    var shade = new THREE.Mesh(trackDisposable(new THREE.LatheGeometry(shadeProfile, 48)), shadeMaterial);
+    shadeGroup.add(shade);
+
+    var rim = new THREE.Mesh(
+      trackDisposable(new THREE.TorusGeometry(1.095, 0.027, 8, 48)),
+      trackDisposable(
+        new THREE.MeshStandardMaterial({ color: 0x17191f, roughness: 0.28, metalness: 0.82 })
+      )
+    );
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = -0.397;
+    shadeGroup.add(rim);
+
+    var undersideMaterial = trackDisposable(
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(INITIAL_LIGHT.color).multiplyScalar(0.18),
+        emissive: INITIAL_LIGHT.color,
+        emissiveIntensity: 0.42,
+        roughness: 0.92,
+        side: THREE.DoubleSide
+      })
+    );
+    var underside = new THREE.Mesh(trackDisposable(new THREE.CircleGeometry(1.055, 48)), undersideMaterial);
+    underside.rotation.x = Math.PI / 2;
+    underside.position.y = -0.385;
+    shadeGroup.add(underside);
+
+    var connector = new THREE.Mesh(
+      trackDisposable(new THREE.CylinderGeometry(0.095, 0.12, 0.2, 20)),
+      trackDisposable(
+        new THREE.MeshStandardMaterial({ color: 0x9c6744, roughness: 0.44, metalness: 0.66 })
+      )
+    );
+    connector.position.y = 0.08;
+    shadeGroup.add(connector);
+
+    var bulbMaterial = trackDisposable(
+      new THREE.MeshStandardMaterial({
+        color: 0xffd7ad,
+        emissive: INITIAL_LIGHT.color,
+        emissiveIntensity: 3.2,
+        roughness: 0.2
+      })
+    );
+    var bulb = new THREE.Mesh(trackDisposable(new THREE.SphereGeometry(0.16, 20, 12)), bulbMaterial);
+    bulb.scale.y = 1.2;
+    bulb.position.y = -0.33;
+    shadeGroup.add(bulb);
+
+    var glowTexture = createGlowTexture(THREE);
+    var glowMaterial = trackDisposable(
+      new THREE.SpriteMaterial({
+        map: glowTexture,
+        color: INITIAL_LIGHT.color,
+        transparent: true,
+        opacity: 0.86,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    var glow = new THREE.Sprite(glowMaterial);
+    glow.position.y = -0.36;
+    glow.scale.set(0.96, 0.96, 0.96);
+    shadeGroup.add(glow);
+
+    var spot = new THREE.SpotLight(
+      INITIAL_LIGHT.color,
+      1,
+      18,
+      THREE.MathUtils.degToRad(INITIAL_LIGHT.angle),
+      0.88,
+      2
+    );
+    spot.power = INITIAL_LIGHT.brightness;
+    spot.position.set(0, -0.35, 0);
+    spot.target.position.set(0, -7, 0);
+    shadeGroup.add(spot);
+    shadeGroup.add(spot.target);
+
+    var bulbLight = new THREE.PointLight(INITIAL_LIGHT.color, 1, 3.2, 2);
+    bulbLight.power = 36;
+    bulbLight.position.set(0, -0.35, 0);
+    shadeGroup.add(bulbLight);
+
+    sceneApi.lampRoot = lampRoot;
+    sceneApi.ceilingCap = ceilingCap;
+    sceneApi.cable = cable;
+    sceneApi.anchor = anchor;
+    sceneApi.lampPosition = lampPosition;
+    /* 轻微初始动量，与源 demo 一致 */
+    sceneApi.lampPrevious = lampPosition.clone().add(new THREE.Vector3(0.018, 0, -0.012));
+    sceneApi.aimTarget = new THREE.Vector3(0, 0.3, 0.08);
+    sceneApi.pointerVelocity = new THREE.Vector3();
+    sceneApi.lastPointerTarget = sceneApi.aimTarget.clone();
+    sceneApi.currentLightDirection = DOWN.clone();
+    sceneApi.gravity = new THREE.Vector3(0, -9.81, 0);
+    sceneApi.fixedStep = 1 / 120;
+    sceneApi._tmpA = new THREE.Vector3();
+    sceneApi._tmpB = new THREE.Vector3();
+    sceneApi._tmpC = new THREE.Vector3();
+    sceneApi._velocity = new THREE.Vector3();
+    sceneApi._ropeDir = new THREE.Vector3();
+    sceneApi._lightDir = new THREE.Vector3();
+    sceneApi._midpoint = new THREE.Vector3();
+    sceneApi._quatCable = new THREE.Quaternion();
+    sceneApi._quatLamp = new THREE.Quaternion();
+    sceneApi._quatSwing = new THREE.Quaternion();
+    /* 兼容旧字段名（若有外部调试引用） */
+    sceneApi._quatA = sceneApi._quatCable;
+    sceneApi._quatB = sceneApi._quatLamp;
+    sceneApi.raycaster = new THREE.Raycaster();
+    sceneApi.pointerNdcVec = new THREE.Vector2();
+    sceneApi.lampNdc = new THREE.Vector3();
+    sceneApi.interactionPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -0.08);
+    /* 最大摆角（相对竖直）：过大时 Spot 扫页 + 四元数奇异 → 整页像在抖 */
+    sceneApi.maxSwingRad = Math.PI * 0.42;
+    sceneApi.activeColor = new THREE.Color();
+    sceneApi._DOWN = DOWN;
+    sceneApi._UP = UP;
+    sceneApi.lightRig = {
+      spot: spot,
+      bulbLight: bulbLight,
+      bulbMaterial: bulbMaterial,
+      glowMaterial: glowMaterial,
+      undersideMaterial: undersideMaterial
+    };
+
+    updateLampPose();
+    return sceneApi.lightRig;
+  }
+
+  function safeNormalize(v, fallback) {
+    if (!v || v.lengthSq() < 1e-10) {
+      if (fallback) v.copy(fallback);
+      else v.set(0, -1, 0);
+      return v;
+    }
+    return v.normalize();
+  }
+
+  function sanitizeVec3(v, fallback) {
+    if (!v) return fallback;
+    if (!isFinite(v.x) || !isFinite(v.y) || !isFinite(v.z)) {
+      if (fallback) v.copy(fallback);
+      else v.set(0, 0, 0);
+    }
+    return v;
+  }
+
+  /* 绳方向相对竖直的最大偏角，抑制极端拉角下的数值抖与 Spot 扫页闪 */
+  function clampRopeDirection(dir, down, maxRad) {
+    var cosMax = Math.cos(maxRad);
+    var dot = dir.dot(down);
+    if (dot >= cosMax) return dir;
+    var axis = sceneApi._tmpC.copy(down).cross(dir);
+    if (axis.lengthSq() < 1e-12) {
+      dir.copy(down);
+      return dir;
+    }
+    axis.normalize();
+    sceneApi._quatSwing.setFromAxisAngle(axis, maxRad);
+    dir.copy(down).applyQuaternion(sceneApi._quatSwing).normalize();
+    return dir;
+  }
+
+  function updateLampPose() {
+    if (!sceneApi.THREE || !sceneApi.lampRoot || !sceneApi.anchor || !sceneApi.lampPosition) return;
+    var anchor = sceneApi.anchor;
+    var position = sceneApi.lampPosition;
+    var ropeLength = sceneApi.ropeLength;
+    var UP = sceneApi._UP;
+    var DOWN = sceneApi._DOWN;
+    var ropeDirection = sceneApi._ropeDir;
+    var midpoint = sceneApi._midpoint;
+    var lightDirection = sceneApi._lightDir;
+    var cableQuaternion = sceneApi._quatCable || sceneApi._quatA;
+    var lampQuaternion = sceneApi._quatLamp || sceneApi._quatB;
+    var swingQuaternion = sceneApi._quatSwing || cableQuaternion;
+
+    sanitizeVec3(position, sceneApi._tmpA.copy(anchor).addScaledVector(DOWN, ropeLength));
+
+    ropeDirection.copy(position).sub(anchor);
+    safeNormalize(ropeDirection, DOWN);
+
+    midpoint.copy(anchor).add(position).multiplyScalar(0.5);
+    sceneApi.cable.position.copy(midpoint);
+    sceneApi.cable.scale.set(1, ropeLength, 1);
+    cableQuaternion.setFromUnitVectors(UP, ropeDirection);
+    sceneApi.cable.quaternion.copy(cableQuaternion);
+
+    if (!sceneApi.currentLightDirection) {
+      sceneApi.currentLightDirection = DOWN.clone();
+    }
+
+    if (sceneApi.pulling && sceneApi.aimTarget) {
+      /*
+       * 源 demo：灯朝向 = aimTarget(交互平面上的点) - position。
+       * aim 必须是平面交点，不能钳到绳球面——否则 aim 与 position 共球，
+       * 弦方向近水平，灯会突然「躺平」。
+       */
+      lightDirection.copy(sceneApi.aimTarget).sub(position);
+      if (lightDirection.lengthSq() < 1e-8) {
+        lightDirection.copy(DOWN);
+      } else {
+        lightDirection.normalize();
+      }
+      /* 仅作安全网：几乎朝上时混一点绳向，避免 setFromUnitVectors 奇异 */
+      if (lightDirection.dot(DOWN) < -0.2) {
+        lightDirection.lerp(ropeDirection, 0.45);
+        safeNormalize(lightDirection, ropeDirection);
+      }
+      sceneApi.currentLightDirection.lerp(lightDirection, 0.32);
+      safeNormalize(sceneApi.currentLightDirection, ropeDirection);
+    } else {
+      swingQuaternion.setFromUnitVectors(DOWN, ropeDirection);
+      lightDirection.copy(DOWN).applyQuaternion(swingQuaternion);
+      safeNormalize(lightDirection, ropeDirection);
+      sceneApi.currentLightDirection.lerp(lightDirection, 0.14);
+      safeNormalize(sceneApi.currentLightDirection, ropeDirection);
+    }
+
+    sanitizeVec3(sceneApi.currentLightDirection, DOWN);
+    /* 只挡真正翻转（朝上），不要把「略偏水平的瞄准」强行拧回绳向 */
+    if (sceneApi.currentLightDirection.dot(DOWN) < -0.5) {
+      sceneApi.currentLightDirection.lerp(ropeDirection, 0.5);
+      safeNormalize(sceneApi.currentLightDirection, ropeDirection);
+    }
+
+    lampQuaternion.setFromUnitVectors(DOWN, sceneApi.currentLightDirection);
+    sceneApi.lampRoot.position.copy(position);
+    sceneApi.lampRoot.quaternion.copy(lampQuaternion);
+
+    sceneApi.ceilingCap.position.copy(anchor);
+    sceneApi.ceilingCap.position.y += 0.08;
+  }
+
+  function stepPhysics() {
+    if (!sceneApi.THREE || !sceneApi.anchor || !sceneApi.lampPosition || !sceneApi.lampPrevious) return;
+    var fixedStep = sceneApi.fixedStep;
+    var ropeLength = sceneApi.ropeLength;
+    var anchor = sceneApi.anchor;
+    var position = sceneApi.lampPosition;
+    var previous = sceneApi.lampPrevious;
+    var gravity = sceneApi.gravity;
+    var DOWN = sceneApi._DOWN;
+    var velocity = sceneApi._velocity;
+    var temp = sceneApi._tmpA;
+    var tempB = sceneApi._tmpB;
+    var tempC = sceneApi._tmpC;
+    var pulling = !!sceneApi.pulling;
+    var pullStrength = sceneApi.pullStrength || 0;
+    var maxSwing = sceneApi.maxSwingRad || Math.PI * 0.42;
+
+    sanitizeVec3(position, temp.copy(anchor).addScaledVector(DOWN, ropeLength));
+    sanitizeVec3(previous, position);
+
+    /* 大摆角时略增阻尼，打断高频抖 */
+    var angleFromDown = 0;
+    temp.copy(position).sub(anchor);
+    if (temp.lengthSq() > 1e-8) {
+      safeNormalize(temp, DOWN);
+      angleFromDown = Math.acos(Math.min(1, Math.max(-1, temp.dot(DOWN))));
+    }
+    var extreme = Math.min(
+      1,
+      Math.max(0, (angleFromDown - maxSwing * 0.55) / (maxSwing * 0.45 + 1e-6))
+    );
+    var damp = pulling ? 0.985 - extreme * 0.025 : 0.9948 - extreme * 0.012;
+
+    velocity.copy(position).sub(previous).multiplyScalar(damp);
+    previous.copy(position);
+    position.add(velocity).addScaledVector(gravity, fixedStep * fixedStep);
+
+    if (pulling && sceneApi.aimTarget) {
+      /*
+       * 源 stepPhysics：用 aim-anchor 方向做平衡，但不改写 aimTarget 本身。
+       * aim 仍是交互平面上的点；这里只取方向并钳摆角。
+       */
+      tempB.copy(sceneApi.aimTarget).sub(anchor);
+      safeNormalize(tempB, DOWN);
+      clampRopeDirection(tempB, DOWN, maxSwing);
+      tempB.lerp(DOWN, 1 - pullStrength * 0.82);
+      safeNormalize(tempB, DOWN);
+      tempC.copy(tempB).multiplyScalar(ropeLength).add(anchor).sub(position);
+      temp.copy(position).sub(anchor);
+      safeNormalize(temp, DOWN);
+      tempC.addScaledVector(temp, -tempC.dot(temp));
+      var pullK = 52 - extreme * 12;
+      position.addScaledVector(tempC, pullK * fixedStep * fixedStep);
+    }
+
+    temp.copy(position).sub(anchor);
+    safeNormalize(temp, DOWN);
+    clampRopeDirection(temp, DOWN, maxSwing);
+    temp.multiplyScalar(ropeLength);
+    position.copy(anchor).add(temp);
+
+    sanitizeVec3(position, temp.copy(anchor).addScaledVector(DOWN, ropeLength));
+    velocity.copy(position).sub(previous);
+
+    /* 逐步速度帽：防止单帧爆炸后整页 Spot 狂闪 */
+    var maxStep = pulling ? 0.085 : 0.12;
+    if (velocity.lengthSq() > maxStep * maxStep) {
+      velocity.setLength(maxStep);
+      previous.copy(position).sub(velocity);
+    }
+
+    if (pulling) {
+      sceneApi.stableFrames = 0;
+    } else if (velocity.lengthSq() < 0.000000014) {
+      sceneApi.stableFrames += 1;
+    } else {
+      sceneApi.stableFrames = 0;
+    }
+  }
+
+  function isUiControlTarget(target) {
+    if (!target || !target.closest) return false;
+    return !!target.closest(
+      'button, input, select, textarea, label, a, .xl-swatch, .xl-custom-color, .xl-power, .xl-reset, .xl-control-row, .xl-color-options'
+    );
+  }
+
+  function pointerNdc(event) {
+    if (!sceneApi.camera || !glCanvas || !sceneApi.raycaster || !sceneApi.pointerNdcVec) return;
+    var rect = glCanvas.getBoundingClientRect();
+    var w = rect.width || 1;
+    var h = rect.height || 1;
+    sceneApi.pointerNdcVec.x = ((event.clientX - rect.left) / w) * 2 - 1;
+    sceneApi.pointerNdcVec.y = -((event.clientY - rect.top) / h) * 2 + 1;
+    sceneApi.raycaster.setFromCamera(sceneApi.pointerNdcVec, sceneApi.camera);
+  }
+
+  function updatePointerTarget(event) {
+    if (!sceneApi.raycaster || !sceneApi.aimTarget || !sceneApi.interactionPlane) return false;
+    var THREE = sceneApi.THREE;
+    pointerNdc(event);
+    if (!sceneApi.raycaster.ray.intersectPlane(sceneApi.interactionPlane, sceneApi.aimTarget)) {
+      return false;
+    }
+    /*
+     * 关键：不要把 aimTarget 投影到绳球面。
+     * 源码 aim 是交互平面(z≈0.08)上的点；灯朝向 = aim - position，自然照向墙面。
+     * 若钳到绳球，aim 与 position 共球 → 弦近水平 → 灯突然躺平。
+     */
+    sanitizeVec3(sceneApi.aimTarget, sceneApi.aimTarget);
+    sceneApi.lampNdc.copy(sceneApi.lampPosition).project(sceneApi.camera);
+    var distanceX = (sceneApi.pointerNdcVec.x - sceneApi.lampNdc.x) * sceneApi.camera.aspect;
+    var distanceY = sceneApi.pointerNdcVec.y - sceneApi.lampNdc.y;
+    var pointerDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    sceneApi.pullStrength = THREE.MathUtils.smoothstep(pointerDistance, 0.08, 1.15);
+    return true;
+  }
+
+  function clearBrowserSelection() {
+    try {
+      var sel = window.getSelection && window.getSelection();
+      if (sel && sel.removeAllRanges) sel.removeAllRanges();
+    } catch (errSel) {}
+  }
+
+  function setDragDocumentLock(kind) {
+    /* kind: 'pull' | 'beam' | null */
+    var html = document.documentElement;
+    html.classList.toggle('xl-is-dragging', kind === 'pull');
+    html.classList.toggle('xl-is-adjusting-beam', kind === 'beam');
+    if (kind) clearBrowserSelection();
+  }
+
+  function capturePointerSafe(event) {
+    var el = event.currentTarget || glCanvas || sceneApi.hitHost;
+    if (!el || typeof el.setPointerCapture !== 'function') return;
+    try {
+      el.setPointerCapture(event.pointerId);
+      sceneApi.captureEl = el;
+    } catch (errCap) {}
+  }
+
+  function releasePointerSafe(pointerId) {
+    var el = sceneApi.captureEl;
+    sceneApi.captureEl = null;
+    if (!el || typeof el.releasePointerCapture !== 'function') return;
+    try {
+      if (el.hasPointerCapture && el.hasPointerCapture(pointerId)) {
+        el.releasePointerCapture(pointerId);
+      }
+    } catch (errRel) {}
+  }
+
+  function onSelectStart(event) {
+    if (sceneApi.pulling || sceneApi.beamPointerId !== -1) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  function onPointerDown(event) {
+    if (!sceneApi.renderer || sceneApi.disposed) return;
+
+    if (event.button === 2) {
+      sceneApi.beamPointerId = event.pointerId;
+      sceneApi.beamStartX = event.clientX;
+      sceneApi.beamStartY = event.clientY;
+      sceneApi.beamStartAngle = state.lighting.angle;
+      sceneApi.beamDragged = false;
+      if (page) page.classList.add('is-adjusting-beam');
+      setDragDocumentLock('beam');
+      clearBrowserSelection();
+      event.preventDefault();
+      capturePointerSafe(event);
+      return;
+    }
+
+    if (event.button !== 0 || sceneApi.beamPointerId !== -1) return;
+    if (isUiControlTarget(event.target)) return;
+    if (!updatePointerTarget(event)) return;
+
+    /*
+     * 必须 preventDefault：否则浏览器会把透明 host/page 当可选文本，
+     * 拖出选区 → 选区重排/滚动 → 整页「震动」。
+     */
+    event.preventDefault();
+    clearBrowserSelection();
+    setDragDocumentLock('pull');
+
+    sceneApi.pulling = true;
+    sceneApi.pullPointerId = event.pointerId;
+    sceneApi.lastPointerTime = performance.now();
+    sceneApi.lastPointerTarget.copy(sceneApi.aimTarget);
+    sceneApi.pointerVelocity.set(0, 0, 0);
+    if (glCanvas) glCanvas.classList.add('is-pulling-light');
+    if (root) root.classList.add('is-pulling-light');
+    capturePointerSafe(event);
+    wake();
+  }
+
+  function onPointerMove(event) {
+    if (!sceneApi.renderer || sceneApi.disposed) return;
+    var THREE = sceneApi.THREE;
+
+    if (event.pointerId === sceneApi.beamPointerId) {
+      if (event.cancelable) event.preventDefault();
+      clearBrowserSelection();
+      var movementX = event.clientX - sceneApi.beamStartX;
+      var movementY = event.clientY - sceneApi.beamStartY;
+      if (!sceneApi.beamDragged && Math.hypot(movementX, movementY) >= 4) {
+        sceneApi.beamDragged = true;
+      }
+      if (sceneApi.beamDragged) {
+        var nextAngle = THREE.MathUtils.clamp(
+          Math.round(sceneApi.beamStartAngle + movementX * 0.14),
+          BEAM_RANGE.min,
+          BEAM_RANGE.max
+        );
+        if (nextAngle !== state.lighting.angle) {
+          setLighting({ angle: nextAngle });
+        } else {
+          wake();
+        }
+      }
+      return;
+    }
+
+    if (!sceneApi.pulling || event.pointerId !== sceneApi.pullPointerId) return;
+    if (event.cancelable) event.preventDefault();
+    clearBrowserSelection();
+    if (!updatePointerTarget(event)) return;
+
+    var now = performance.now();
+    var elapsed = Math.max(0.008, Math.min(0.05, (now - sceneApi.lastPointerTime) / 1000));
+    sceneApi._tmpA.copy(sceneApi.aimTarget).sub(sceneApi.lastPointerTarget).multiplyScalar(1 / elapsed);
+    sceneApi.pointerVelocity.lerp(sceneApi._tmpA, 0.34);
+    sceneApi.lastPointerTarget.copy(sceneApi.aimTarget);
+    sceneApi.lastPointerTime = now;
+    wake();
+  }
+
+  function onPointerUp(event) {
+    if (!sceneApi.renderer || sceneApi.disposed) return;
+    var THREE = sceneApi.THREE;
+    var fixedStep = sceneApi.fixedStep;
+    var ropeLength = sceneApi.ropeLength;
+    var anchor = sceneApi.anchor;
+    var position = sceneApi.lampPosition;
+    var previous = sceneApi.lampPrevious;
+    var DOWN = sceneApi._DOWN;
+    var velocity = sceneApi._velocity;
+    var temp = sceneApi._tmpA;
+    var tempB = sceneApi._tmpB;
+
+    if (event.pointerId === sceneApi.beamPointerId) {
+      var shouldCycleColor = !sceneApi.beamDragged && event.type !== 'pointercancel';
+      releasePointerSafe(event.pointerId);
+      sceneApi.beamPointerId = -1;
+      sceneApi.beamDragged = false;
+      if (page) page.classList.remove('is-adjusting-beam');
+      setDragDocumentLock(null);
+      clearBrowserSelection();
+      if (shouldCycleColor) cycleColor(1);
+      wake();
+      return;
+    }
+
+    if (!sceneApi.pulling || event.pointerId !== sceneApi.pullPointerId) return;
+
+    releasePointerSafe(event.pointerId);
+    setDragDocumentLock(null);
+    clearBrowserSelection();
+
+    /* 保留当前动量 + 指针动量 + 回弹冲量 — 对齐源 onPointerUp */
+    velocity.copy(position).sub(previous).multiplyScalar(1 / fixedStep);
+    temp.copy(position).sub(anchor).normalize();
+    sceneApi.pointerVelocity
+      .addScaledVector(temp, -sceneApi.pointerVelocity.dot(temp))
+      .clampLength(0, 6);
+    var pullStrength = sceneApi.pullStrength || 0;
+    var pointerTransfer = THREE.MathUtils.lerp(0.055, 0.12, pullStrength);
+    velocity.addScaledVector(sceneApi.pointerVelocity, pointerTransfer);
+    tempB.copy(anchor).addScaledVector(DOWN, ropeLength).sub(position);
+    tempB.addScaledVector(temp, -tempB.dot(temp));
+    if (tempB.lengthSq() > 0.0001) {
+      tempB.normalize();
+      var returnImpulse = THREE.MathUtils.lerp(0.32, 1.6, pullStrength);
+      velocity.addScaledVector(tempB, returnImpulse);
+    }
+    velocity.clampLength(0, 3.6);
+    previous.copy(position).addScaledVector(velocity, -fixedStep);
+    sanitizeVec3(position, position);
+    sanitizeVec3(previous, position);
+
+    sceneApi.pulling = false;
+    sceneApi.pullPointerId = -1;
+    sceneApi.pullStrength = 0;
+    if (glCanvas) glCanvas.classList.remove('is-pulling-light');
+    if (root) root.classList.remove('is-pulling-light');
+    setDragDocumentLock(null);
+    wake();
+  }
+
+  function resetMotion() {
+    if (!sceneApi.anchor || !sceneApi.lampPosition || !sceneApi.lampPrevious) return;
+    var DOWN = sceneApi._DOWN;
+    sceneApi.pulling = false;
+    sceneApi.pullPointerId = -1;
+    sceneApi.pullStrength = 0;
+    sceneApi.lampPosition.copy(sceneApi.anchor).addScaledVector(DOWN, sceneApi.ropeLength);
+    sceneApi.lampPrevious.copy(sceneApi.lampPosition);
+    if (sceneApi.pointerVelocity) sceneApi.pointerVelocity.set(0, 0, 0);
+    if (sceneApi.currentLightDirection) sceneApi.currentLightDirection.copy(DOWN);
+    if (glCanvas) glCanvas.classList.remove('is-pulling-light');
+    if (root) root.classList.remove('is-pulling-light');
+    sceneApi.beamPointerId = -1;
+    sceneApi.beamDragged = false;
+    if (page) page.classList.remove('is-adjusting-beam');
+    setDragDocumentLock(null);
+    clearBrowserSelection();
+    updateLampPose();
+    wake();
+  }
+
+  function onContextMenu(event) {
+    event.preventDefault();
+  }
+
+  function onDoubleClick(event) {
+    if (isUiControlTarget(event.target)) return;
+    resetMotion();
+  }
+
+  function bindPointerIfNeeded() {
+    if (sceneApi.pointerBound || !glCanvas) return;
+    sceneApi.pointerBound = true;
+
+    glCanvas.addEventListener('pointerdown', onPointerDown, { passive: false });
+    glCanvas.addEventListener('dblclick', onDoubleClick);
+    glCanvas.addEventListener('contextmenu', onContextMenu);
+
+    /* host 盖在 canvas 上时，空白墙面事件落在 page/host；控件仍走原生 */
+    var host = sceneApi.hitHost;
+    if (host) {
+      host.addEventListener('pointerdown', onPointerDown, { passive: false });
+      host.addEventListener('dblclick', onDoubleClick);
+      host.addEventListener('contextmenu', onContextMenu);
+      host.style.userSelect = 'none';
+      host.style.webkitUserSelect = 'none';
+    }
+    if (page) {
+      page.addEventListener('pointerdown', onPointerDown, { passive: false });
+      page.addEventListener('dblclick', onDoubleClick);
+      page.addEventListener('contextmenu', onContextMenu);
+      page.style.userSelect = 'none';
+      page.style.webkitUserSelect = 'none';
+    }
+
+    /* passive:false 才能在 move 时 preventDefault 阻断文本拖选 */
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+    document.addEventListener('selectstart', onSelectStart, true);
+    document.addEventListener('dragstart', onSelectStart, true);
+  }
+
+  function unbindPointer() {
+    if (!sceneApi.pointerBound) return;
+    sceneApi.pointerBound = false;
+    setDragDocumentLock(null);
+    if (glCanvas) {
+      glCanvas.removeEventListener('pointerdown', onPointerDown);
+      glCanvas.removeEventListener('dblclick', onDoubleClick);
+      glCanvas.removeEventListener('contextmenu', onContextMenu);
+      glCanvas.classList.remove('is-pulling-light');
+    }
+    if (sceneApi.hitHost) {
+      sceneApi.hitHost.removeEventListener('pointerdown', onPointerDown);
+      sceneApi.hitHost.removeEventListener('dblclick', onDoubleClick);
+      sceneApi.hitHost.removeEventListener('contextmenu', onContextMenu);
+    }
+    if (page) {
+      page.removeEventListener('pointerdown', onPointerDown);
+      page.removeEventListener('dblclick', onDoubleClick);
+      page.removeEventListener('contextmenu', onContextMenu);
+      page.classList.remove('is-adjusting-beam');
+    }
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener('pointercancel', onPointerUp);
+    document.removeEventListener('selectstart', onSelectStart, true);
+    document.removeEventListener('dragstart', onSelectStart, true);
+    if (root) root.classList.remove('is-pulling-light');
+  }
+
+  function applyLightingToRig(lighting) {
+    var rig = sceneApi.lightRig;
+    var THREE = sceneApi.THREE;
+    if (!rig || !THREE || !sceneApi.activeColor) return;
+
+    var color = sceneApi.activeColor.set(lighting.color);
+    var bright = lighting.enabled ? lighting.brightness : 0;
+
+    rig.spot.color.copy(color);
+    rig.spot.power = bright;
+    rig.spot.angle = THREE.MathUtils.degToRad(lighting.angle);
+
+    rig.bulbLight.color.copy(color);
+    rig.bulbLight.power = lighting.enabled ? Math.max(18, lighting.brightness * 0.026) : 0;
+
+    rig.bulbMaterial.emissive.copy(color);
+    rig.bulbMaterial.emissiveIntensity = lighting.enabled
+      ? 2.4 + lighting.brightness / 850
+      : 0.04;
+
+    rig.glowMaterial.color.copy(color);
+    rig.glowMaterial.opacity = lighting.enabled ? 0.52 + lighting.brightness / 4200 : 0;
+
+    rig.undersideMaterial.color.copy(color).multiplyScalar(0.18);
+    rig.undersideMaterial.emissive.copy(color);
+    rig.undersideMaterial.emissiveIntensity = lighting.enabled
+      ? 0.22 + lighting.brightness / 7250
+      : 0.03;
+  }
+
+  /* =========================================================
+   * [scene] T3 平面 + T4 灯具
+   * ========================================================= */
+  function renderOnce() {
+    /* 兼容旧调用：转入持续 loop */
+    wake();
+  }
+
+  function resizeScene() {
+    if (!sceneApi.renderer || !sceneApi.camera || !glCanvas || !page || !sceneApi.THREE) return;
+    var THREE = sceneApi.THREE;
+    var width = Math.max(1, glCanvas.clientWidth || root.clientWidth || 1);
+    var height = Math.max(1, glCanvas.clientHeight || root.clientHeight || 1);
+    var dpr = Math.min(window.devicePixelRatio || 1, width < 760 ? 1.25 : 1.5);
+    sceneApi.renderer.setPixelRatio(dpr);
+    sceneApi.renderer.setSize(width, height, false);
+    sceneApi.camera.aspect = width / height;
+    sceneApi.camera.updateProjectionMatrix();
+
+    var sourceWidth = page.offsetWidth || 1440;
+    var sourceHeight = page.offsetHeight || 810;
+    var portrait = height > width * 1.16;
+    var pageWidth = portrait ? 7.2 : 12.8;
+    var pageHeight = pageWidth * (sourceHeight / sourceWidth);
+
+    if (sceneApi.pageMesh) sceneApi.pageMesh.scale.set(pageWidth, pageHeight, 1);
+    if (sceneApi.backing) sceneApi.backing.scale.set(pageWidth, pageHeight, 1);
+    if (sceneApi.pageGroup) {
+      sceneApi.pageGroup.position.y = portrait ? -0.62 : -0.38;
+    }
+
+    /* 锚点贴页顶（与源 demo 一致） */
+    if (sceneApi.anchor && sceneApi.lampPosition && sceneApi.pageGroup) {
+      var groupY = sceneApi.pageGroup.position.y;
+      var DOWN = sceneApi._DOWN;
+      sceneApi.anchor.set(
+        0,
+        groupY + pageHeight / 2 + sceneApi.pageTopToAnchor,
+        portrait ? 1.1 : 1.18
+      );
+      if (sceneApi.ceilingCap) {
+        sceneApi.ceilingCap.position.copy(sceneApi.anchor);
+        sceneApi.ceilingCap.position.y += 0.08;
+      }
+      if (!sceneApi.pulling && DOWN) {
+        var constrained = sceneApi._tmpA
+          .copy(sceneApi.lampPosition)
+          .sub(sceneApi.anchor);
+        if (constrained.lengthSq() < 0.001) constrained.copy(DOWN);
+        constrained.normalize().multiplyScalar(sceneApi.ropeLength);
+        sceneApi.lampPosition.copy(sceneApi.anchor).add(constrained);
+        if (sceneApi.lampPrevious) sceneApi.lampPrevious.copy(sceneApi.lampPosition);
+      }
+      updateLampPose();
+    }
+
+    var fitHeight = pageHeight + 3.1;
+    var fitWidth = pageWidth + 1.25;
+    var halfFov = THREE.MathUtils.degToRad(sceneApi.camera.fov * 0.5);
+    var distanceForHeight = fitHeight / (2 * Math.tan(halfFov));
+    var distanceForWidth = fitWidth / (2 * Math.tan(halfFov) * sceneApi.camera.aspect);
+    var cameraDistance = Math.max(distanceForHeight, distanceForWidth);
+    var cameraDrop = portrait ? 0.78 : 0.62;
+    var upwardTarget = portrait ? -0.04 : 0.06;
+    var groupY = sceneApi.pageGroup ? sceneApi.pageGroup.position.y : -0.35;
+    sceneApi.camera.position.set(0, groupY - cameraDrop, cameraDistance);
+    sceneApi.camera.lookAt(0, groupY + upwardTarget, 0);
+    sceneApi.camera.updateMatrixWorld();
+    if (sceneApi.pageMesh) sceneApi.pageMesh.updateMatrixWorld(true);
+    if (sceneApi.interactions) sceneApi.interactions.update();
+
+    requestPaint();
+    wake();
+  }
+
+  function onWindowResize() {
+    cancelAnimationFrame(sceneApi.resizeFrame);
+    sceneApi.resizeFrame = requestAnimationFrame(resizeScene);
+  }
+
+  function onVisibilityChange() {
+    if (document.hidden) return;
+    /* 切回 tab：重对齐命中矩阵并 wake */
+    if (sceneApi.pageMesh) sceneApi.pageMesh.updateMatrixWorld(true);
+    if (sceneApi.camera) sceneApi.camera.updateMatrixWorld();
+    if (sceneApi.interactions) sceneApi.interactions.update();
+    requestPaint();
+    wake();
+  }
+
+  function disposeScene() {
+    if (sceneApi.disposed && !sceneApi.renderer && !sceneApi.hitHost) {
+      /* 已清理过 */
+    }
+    sceneApi.disposed = true;
+    cancelAnimationFrame(sceneApi.animationFrame);
+    sceneApi.animationFrame = 0;
+    cancelAnimationFrame(sceneApi.resizeFrame);
+    sceneApi.resizeFrame = 0;
+    unbindPointer();
+    window.removeEventListener('resize', onWindowResize);
+    window.removeEventListener('orientationchange', onWindowResize);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    if (glCanvas) glCanvas.removeEventListener('paint', wake);
+    if (sceneApi.interactions) {
+      try {
+        sceneApi.interactions.disconnect();
+      } catch (errDisc) {}
+      sceneApi.interactions = null;
+    }
+    if (sceneApi.pageTexture && sceneApi.pageTexture.dispose) {
+      try {
+        sceneApi.pageTexture.dispose();
+      } catch (errTex) {}
+      sceneApi.pageTexture = null;
+    }
+    if (sceneApi.pageMesh) {
+      if (sceneApi.pageMesh.geometry) sceneApi.pageMesh.geometry.dispose();
+      if (sceneApi.pageMesh.material) sceneApi.pageMesh.material.dispose();
+      sceneApi.pageMesh = null;
+    }
+    if (sceneApi.backing) {
+      if (sceneApi.backing.geometry) sceneApi.backing.geometry.dispose();
+      if (sceneApi.backing.material) sceneApi.backing.material.dispose();
+      sceneApi.backing = null;
+    }
+    var di;
+    for (di = 0; di < sceneApi.disposables.length; di++) {
+      var d = sceneApi.disposables[di];
+      if (d && typeof d.dispose === 'function') {
+        try {
+          d.dispose();
+        } catch (errD) {}
+      }
+    }
+    sceneApi.disposables = [];
+    sceneApi.lightRig = null;
+    sceneApi.lampRoot = null;
+    if (sceneApi.renderer) {
+      try {
+        sceneApi.renderer.dispose();
+      } catch (errR) {}
+      sceneApi.renderer = null;
+    }
+
+    /*
+     * Bored 切页时 #mainContent 会被清空，但 polyfill 的 host 挂在 document.body：
+     * 必须主动拆掉，否则透明可点层 + 高 z-index 会残留在其它子页上。
+     */
+    try {
+      var host =
+        sceneApi.hitHost ||
+        document.querySelector('[data-host-of="xiphoray-light-gl"]') ||
+        document.querySelector('[data-html-in-canvas-host][data-host-of="xiphoray-light-gl"]');
+      if (host && host.parentNode) host.parentNode.removeChild(host);
+    } catch (errHost) {}
+    sceneApi.hitHost = null;
+
+    /* 清全局拖拽锁 class（曾写在 html 上） */
+    try {
+      document.documentElement.classList.remove('xl-is-dragging', 'xl-is-adjusting-beam');
+    } catch (errHtml) {}
+
+    if (window.__XIPHORAY_LIGHT__ && window.__XIPHORAY_LIGHT__.root === root) {
+      try {
+        delete window.__XIPHORAY_LIGHT__;
+      } catch (errApi) {
+        window.__XIPHORAY_LIGHT__ = undefined;
+      }
+    }
+  }
+
+  /* 监视根节点被 jQuery .load 换掉 / 移出文档 → 自动 dispose */
+  function watchRootLifecycle() {
+    if (!root || !root.parentNode || typeof MutationObserver !== 'function') return;
+    var parent = root.parentNode;
+    var obs = new MutationObserver(function () {
+      if (sceneApi.disposed) {
+        try {
+          obs.disconnect();
+        } catch (e1) {}
+        return;
+      }
+      if (!root.isConnected || !document.getElementById(ROOT_ID)) {
+        try {
+          obs.disconnect();
+        } catch (e2) {}
+        disposeScene();
+      }
+    });
+    obs.observe(parent, { childList: true });
+    /* 页面隐藏卸载兜底 */
+    window.addEventListener(
+      'pagehide',
+      function onPageHide() {
+        disposeScene();
+      },
+      { once: true }
+    );
+  }
+
+  function initScene(THREE, HTMLTextureCtor, InteractionManager) {
+    if (!glCanvas || !page) {
+      showError('Missing canvas or page-source node.');
+      return;
+    }
+
+    glCanvas.setAttribute('layoutsubtree', '');
+
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas: glCanvas,
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance'
+      });
+    } catch (err) {
+      console.error(err);
+      showError('This experience needs WebGL to render the Xiphoray light study.');
+      return;
+    }
+
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.toneMappingExposure = 1.08;
+    renderer.setClearColor(0x010204, 1);
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x010204);
+
+    var camera = new THREE.PerspectiveCamera(37, 1, 0.1, 80);
+    camera.position.set(0, 0.2, 13.6);
+
+    var pageGroup = new THREE.Group();
+    pageGroup.position.set(0, -0.35, 0);
+    scene.add(pageGroup);
+
+    var HTMLTexture = HTMLTextureCtor || THREE.HTMLTexture;
+    if (typeof HTMLTexture !== 'function') {
+      showError('HTMLTexture is not available (three / three-html-render mismatch).');
+      renderer.dispose();
+      return;
+    }
+
+    var pageTexture;
+    try {
+      pageTexture = new HTMLTexture(page);
+    } catch (texErr) {
+      console.error(texErr);
+      showError('Failed to create HTMLTexture from page-source.');
+      renderer.dispose();
+      return;
+    }
+
+    pageTexture.colorSpace = THREE.SRGBColorSpace;
+    pageTexture.minFilter = THREE.LinearFilter;
+    pageTexture.magFilter = THREE.LinearFilter;
+    pageTexture.generateMipmaps = false;
+
+    var pageMaterial = new THREE.MeshStandardMaterial({
+      map: pageTexture,
+      color: 0xc5cad4,
+      roughness: 0.96,
+      metalness: 0,
+      transparent: true,
+      alphaTest: 0.005,
+      side: THREE.FrontSide
+    });
+    var pageMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), pageMaterial);
+    pageGroup.add(pageMesh);
+
+    var backingMaterial = new THREE.MeshStandardMaterial({
+      color: 0x080a10,
+      roughness: 0.9,
+      metalness: 0.03
+    });
+    var backing = new THREE.Mesh(new THREE.PlaneGeometry(1.018, 1.028), backingMaterial);
+    backing.position.z = -0.035;
+    pageGroup.add(backing);
+
+    /* 环境/补光（强度对齐源 demo，让 SpotLight 成为主角） */
+    scene.add(new THREE.HemisphereLight(0x71809b, 0x151118, 0.58));
+    var fillLight = new THREE.DirectionalLight(0x91a6c8, 0.24);
+    fillLight.position.set(-4.8, 5.6, 7.4);
+    scene.add(fillLight);
+
+    sceneApi.THREE = THREE;
+    sceneApi.renderer = renderer;
+    sceneApi.scene = scene;
+    sceneApi.camera = camera;
+    sceneApi.pageGroup = pageGroup;
+    sceneApi.pageMesh = pageMesh;
+    sceneApi.backing = backing;
+    sceneApi.pageTexture = pageTexture;
+    sceneApi.disposed = false;
+    sceneApi.disposables = [];
+
+    buildLampRig(THREE, scene);
+    applyLightingToRig(state.lighting);
+
+    /* T6：3D 平面真 DOM 命中 + 面板持续可点 */
+    if (typeof InteractionManager === 'function') {
+      var interactions = new InteractionManager();
+      interactions.connect(renderer, camera);
+      interactions.add(pageMesh);
+      sceneApi.interactions = interactions;
+    } else {
+      console.warn('[xiphoray-light] InteractionManager missing — panel hits disabled');
+    }
+
+    window.addEventListener('resize', onWindowResize, { passive: true });
+    window.addEventListener('orientationchange', onWindowResize, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    glCanvas.addEventListener('paint', wake);
+
+    function ensureHitHostStacking() {
+      /*
+       * polyfill 会把 page 从 canvas 挪到 document.body 下的
+       * [data-html-in-canvas-host][data-host-of=canvasId]，opacity:0 可点。
+       * 必须高于 Bored 根 z-index(199999)，否则点击全被 canvas/root 吃掉。
+       */
+      var host =
+        document.querySelector('[data-host-of="xiphoray-light-gl"]') ||
+        document.querySelector('[data-html-in-canvas-host]');
+      if (host) {
+        host.style.zIndex = '2000000';
+        host.style.pointerEvents = 'auto';
+        host.style.userSelect = 'none';
+        host.style.webkitUserSelect = 'none';
+        sceneApi.hitHost = host;
+      }
+      if (page) {
+        page.style.pointerEvents = 'auto';
+        page.style.userSelect = 'none';
+        page.style.webkitUserSelect = 'none';
+        if (!page.style.opacity) page.style.opacity = '0';
+      }
+      refreshControlRefs();
+      /* T6：迁移后若尚未绑控件（极端时序），补绑一次 */
+      if (!sceneApi.controlsBound) bindControls();
+    }
+
+    function finishReady() {
+      if (sceneApi.disposed) return;
+      ensureHitHostStacking();
+      refreshControlRefs();
+      bindPointerIfNeeded();
+      /* 字体/布局就绪：再 paint + resize，保证纹理与命中矩阵对齐 */
+      requestPaint();
+      resizeScene();
+      applyLightingToRig(state.lighting);
+      syncControlDOM(state.lighting);
+      updateLampPose();
+      if (sceneApi.interactions) {
+        if (sceneApi.pageMesh) sceneApi.pageMesh.updateMatrixWorld(true);
+        if (sceneApi.camera) sceneApi.camera.updateMatrixWorld();
+        sceneApi.interactions.update();
+      }
+      setSceneReady(true);
+      setStatus('T7 READY · BORED #9');
+      wake();
+      /* 再等一帧，确认 host 矩阵与纹理都跟上 */
+      requestAnimationFrame(function () {
+        if (sceneApi.disposed) return;
+        ensureHitHostStacking();
+        if (sceneApi.interactions) sceneApi.interactions.update();
+        requestPaint();
+        wake();
+      });
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(finishReady).catch(finishReady);
+    } else {
+      finishReady();
+    }
+  }
+
+  /*
+   * 内联 InteractionManager（对齐 three@0.185.1 examples/jsm）。
+   * 原因：addons 源码 `from 'three'` 依赖 importmap；Bored 碎片 + 动态注入
+   * importmap 在部分环境下会静默失败 → 面板看得见点不中。
+   * 这里直接吃 boot 已加载的同一份 THREE，保证 isHTMLTexture 同实例。
+   */
+  function createInteractionManager(THREE) {
+    var Matrix4 = THREE.Matrix4;
+    var Vector3 = THREE.Vector3;
+    var _pixelToLocal = new Matrix4();
+    var _mvp = new Matrix4();
+    var _viewport = new Matrix4();
+    var _size = new Vector3();
+
+    function InteractionManager() {
+      this.objects = [];
+      this.element = null;
+      this.camera = null;
+      this._cachedCssW = -1;
+      this._cachedCssH = -1;
+    }
+
+    InteractionManager.prototype.add = function () {
+      var i;
+      for (i = 0; i < arguments.length; i++) {
+        var object = arguments[i];
+        if (this.objects.indexOf(object) === -1) this.objects.push(object);
+      }
+      return this;
+    };
+
+    InteractionManager.prototype.remove = function () {
+      var i;
+      for (i = 0; i < arguments.length; i++) {
+        var index = this.objects.indexOf(arguments[i]);
+        if (index !== -1) this.objects.splice(index, 1);
+      }
+      return this;
+    };
+
+    InteractionManager.prototype.connect = function (renderer, camera) {
+      this.camera = camera;
+      this.element = renderer.domElement;
+      return this;
+    };
+
+    InteractionManager.prototype.update = function () {
+      var canvas = this.element;
+      var camera = this.camera;
+      if (canvas === null || camera === null) return;
+
+      var cssW = canvas.clientWidth;
+      var cssH = canvas.clientHeight;
+
+      if (cssW !== this._cachedCssW || cssH !== this._cachedCssH) {
+        _viewport.set(
+          cssW / 2, 0, 0, cssW / 2,
+          0, -cssH / 2, 0, cssH / 2,
+          0, 0, 1, 0,
+          0, 0, 0, 1
+        );
+        this._cachedCssW = cssW;
+        this._cachedCssH = cssH;
+      }
+
+      var oi;
+      for (oi = 0; oi < this.objects.length; oi++) {
+        var object = this.objects[oi];
+        var material = object.material;
+        var texture = material && material.map;
+        if (!texture || !texture.isHTMLTexture) continue;
+
+        var element = texture.image;
+        if (!element) continue;
+
+        element.style.position = 'absolute';
+        element.style.left = '0';
+        element.style.top = '0';
+        element.style.transformOrigin = '0 0';
+        /* 确保 polyfill 叠层可点（部分环境下默认被画布挡） */
+        if (!element.style.pointerEvents) element.style.pointerEvents = 'auto';
+
+        var elemW = element.offsetWidth;
+        var elemH = element.offsetHeight;
+        if (!elemW || !elemH) continue;
+
+        var geometry = object.geometry;
+        if (!geometry.boundingBox) geometry.computeBoundingBox();
+        geometry.boundingBox.getSize(_size);
+
+        _pixelToLocal.set(
+          _size.x / elemW, 0, 0, -_size.x / 2,
+          0, -_size.y / elemH, 0, _size.y / 2,
+          0, 0, 1, geometry.boundingBox.max.z,
+          0, 0, 0, 1
+        );
+
+        _mvp.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+        _mvp.multiply(object.matrixWorld);
+        _mvp.multiply(_pixelToLocal);
+        _mvp.premultiply(_viewport);
+
+        element.style.transform = 'matrix3d(' + _mvp.elements.join(',') + ')';
+      }
+    };
+
+    InteractionManager.prototype.disconnect = function () {
+      this.camera = null;
+      this.element = null;
+      this._cachedCssW = -1;
+      this._cachedCssH = -1;
+    };
+
+    return InteractionManager;
+  }
+
+  function bootWebGL() {
+    setStatus('T7 · LOADING THREE + POLYFILL');
+
+    /*
+     * 绝对 URL 动态 import，不依赖 bare importmap：
+     * - three / polyfill 直接拉 CDN
+     * - InteractionManager 内联，强制与 THREE 同实例
+     */
+    Promise.all([
+      import(/* webpackIgnore: true */ CDN.three),
+      import(/* webpackIgnore: true */ CDN.polyfill)
+    ])
+      .then(function (mods) {
+        var THREE = mods[0];
+        var poly = mods[1];
+
+        if (!glCanvas) throw new Error('canvas missing');
+        glCanvas.setAttribute('layoutsubtree', '');
+
+        if (poly && typeof poly.installHtmlInCanvasPolyfill === 'function') {
+          poly.installHtmlInCanvasPolyfill();
+        } else if (poly && typeof poly.default === 'function') {
+          poly.default();
+        } else {
+          throw new Error('installHtmlInCanvasPolyfill not found');
+        }
+
+        installThreeHtmlTextureCompatibility();
+        state.htmlCanvasReady = true;
+        setStatus('T7 · BUILDING LAMP + PHYS');
+
+        var HTMLTextureCtor = THREE.HTMLTexture || null;
+        var InteractionManager = createInteractionManager(THREE);
+
+        initScene(THREE, HTMLTextureCtor, InteractionManager);
+      })
+      .catch(function (err) {
+        console.error(err);
+        showError(
+          'HTML-in-Canvas is not available in this browser (or CDN blocked). Open via HTTP and allow jsdelivr. Detail: ' +
+            (err && err.message ? err.message : String(err))
+        );
+      });
+  }
+
+  /* =========================================================
+   * [bootstrap]
+   * ========================================================= */
+  function main() {
+    if (glCanvas) glCanvas.setAttribute('layoutsubtree', '');
+
+    paintTitle();
+    paintDoodles();
+    bindControls();
+    setLighting(
+      {
+        enabled: INITIAL_LIGHT.enabled,
+        angle: INITIAL_LIGHT.angle,
+        brightness: INITIAL_LIGHT.brightness,
+        color: INITIAL_LIGHT.color
+      },
+      { silent: true }
+    );
+
+    window.__XIPHORAY_LIGHT__ = {
+      root: root,
+      state: state,
+      setLighting: setLighting,
+      resetLighting: resetLighting,
+      cycleColor: cycleColor,
+      COLOR_PRESETS: COLOR_PRESETS,
+      INITIAL_LIGHT: INITIAL_LIGHT,
+      BEAM_RANGE: BEAM_RANGE,
+      BRIGHT_RANGE: BRIGHT_RANGE,
+      WALL_COPY: WALL_COPY,
+      buildBlockWord: buildBlockWord,
+      requestPaint: requestPaint,
+      wake: wake,
+      onPaint: onPaint,
+      onWake: onWake,
+      setStatus: setStatus,
+      showError: showError,
+      sceneApi: sceneApi,
+      disposeScene: disposeScene,
+      resizeScene: resizeScene,
+      applyLightingToRig: applyLightingToRig,
+      updateLampPose: updateLampPose,
+      stepPhysics: stepPhysics,
+      resetMotion: resetMotion,
+      bindPointerIfNeeded: bindPointerIfNeeded,
+      refreshControlRefs: refreshControlRefs,
+      beginUiInteract: beginUiInteract,
+      endUiInteract: endUiInteract
+    };
+
+    watchRootLifecycle();
+    bootWebGL();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', main, { once: true });
+  } else {
+    main();
+  }
+})();
+
+</script>
